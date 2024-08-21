@@ -10,3 +10,16 @@ E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\Maintain
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.Core\obj\Debug\net7.0\refint\MeterOff.Core.dll
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.pdb
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.Core\obj\Debug\net7.0\ref\MeterOff.Core.dll
+E:\MosTawfik\MeterOff.Core\bin\Debug\net7.0\MeterOff.Core.deps.json
+E:\MosTawfik\MeterOff.Core\bin\Debug\net7.0\MeterOff.Core.dll
+E:\MosTawfik\MeterOff.Core\bin\Debug\net7.0\MeterOff.Core.pdb
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.csproj.AssemblyReference.cache
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.AssemblyInfoInputs.cache
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.AssemblyInfo.cs
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.csproj.CoreCompileInputs.cache
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.sourcelink.json
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.dll
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\refint\MeterOff.Core.dll
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\MeterOff.Core.pdb
+E:\MosTawfik\MeterOff.Core\obj\Debug\net7.0\ref\MeterOff.Core.dll

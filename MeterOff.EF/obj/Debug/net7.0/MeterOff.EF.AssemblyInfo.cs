@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MeterOff.EF")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4dd291e9e68fee838ac866ba23de9c175bd99de5")]
 [assembly: System.Reflection.AssemblyProductAttribute("MeterOff.EF")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MeterOff.EF")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

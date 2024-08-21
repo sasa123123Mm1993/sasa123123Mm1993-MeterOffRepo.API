@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
+﻿using System.Xml.Linq;
+using GPICardCore.Master;
 
 namespace GPICardCore
 {
@@ -8,25 +7,25 @@ namespace GPICardCore
     public delegate void CardCreatedHandler(ControlCardBuilder controlCard);
     public class ControlCardBuilder
     {
-        private string MeterType { get; set; }
+        private int   MeterType { get; set; }
         private string MeterVersion { get; set; }
         private string ManufacturerId { get; set; }
         private string CardId { get; set; }
         private string DistributionCompanyCode { get; set; }
         private string SectorCode { get; set; }
-        private CardPeriod CardDate { get; set; }
+        private ControlCardActivationPeriod CardDate { get; set; }
 
         public string CardXML { get; private set; }
-        public ControlCardType CardType { get; private set; }
-
+        public int CardType { get; private set; }
+        public string CardName { get; private set; }
         public List<string> SelectedMeters { get; private set; }
 
         public event CardCreatedHandler OnCardCreated;
 
-        private const int MaximumMeterNumberLength = 8;
+       // private const int MaximumMeterNumberLength = 8;
 
 
-        private XDocument defultXml = new XDocument(
+        private XDocument defaultXml = new XDocument(
         new XElement("meterData",
         new XElement("meterType"),
         new XElement("meterVersion"),
@@ -43,36 +42,93 @@ namespace GPICardCore
      
    
     
-        public void SetMeterType (string meterType)
+        public void SetMeterType (int  meterType)
         {
-            this.MeterType = meterType;
+            if (Validate.IsNotNullAndNonNegative<int>(meterType))
+            {
+                this.MeterType = meterType;
+                defaultXml.Root.Element("meterType").Value = meterType.ToString();
+            }
+            else
+            {
+                throw new Exception("The meterType value is invalid.");
+            }
+
         }
 
         public void SetMeterVersion(string meterVersion)
         {
-            this.MeterVersion = meterVersion;
+            if (!string.IsNullOrWhiteSpace(meterVersion))
+            {
+                this.MeterVersion = meterVersion;
+                defaultXml.Root.Element("meterVersion").Value = meterVersion;
+            }
+            else
+            {
+                throw new Exception("The meterVersion value is invalid.");
+            }
+
         }
 
 
         public void SetManufacturerId(string manufacturerId)
         {
-            this.ManufacturerId = manufacturerId;
+            if (!string.IsNullOrWhiteSpace(manufacturerId))
+            {
+                this.ManufacturerId = manufacturerId;
+                defaultXml.Root.Element("manufacturerId").Value = manufacturerId;
+            }
+            else
+            {
+                throw new Exception("The manufacturerId value is invalid.");
+            }
         }
 
         public void SetCardId(string cardId)
         {
-            this.CardId = cardId;
+            if (!string.IsNullOrWhiteSpace(cardId))
+            {
+                this.CardId = cardId;
+                defaultXml.Root.Element("cardId").Value = cardId;
+            }
+            else
+            {
+                throw new Exception("The cardId value is invalid.");
+            }
         }
+
 
 
         public void SetDistributionCompanyCode(string distributionCompanyCode)
         {
-            this.DistributionCompanyCode = distributionCompanyCode;
+            if (!string.IsNullOrWhiteSpace(distributionCompanyCode))
+            {
+                this.DistributionCompanyCode = distributionCompanyCode;
+                defaultXml.Root
+                .Element("distributionCompanyCode")
+                .Value = distributionCompanyCode;
+            }
+            else
+            {
+                throw new Exception("The distributionCompanyCode value is invalid.");
+            }
+
         }
 
         public void SetSectorCode(string sectorCode)
         {
-            this.SectorCode = sectorCode;
+            if (!string.IsNullOrWhiteSpace(sectorCode))
+            {
+                this.SectorCode = sectorCode;
+                defaultXml.Root
+               .Element("sectorCode")
+               .Value = sectorCode;
+            }
+            else
+            {
+                throw new Exception("The sectorCode value is invalid.");
+            }
+
         }
 
         public void SetSelectedMeters(List<string> meters)
@@ -83,9 +139,9 @@ namespace GPICardCore
 
             foreach (var item in meters)
             {
-                if (item.Length > MaximumMeterNumberLength)
+                if (! Validate.ValidMeterNo(item))
                 {
-                    throw new Exception($"Meter length Exceeds [{MaximumMeterNumberLength}] : [{item}] .");
+                    throw new Exception($"Meter length invalid : [{item}] .");
                 }
 
                 if (item.Length < 1) throw new Exception($"Meter length Invalid : [{item}] .");
@@ -93,98 +149,84 @@ namespace GPICardCore
                 ActiveMeters.Add(new XElement("controlCardActiveMeter", item));
             }
 
-            defultXml.Element("meterData")
+            defaultXml.Element("meterData")
             .Add(ActiveMeters);
         }
 
-        public void SetCardPeriod(CardPeriod cardDate)
+        public void SetCardPeriod(ControlCardActivationPeriod cardDate)
         {
+            if (!(cardDate.ExpiryDate >= cardDate.ActivationDate) )
+            {
+                throw new Exception(" ExpiryDate less than ActivationDate");
+            }
+
             this.CardDate = cardDate;
-            defultXml.Root
+            defaultXml.Root
             .Element("controlCardActivationPeriod")
             .Element("controlCardActivationDate")
             .Value = this.CardDate.ActivationDate.ToString("dd-MM-yyyy");
            
 
-            defultXml.Root
+            defaultXml.Root
             .Element("controlCardActivationPeriod")
             .Element("controlCardExpiryDate")
             .Value = this.CardDate.ExpiryDate.ToString("dd-MM-yyyy");
            
         }
            
-        private void SetDefaultValues(XDocument local)
-        {
-            local.Root.Element("meterType").Value = this.MeterType;
-            local.Root.Element("meterVersion").Value = this.MeterVersion;
-            local.Root.Element("manufacturerId").Value = this.ManufacturerId;
-            local.Root.Element("cardId").Value = this.CardId;
-            local.Root.Element("sectorCode").Value = this.SectorCode;
-            local.Root.Element("distributionCompanyCode").Value = this.DistributionCompanyCode;
-        }
-        private void ValidateSettersData()
-        {
-            if (string.IsNullOrWhiteSpace(this.MeterType)) throw new Exception("Please Set MeterType .");
-            if (string.IsNullOrWhiteSpace(this.MeterVersion)) throw new Exception("Please Set MeterVersion .");
-            if (string.IsNullOrWhiteSpace(this.ManufacturerId)) throw new Exception("Please Set ManufacturerId .");
-            if (string.IsNullOrWhiteSpace(this.CardId)) throw new Exception("Please Set CardId For Technician .");
-            if (string.IsNullOrWhiteSpace(this.DistributionCompanyCode)) throw new Exception("Please Set DistributionCompanyCode .");
-            if (string.IsNullOrWhiteSpace(this.SectorCode)) throw new Exception("Please Set SectorCode .");
-
-            if (this.CardDate == null)
-            {
-                throw new Exception("Please Set controlCardActivationPeriod [ActivationDate] [ExpiryDate] ");
-            }
-            else if (this.CardDate.ActivationDate == null)
-            {
-                throw new Exception("Please Set ActivationDate ");
-            }
-            else if (this.CardDate.ExpiryDate == null)
-            {
-                throw new Exception("Please Set ExpiryDate ");
-            }
-            if (!(this.CardDate.ExpiryDate >= this.CardDate.ActivationDate))
-            {
-                throw new Exception("ExpiryDate Expiry date is not valid .");
-            }
-
-
-
-        }
+    
+        
 
 
         public string BuildToggleRelayCard()
         {
-            ValidateSettersData();
-            XDocument local = new XDocument(this.defultXml);
+            
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
-             .Add(new XElement("controlOperationType", "5"));
+            .Add(new XElement("controlOperationType", "5"));
 
-            SetDefaultValues(local);
+            
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.RelayToggle;
+            this.CardName = ControlCardType.RelayToggle.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
 
         }
-        public string BuildChangeCompanyCodeCard(string NewNumber)
+
+
+        public string BuildCollectCard()
         {
-            ValidateSettersData();
+
+            XDocument local = new XDocument(this.defaultXml);
+
+            local.Element("meterData")
+            .Add(new XElement("controlOperationType", "2"));
+
+
+
+            this.CardXML = local.ToString();
+            this.CardName = ControlCardType.Collect.ToString();
+            OnCardCreated?.Invoke(this);
+            return local.ToString();
+
+        }
+
+
+
+        public string BuildChangeDistributionCompanyCodeCard(string NewNumber)
+        {
+              
 
             if (string.IsNullOrWhiteSpace(NewNumber))
             {
                 throw new Exception($"New CompanyCode [{NewNumber}] is Invalid  .");
             }
 
-            if (NewNumber.Trim() == this.DistributionCompanyCode.Trim())
-            {
-                throw new Exception($"New CompanyCode [{NewNumber}] is same old Number   .");
-            }
-
+          
             
-            XDocument local = new XDocument(this.defultXml);
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
              .Add(new XElement("controlOperationType", "50"));
@@ -192,110 +234,105 @@ namespace GPICardCore
          
             local.Element("meterData")
             .Add(new XElement("newDistributionCompanyCode", NewNumber));
-
-            SetDefaultValues(local);
+                        
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.ChangeCompany;
+            this.CardName = ControlCardType.ChangeCompany.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
         public string BuildChangeMeterNumberCard(string currentNumber , string NewNumber)
         {
-            ValidateSettersData();
             
-            if (string.IsNullOrWhiteSpace(currentNumber))
+            
+            if (!Validate.ValidMeterNo( currentNumber) )
             {
                 throw new Exception($"Current Meter Number [{currentNumber}] is Invalid  .");
             }
 
-            if (string.IsNullOrWhiteSpace(NewNumber))
+            if (!Validate.ValidMeterNo(NewNumber))
             {
                 throw new Exception($"New Meter Number [{NewNumber}] is Invalid  .");
             }
 
-            if (NewNumber.Length > MaximumMeterNumberLength )
-            {
-                throw new Exception($"New Meter Number Length exceed [{MaximumMeterNumberLength}] digits [{NewNumber}] .");
-            }
+            
 
            
-            XDocument local = new XDocument(this.defultXml);
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
-             .Add(new XElement("controlOperationType", "51"));
+                 .Add(new XElement("controlOperationType", "51"));
 
             local.Element("meterData")
-            .Add(new XElement("meterId", currentNumber ));
+                .Add(new XElement("meterId", currentNumber ));
 
             local.Element("meterData")
             .Add(new XElement("newMeterId", NewNumber));
 
-            SetDefaultValues(local);
+            
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.ChangeMeterNumber;
+            this.CardName = ControlCardType.ChangeMeterNumber.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
 
         }
         public string BuildLunchCurrentCard()
         {
-            ValidateSettersData();
-            XDocument local = new XDocument(this.defultXml);
+            
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
              .Add(new XElement("controlOperationType", "52"));
 
-            SetDefaultValues(local);
-
+             
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.LunchCurrent;
+            this.CardName = ControlCardType.LunchCurrent.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
 
         }
         public string BuildRelayTestCard()
         {
-            ValidateSettersData();
-            XDocument local = new XDocument(this.defultXml);
+            
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
            .Add(new XElement("controlOperationType", "6"));
 
-            SetDefaultValues(local);
+            
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.RelayTest;
+            this.CardName = ControlCardType.RelayTest.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
         public string BuildResetCard()
         {
-            ValidateSettersData();
+            
 
-            XDocument local = new XDocument(this.defultXml);
-
-            local.Element("meterData")
-             .Add(new XElement("resetMeterMode", "0"));
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
-           .Add(new XElement("customerOperationType", "2"));
+             .Add(new XElement("resetMeterMode", 0));
+
+            local.Element("meterData")
+           .Add(new XElement("customerOperationType", 2));
 
             local.Root.Element("cardType").Value = "0";
 
-            SetDefaultValues(local);
+            
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.Reset;
+            this.CardName = ControlCardType.Reset.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
         public string BuildSetDateTimeCard(DateTime DateTimeValue)
         {
-            ValidateSettersData();
+            
 
-            XDocument local = new XDocument(this.defultXml);
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
              .Add(new XElement("setDateAndTimeMode", "0"));
@@ -308,18 +345,18 @@ namespace GPICardCore
 
             local.Root.Element("cardType").Value = "1";
 
-            SetDefaultValues(local);
+            
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.SetDateTime;
+            this.CardName = ControlCardType.SetDateTime.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
         public string BuildSetDateTimeOnMeterManualCard()
         {
-            ValidateSettersData();
+            
 
-            XDocument local = new XDocument(this.defultXml);
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
             .Add(new XElement("setDateAndTimeMode", "1"));
@@ -330,16 +367,16 @@ namespace GPICardCore
 
             local.Root.Element("cardType").Value = "1";
 
-            SetDefaultValues(local);
+            
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.SetDateTimeOnMeter;
+            this.CardName = ControlCardType.SetDateTimeOnMeter.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
         public string BuildClearTamperCard(List<int> tamperCodelist )
         {
-            ValidateSettersData();
+            
 
             if (tamperCodelist.Count == 0)
             {
@@ -347,7 +384,7 @@ namespace GPICardCore
             }
             
 
-            XDocument local = new XDocument(this.defultXml);
+            XDocument local = new XDocument(this.defaultXml);
 
             var manipulationsAndFaultsToBeCleared = new XElement("manipulationsAndFaultsToBeCleared");
          
@@ -364,21 +401,25 @@ namespace GPICardCore
 
             local.Root.Element("cardType").Value = "1";
 
-            SetDefaultValues(local);
+             
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.ClearTamper;
+            this.CardName = ControlCardType.ClearTamper.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
 
 
-        public string BuildAlterTariffCard(List<TariffStep> tariffSteps,  int tariffId , decimal zeroConsumptionFeeAmount)
+        public string BuildAlterTariffCard(List<TariffStep> tariffSteps,  TariffHeader header , decimal zeroConsumptionFeeAmount)
         {
-            ValidateSettersData();
+            
             ValidateTariffSteps(tariffSteps);
 
-            XDocument local = new XDocument(this.defultXml);
+            XDocument local = new XDocument(this.defaultXml);
+
+            local.Element("meterData")
+          .Add(new XElement("editMeterDataOperations",
+          new XElement("editMeterDataOperation", 1)));
 
             local.Element("meterData")
            .Add(new XElement("controlOperationType", 4 ));
@@ -387,23 +428,21 @@ namespace GPICardCore
             local.Element("meterData")
            .Add(new XElement("zeroConsumptionFeeAmount", zeroConsumptionFeeAmount ));
 
-            local.Element("meterData")
-           .Add(new XElement("editMeterDataOperations",
-           new XElement("editMeterDataOperation", 1 )));
+           
          
 
 
 
 
-            var tariffsDetails = new XElement("tariffsDetails",
+         var tariffsDetails = new XElement("tariffsDetails",
          new XElement("tariffDetails",
-         new XElement("tariffId", tariffId ),
-         new XElement("tariffVersion"),
-         new XElement("tariffGraceType"),
-         new XElement("tariffGracevalue"),
-         new XElement("tariffAlarmGrace"),
-         new XElement("tariffLimitGrace"),
-         new XElement("tariffDeductionGrace"),
+         new XElement("tariffId", header.tariffId ),
+         new XElement("tariffVersion"        , header.tariffVersion ),
+         new XElement("tariffGraceType"      , header.tariffGraceType ),
+         new XElement("tariffGracevalue"     , header.tariffGracevalue ),
+         new XElement("tariffAlarmGrace"     , header.tariffAlarmGrace ),
+         new XElement("tariffLimitGrace"     , header.tariffLimitGrace ),
+         new XElement("tariffDeductionGrace" , header.tariffDeductionGrace),
          new XElement("tariffSteps")
             )
             );
@@ -420,12 +459,13 @@ namespace GPICardCore
                     new XElement("tariffStepPrice", step.TariffStepPrice)
                 );
 
-                if (step.TariffStepRecalculationEdge.HasValue)
-                {
-                    stepElement.Add(new XElement("tariffStepRecalculationEdge", step.TariffStepRecalculationEdge.Value));
+                if (step.TariffStepRecalculationEdge is > 0)
+                {                     
+                   stepElement.Add(new XElement("tariffStepRecalculationEdge", step.TariffStepRecalculationEdge.Value));
+                    
                 }
 
-                if (step.TariffStepRecalculationEdgeAddedAmount.HasValue)
+                if (step.TariffStepRecalculationEdgeAddedAmount is > 0)
                 {
                     stepElement.Add(new XElement("tariffStepRecalculationEdgeAddedAmount", step.TariffStepRecalculationEdgeAddedAmount.Value));
                 }
@@ -437,11 +477,11 @@ namespace GPICardCore
 
 
 
-            SetDefaultValues(local);
+            
 
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.TarrifUpdate;
+            this.CardName = ControlCardType.TarrifUpdate.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
@@ -481,9 +521,9 @@ namespace GPICardCore
 
         public string BuildAlarmCutoffLimitsCard( List<int> limits)
         {
-            ValidateSettersData();
+            
 
-            XDocument local = new XDocument(this.defultXml);
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
            .Add(new XElement("editMeterDataOperations",
@@ -504,10 +544,10 @@ namespace GPICardCore
 
 
 
-            SetDefaultValues(local);
+             
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.AlarmCutoffLimits;
+            this.CardName = ControlCardType.AlarmCutoffLimits.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
@@ -515,9 +555,9 @@ namespace GPICardCore
 
         public string BuildLabCard(List<int> ControlWord , int AvailableKWh , int AvailableTime    )
         {
-            ValidateSettersData();
+            
 
-            XDocument local = new XDocument(this.defultXml);
+            XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
            .Add(new XElement("labTestCardAvailableTime", AvailableTime));
@@ -540,10 +580,10 @@ namespace GPICardCore
             local.Element("meterData")
             .Add(ControlWords);
 
-            SetDefaultValues(local);
+             
 
             this.CardXML = local.ToString();
-            this.CardType = ControlCardType.Lab;
+            this.CardName = ControlCardType.Lab.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }

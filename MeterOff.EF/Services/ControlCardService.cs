@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GPICardCore.Master;
 
 namespace MeterOff.EF.Services
 {
@@ -131,12 +132,12 @@ namespace MeterOff.EF.Services
 
             #region Build XML
             ControlCardBuilder contrlCardBuilder = new ControlCardBuilder();
-            contrlCardBuilder.SetMeterType("0");
+            contrlCardBuilder.SetMeterType(0);
             contrlCardBuilder.SetMeterVersion("GPM-PP01");
             contrlCardBuilder.SetManufacturerId("07");
             contrlCardBuilder.SetCardId("111");
             contrlCardBuilder.SetDistributionCompanyCode("5");
-            contrlCardBuilder.SetCardPeriod(new CardPeriod
+            contrlCardBuilder.SetCardPeriod(new ControlCardActivationPeriod
             {
                 ActivationDate = DateTime.Now,
                 ExpiryDate = DateTime.Now.AddDays(99)
@@ -194,7 +195,7 @@ namespace MeterOff.EF.Services
                     break;
 
                 case 50:
-                    xmlResult = contrlCardBuilder.BuildChangeCompanyCodeCard(card.NewDistributionCompanyCode);
+                    xmlResult = contrlCardBuilder.BuildChangeDistributionCompanyCodeCard(card.NewDistributionCompanyCode);
                     break;
                 case 51:
                     xmlResult = contrlCardBuilder.BuildChangeMeterNumberCard(card.OldMeterSerial, card.NewMeterSerial);
