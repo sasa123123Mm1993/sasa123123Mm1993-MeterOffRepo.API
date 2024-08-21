@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GPICardCore.Master;
 using System.Xml.Linq;
 
 namespace GPICardCore.Customer
@@ -11,25 +7,28 @@ namespace GPICardCore.Customer
     
     public class CustomerCardBuilder
     {
-        private string MeterType { get; set; }
+        private int MeterType { get; set; }
+        private string MeterId { get; set; }
         private string MeterVersion { get; set; }
         private string ManufacturerId { get; set; }
         private string CardId { get; set; }
         private string CustomerId { get; set; }
-        private CustomerCardType CardType { get; set; }
-        private string CustomerOperationType { get; set; }
-        private string InstallingMode { get; set; }
-        private string CustomerRechargeCardCanRemoveFaultsAndManipulations { get; set; }
+        private int  CardType { get; set; }
+        private int CustomerOperationType { get; set; }
+        private int InstallingMode { get; set; }
+        private int DateAndTimeMode { get; set; }
+        private string OldCardId { get; set; }
+        private int CustomerRechargeCardCanRemoveFaultsAndManipulations { get; set; }
         private List<string> Holidays { get; set; }
         private FriendlyTime FriendlyTime { get;  set; }
         private MaxLoadSetting MaxLoadSettings { get; set; }
-        private ReChargeDetail RechargeDetails { get; set; }
+        private RechargeDetails RechargeDetails { get; set; }
         private string BillingDay { get; set; }
-        private List<int> FeesAmounts { get; set; }
+        private List<decimal> FeesAmounts { get; set; }
         private decimal ZeroConsumptionFeeAmount { get; set; }
         private TotalDebt TotalDebt { get; set; }
         private List<TariffStep> TariffsDetails { get; set; }
-        private int Extrafeeskwh { get; set; }
+        private decimal Extrafeeskwh { get; set; }
         private decimal Extrafeesprice { get; set; }
         private string SlidingIntervalDeductionDetails { get; set; }
         private List<SpecificDeductionDetail> SpecificDeductionDetails { get; set; }
@@ -48,59 +47,157 @@ namespace GPICardCore.Customer
         public event CardCreatedHandler OnCardCreated;
 
         public string CardXML { get; set; }
+        public string ControlOperationType { get; private set; }
+        public string MeterWillDeductInstallments { get; private set; }
+        public decimal HoardMoneyLimit { get; private set; }
+        public decimal CurrentInBalanceConsumption { get; private set; }
+        public decimal CurrentReverseConsumption { get; private set; }
 
-
-        public void SetMeterType(string meterType)
+        public void SetMeterType(int meterType)
         {
-            this.MeterType = meterType;
+            if (Validate.IsNotNullAndNonNegative<int>(meterType))
+            {
+                this.MeterType = meterType;
+                defaultXml.Root.Element("meterType").Value = meterType.ToString();
+            }
+            else
+            {
+                throw new Exception("The meterType value is invalid.");
+            }
+
+        }
+
+        public void SetMeterId(string meterId)
+        {
+            if (!string.IsNullOrWhiteSpace(meterId))
+            {
+                this.MeterId = meterId;
+                this.defaultXml.Root.Element("meterId").Value = meterId;
+
+            }
+            else
+            {
+                throw new Exception("MeterId value is invalid .");
+            }
+
         }
 
         public void SetMeterVersion(string meterVersion)
         {
-            this.MeterVersion = meterVersion;
+           if (!string.IsNullOrWhiteSpace(meterVersion))
+           {
+                this.MeterVersion = meterVersion;
+                this.defaultXml.Root.Element("meterVersion").Value = meterVersion;
+            }
+           else
+           {
+                throw new Exception("meterVersion value is invalid .");
+           }
         }
 
         public void SetManufacturerId(string manufacturerId)
         {
-            this.ManufacturerId = manufacturerId;
+            if (!string.IsNullOrWhiteSpace(manufacturerId))
+            {
+                this.ManufacturerId = manufacturerId;
+                this.defaultXml.Root.Element("manufacturerId").Value = manufacturerId;
+
+            }
+            else
+            {
+                throw new Exception("The manufacturerId value is invalid.");
+            }
         }
 
         public void SetCardId(string cardId)
         {
-            this.CardId = cardId;
+            if (!string.IsNullOrWhiteSpace(cardId))
+            {
+                this.CardId = cardId;
+                this.defaultXml.Root.Element("cardId").Value = cardId;
+
+            }
+            else
+            {
+                throw new Exception("The cardId value is invalid.");
+            }
         }
 
         public void SetCustomerId(string customerId)
         {
-            this.CustomerId = customerId;
+            if (!string.IsNullOrWhiteSpace(customerId))
+            {
+                this.CustomerId = customerId;
+                this.defaultXml.Root.Element("customerId").Value = customerId;
+            }
+            else
+            {
+                throw new Exception("The customerId value is invalid.");
+            }
         }
 
      
 
-        public void SetCustomerOperationType(string customerOperationType)
+        public void SetCustomerOperationType(int customerOperationType)
         {
-            this.CustomerOperationType = customerOperationType;
+            if (Validate.IsNotNullAndNonNegative<int>(customerOperationType))
+            {
+                this.CustomerOperationType = customerOperationType;
+                this.defaultXml.Root
+                .Element("customerOperationType").Value = customerOperationType.ToString();
+
+            }
+            else {
+                throw new Exception("The CustomerOperationType value is invalid.");
+            }
+            
         }
 
-        public void SetInstallingMode(string installingMode)
+        public void SetInstallingMode(int installingMode)
         {
-            this.InstallingMode = installingMode;
+            if (Validate.IsNotNullAndNonNegative<int>(installingMode))
+            {
+                this.InstallingMode = installingMode;
+                this.defaultXml.Root
+                .Element("installingMode").Value = installingMode.ToString();
+            }
+            else 
+            {
+                throw new Exception("The installingMode value is invalid.");
+            }
+
+            
         }
 
-        public void SetCustomerRechargeCardCanRemoveFaultsAndManipulations(string value)
+        public void SetCustomerRechargeCardCanRemoveFaultsAndManipulations(int value)
         {
-            this.CustomerRechargeCardCanRemoveFaultsAndManipulations = value;
+            if (Validate.IsNotNullAndNonNegative<int>(value))
+            {
+                this.CustomerRechargeCardCanRemoveFaultsAndManipulations = value;
+
+                this.defaultXml.Root
+               .Element("customerRechargeCardCanRemoveFaultsAndManipulations").Value = value.ToString();
+            }
+            else {
+
+                throw new Exception("The CustomerRechargeCardCanRemoveFaultsAndManipulations value is invalid.");
+
+            }
+
         }
 
         public void SetHolidays(List<string> holidays)
         {
+            if (!Validate.IsValidDateList(holidays))
+            throw new Exception("holidays formatting errors");
+
             this.Holidays = holidays;
 
-           var holidaysTag =  this.defaultXml.Root.Element("holidays");
+           var holidaysTag = defaultXml.Root.Element("holidays");
 
             foreach (var item in holidays)
             {
-                holidaysTag.Add(new XElement("holidayDate", item));
+                holidaysTag.Add(new XElement("holiday", item));
             }
 
             
@@ -111,7 +208,9 @@ namespace GPICardCore.Customer
         {
             this.FriendlyTime = friendlyTime;
 
-            var friendlyTimeTag = this.defaultXml.Root.Element("friendlyTime");
+            var friendlyTimeTag = 
+            this.defaultXml.Root.Element("friendlyTime");
+                       
 
             friendlyTimeTag.Add(new XElement("friendlyStartHour", friendlyTime.StartHour));
             friendlyTimeTag.Add(new XElement("friendlyEndHour", friendlyTime.EndHour));
@@ -129,7 +228,7 @@ namespace GPICardCore.Customer
 
         }
 
-        public void SetRechargeDetails(ReChargeDetail rechargeDetails)
+        public void SetRechargeDetails(RechargeDetails rechargeDetails)
         {
             this.RechargeDetails = rechargeDetails;
 
@@ -138,17 +237,27 @@ namespace GPICardCore.Customer
 
             rechargeDetailsTag.Add(new XElement("rechargeSequence", rechargeDetails.Sequence ));
             rechargeDetailsTag.Add(new XElement("rechargeAmount", rechargeDetails.Amount));
-            rechargeDetailsTag.Add(new XElement("rechargeTime", rechargeDetails.RechargeTime.ToString("dd-MM-yyyy HH:mm")));
+            rechargeDetailsTag.Add(new XElement("rechargeTime", rechargeDetails.RechargeTime?.ToString("dd-MM-yyyy HH:mm")));
 
 
         }
 
         public void SetBillingDay(string billingDay)
         {
-            this.BillingDay = billingDay;
+            if (Validate.ValidateBillingDay(billingDay))
+            {
+                this.BillingDay = billingDay;
+                this.defaultXml.Root
+                .Element("billingDay").Value = billingDay;
+            }
+            else {
+                throw new Exception("billingDay format is Invalid. format [dd HH:mm] .");
+            }
+
+            
         }
 
-        public void SetFeesAmounts(List<int> feesAmounts)
+        public void SetFeesAmounts(List<decimal> feesAmounts)
         {
             this.FeesAmounts = feesAmounts;
 
@@ -163,7 +272,16 @@ namespace GPICardCore.Customer
 
         public void SetZeroConsumptionFeeAmount(decimal zeroConsumptionFeeAmount)
         {
-            this.ZeroConsumptionFeeAmount = zeroConsumptionFeeAmount;
+            if (Validate.IsNotNullAndNonNegative<decimal>(zeroConsumptionFeeAmount) )
+            {
+                this.ZeroConsumptionFeeAmount = zeroConsumptionFeeAmount;
+                this.defaultXml.Root
+                .Element("zeroConsumptionFeeAmount").Value = zeroConsumptionFeeAmount.ToString();
+            }
+            else 
+            {
+                throw new Exception("zeroConsumptionFeeAmount is invalid value .");
+            }
         }
 
         public void SetTotalDebt(TotalDebt totalDebt)
@@ -171,48 +289,41 @@ namespace GPICardCore.Customer
             this.TotalDebt = totalDebt;
             var totalDebtTag = this.defaultXml.Root.Element("totalDebt");
 
-            if (IsNotNullAndNonNegative<int>(totalDebt.Amount) )
+            if (Validate.IsNotNullAndNonNegative<int>(totalDebt.Amount) )
             {
                 totalDebtTag.Add(new XElement("totalDebtAmount", totalDebt.Amount) );
             }
 
-            if (IsNotNullAndNonNegative<int>(totalDebt.KW))
+            if (Validate.IsNotNullAndNonNegative<int>(totalDebt.KW))
             {
                 totalDebtTag.Add(new XElement("totalDebtInKW", totalDebt.KW));
             }
 
-            if (IsNotNullAndNonNegative<int>(totalDebt.Limit))
+            if (Validate.IsNotNullAndNonNegative<int>(totalDebt.Limit))
             {
                 totalDebtTag.Add(new XElement("debtAmountLimit" , totalDebt.Limit));
             }
 
         }
 
-        private bool IsNotNullAndNonNegative<T>(T? number) where T : struct, IComparable
-        {
-            if (number.HasValue)
-            {
-                return number.Value.CompareTo(default(T)) >= 0;
-            }
-            return false;
-        }
+      
 
 
 
-        public void SetTariffsDetails(List<TariffStep> tariffSteps)
+        public void SetTariffsDetails(List<TariffStep> tariffSteps , TariffHeader header)
         {
 
             var tariffsDetailsTag = this.defaultXml.Root.Element("tariffsDetails");
 
             tariffsDetailsTag.Add(
                 new XElement("tariffDetails",
-                    new XElement("tariffId", 22),
-                    new XElement("tariffVersion"),
-                    new XElement("tariffGraceType", 1),
-                    new XElement("tariffGracevalue", 10),
-                    new XElement("tariffAlarmGrace", 200),
-                    new XElement("tariffLimitGrace", 300),
-                    new XElement("tariffDeductionGrace", 55),
+                    new XElement("tariffId", header.tariffId ),
+                    new XElement("tariffVersion" , header.tariffVersion),
+                    new XElement("tariffGraceType" , header.tariffGraceType),
+                    new XElement("tariffGracevalue",header.tariffGracevalue),
+                    new XElement("tariffAlarmGrace",header.tariffAlarmGrace),
+                    new XElement("tariffLimitGrace",header.tariffLimitGrace),
+                    new XElement("tariffDeductionGrace",header.tariffDeductionGrace),
                     new XElement("tariffSteps",
                         new List<XElement>()
                     )
@@ -228,8 +339,8 @@ namespace GPICardCore.Customer
                         new XElement("tariffStepLimitTo", step.TariffStepLimitTo),
                         new XElement("tariffStepPrice", step.TariffStepPrice),
                         new XElement("tariffStepCustomerServiceFee", step.TariffStepCustomerServiceFee == 0 ? null : (decimal?)step.TariffStepCustomerServiceFee),
-                        new XElement("tariffStepRecalculationEdge", step.TariffStepRecalculationEdge),
-                        new XElement("tariffStepRecalculationEdgeAddedAmount", step.TariffStepRecalculationEdgeAddedAmount)
+                        new XElement("tariffStepRecalculationEdge", step.TariffStepRecalculationEdge==0 ? null : step.TariffStepRecalculationEdge),
+                        new XElement("tariffStepRecalculationEdgeAddedAmount", step.TariffStepRecalculationEdgeAddedAmount==0 ? null : step.TariffStepRecalculationEdgeAddedAmount)
                     )
                 );
             }
@@ -237,12 +348,82 @@ namespace GPICardCore.Customer
            
         }
 
+        
+        public void SetControlOperationType(int controlOperationType)
+        {
+            this.ControlOperationType = $"{controlOperationType}";
 
-        public void SetExtrafeeskwh(int extrafeeskwh)
+            this.defaultXml.Root
+            .Element("controlOperationType").Value = $"{controlOperationType}";
+             
+
+        }
+
+        public void SetCurrentInBalanceConsumption(decimal Consumption)
+        {
+            this.CurrentInBalanceConsumption = Consumption;
+
+            this.defaultXml.Root
+            .Element("currentInbalanceConsumption").Value = $"{Consumption}";
+        }
+
+        public void SetCurrentReverseConsumption(decimal Consumption)
+        {
+            this.CurrentReverseConsumption = Consumption;
+
+            this.defaultXml.Root
+            .Element("currentReverseConsumption").Value = $"{Consumption}";
+        }
+
+
+        public void SetMeterWillDeductInstallments(int code)
+        {
+            this.MeterWillDeductInstallments = $"{code}";
+
+            this.defaultXml.Root
+            .Element("meterWillDeductInstallments").Value = $"{code}";
+
+
+        }
+
+
+        public void SetHoardMoneyLimit(decimal Limit)
+        {
+            this.HoardMoneyLimit = Limit ;
+
+            this.defaultXml.Root
+            .Element("hoardMoneyLimit").Value = $"{Limit}";
+
+
+        }
+
+        public void SetDateAndTimeMode(int DateAndTimeMode)
+        {
+            this.DateAndTimeMode = DateAndTimeMode;
+
+            this.defaultXml.Root
+            .Element("setDateAndTimeMode").Value = $"{DateAndTimeMode}";
+
+
+        }
+
+        public void SetOldCardId(string OldCardId)
+        { 
+            
+            this.OldCardId = OldCardId;
+
+            this.defaultXml.Root
+            .Element("oldCardId").Value = OldCardId ;
+
+
+        }
+
+        public void SetExtrafeeskwh(decimal extrafeeskwh)
         {
             this.Extrafeeskwh = extrafeeskwh;
 
-            this.defaultXml.Root.Element("extrafeeskwh").Value = extrafeeskwh.ToString();
+            this.defaultXml.Root
+            .Element("extrafeeskwh").Value = extrafeeskwh.ToString();
 
         }
 
@@ -263,8 +444,7 @@ namespace GPICardCore.Customer
             foreach (var detail in details)
             {
                 var slidingIntervalDeductionDetail = 
-                    new XElement("slidingIntervalDeductionDetail",
-                    new XElement("slidingIntervaNumber", detail.IntervaNumber),
+                    new XElement("slidingIntervalDeductionDetail",                   
                     new XElement("slidingIntervalLimitFrom", detail.LimitFrom),
                     new XElement("slidingIntervalLimitTo", detail.LimitTo),
                     new XElement("slidingIntervalPrice", detail.Price)
@@ -299,10 +479,13 @@ namespace GPICardCore.Customer
 
         public void SetExtraFeeEveryKWH(decimal extraFeeEveryKWH)
         {
-            if (IsNotNullAndNonNegative<decimal>(extraFeeEveryKWH))
+            if (Validate.IsNotNullAndNonNegative<decimal>(extraFeeEveryKWH))
             {
                 this.ExtraFeeEveryKWH = extraFeeEveryKWH;
-                
+                this.defaultXml.Root
+                .Element("extraFeeEveryKWH").Value = extraFeeEveryKWH.ToString();
+
+
             }
             else {
                 throw new Exception($"Extra Fee Every KWH [{extraFeeEveryKWH}] Invalid Value .");
@@ -314,7 +497,8 @@ namespace GPICardCore.Customer
         {
             this.BalanceAlarmCutoffLimits = CutoffLimits;
 
-            var BalanceAlarmCutoffLimitsTag = this.defaultXml.Root.Element("balanceAlarmCutoffLimits");
+            var BalanceAlarmCutoffLimitsTag = 
+            this.defaultXml.Root.Element("balanceAlarmCutoffLimits");
 
             foreach (var item in CutoffLimits)
             {
@@ -346,12 +530,35 @@ namespace GPICardCore.Customer
 
         public void SetCardDataStatus(int cardDataStatus)
         {
-            this.CardDataStatus = cardDataStatus;
+            if (Validate.IsNotNullAndNonNegative<int>(cardDataStatus))
+            {
+                this.CardDataStatus = cardDataStatus;
+                this.defaultXml.Root
+               .Element("cardDataStatus").Value = cardDataStatus.ToString();
+
+            }
+            else {
+                throw new Exception("cardDataStatus Invalid Value .");
+            }
+            
         }
 
         public void SetResetMeterMode(int resetMeterMode)
         {
-            this.ResetMeterMode = resetMeterMode;
+            
+
+            if (Validate.IsNotNullAndNonNegative<int>(resetMeterMode))
+            {
+                this.ResetMeterMode = resetMeterMode;
+                this.defaultXml.Root
+               .Element("resetMeterMode").Value = resetMeterMode.ToString();
+
+            }
+            else
+            {
+                throw new Exception("resetMeterMode Invalid Value .");
+            }
+
         }
 
         public void SetWeekOffDays(List<int> weekOffDays)
@@ -368,46 +575,58 @@ namespace GPICardCore.Customer
 
         public void SetDistributionCompanyCode(string distributionCompanyCode)
         {
-            this.DistributionCompanyCode = distributionCompanyCode;
+            if (!string.IsNullOrWhiteSpace(distributionCompanyCode))
+            {
+                this.DistributionCompanyCode = distributionCompanyCode;
+                this.defaultXml.Root
+                .Element("distributionCompanyCode").Value = distributionCompanyCode.ToString();
+            }
+            else
+            {
+                throw new Exception("The distributionCompanyCode value is invalid.");
+            }
+
         }
 
         public void SetSectorCode(string sectorCode)
         {
-            this.SectorCode = sectorCode;
+            if (!string.IsNullOrWhiteSpace(sectorCode))
+            {
+                this.SectorCode = sectorCode;
+                this.defaultXml.Root
+               .Element("sectorCode").Value = sectorCode.ToString();
+            }
+            else
+            {
+                throw new Exception("The sectorCode value is invalid.");
+            }
+
         }
 
         public void SetCustomerServiceMethod(int customerServiceMethod)
         {
-            this.CustomerServiceMethod = customerServiceMethod;
+            if (Validate.IsNotNullAndNonNegative<int>(customerServiceMethod))
+            {
+                this.CustomerServiceMethod = customerServiceMethod;
+                this.defaultXml.Root
+                .Element("customerServiceMethod").Value = customerServiceMethod.ToString();
+            }
+            else
+            {
+                throw new Exception("The customerServiceMethod value is invalid.");
+            }
+
         }
 
 
 
-        private void SetDefaultValues(XDocument local)
-        {
-            local.Root.Element("meterType").Value = this.MeterType ;
-            local.Root.Element("meterVersion").Value = this.MeterVersion ;
-            local.Root.Element("manufacturerId").Value = this.ManufacturerId ;
-            local.Root.Element("cardId").Value = this.CardId ;
-            local.Root.Element("customerId").Value = this.CustomerId ;
-            local.Root.Element("cardType").Value = this.CardType.ToString() ;
-            local.Root.Element("customerOperationType").Value = this.CustomerOperationType ;
-            local.Root.Element("installingMode").Value = this.InstallingMode ;
-            local.Root.Element("customerRechargeCardCanRemoveFaultsAndManipulations").Value = this.CustomerRechargeCardCanRemoveFaultsAndManipulations ;
-            local.Root.Element("billingDay").Value = this.BillingDay ;
-            local.Root.Element("zeroConsumptionFeeAmount").Value = this.ZeroConsumptionFeeAmount.ToString();
-            local.Root.Element("extraFeeEveryKWH").Value = this.ExtraFeeEveryKWH.ToString() ;
-            local.Root.Element("cardDataStatus").Value = this.CardDataStatus.ToString() ;
-            local.Root.Element("resetMeterMode").Value = this.ResetMeterMode.ToString() ;
-            local.Root.Element("distributionCompanyCode").Value = this.DistributionCompanyCode ;
-            local.Root.Element("sectorCode").Value = this.SectorCode ;
-            local.Root.Element("customerServiceMethod").Value = this.CustomerServiceMethod.ToString() ;
-        }
+  
 
 
 
         private XDocument defaultXml = new XDocument(
            new XElement("meterData",
+           new XElement("meterId"),
            new XElement("meterType"),
            new XElement("meterVersion"),
            new XElement("manufacturerId"),
@@ -416,11 +635,18 @@ namespace GPICardCore.Customer
            new XElement("cardType",0),
            new XElement("customerOperationType"),
            new XElement("installingMode"),
+           new XElement("oldCardId"),
            new XElement("customerRechargeCardCanRemoveFaultsAndManipulations"),
+           new XElement("setDateAndTimeMode"),
+           new XElement("editMeterDataOperations", 
+                        new XElement("editMeterDataOperation")), 
            new XElement("holidays"),
            new XElement("friendlyTime"),
            new XElement("maxLoadSettings"),
            new XElement("rechargeDetails"),
+           new XElement("lastRechargeDetails"),
+           new XElement("rechargeHistory"),
+           new XElement("encryptionKey"),
            new XElement("billingDay"),
            new XElement("feesAmounts"),
            new XElement("zeroConsumptionFeeAmount"),
@@ -434,14 +660,17 @@ namespace GPICardCore.Customer
            new XElement("balanceAlarmCutoffLimits"),
            new XElement("quiteTime"),
            new XElement("gracePeriod"),
-           new XElement("cardDataStatus"),
+           new XElement("cardDataStatus",2),
            new XElement("resetMeterMode"),
            new XElement("weekOffDays"),
            new XElement("distributionCompanyCode"),
            new XElement("sectorCode"),
-           new XElement("customerServiceMethod")
-       )
-     );
+           new XElement("customerServiceMethod"),
+           new XElement("editMeterDataOperations")
+ 
+
+       ));
+    
 
 
 
@@ -449,18 +678,48 @@ namespace GPICardCore.Customer
 
         public string BuildOpenAccountCard()
         {
-            
+             SetCustomerOperationType(2);
+             XDocument local = new XDocument(this.defaultXml);
 
-            XDocument local = new XDocument(this.defaultXml);
 
-            SetDefaultValues(local);
+            if (this.RechargeDetails.Sequence.ToInt() != 1)
+            {
+                throw new Exception("RechargeDetails.Sequence Must be [1]");
+            }
 
             this.CardXML = local.ToString();
-            this.CardType = CustomerCardType.OpenAccount;
+            
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
 
+        public string BuildChargeCard()
+        {
+             SetCustomerOperationType(0);
+             XDocument local = new XDocument(this.defaultXml);
+                       
+
+            this.CardXML = local.ToString();
+
+            OnCardCreated?.Invoke(this);
+            return local.ToString();
+        }
+
+
+        public string BuildReplacementCard( string CurrentCardId  , string NewCardId)
+        {
+
+            SetCardId(NewCardId);
+            SetOldCardId(CurrentCardId);
+            SetCustomerOperationType(1);
+            XDocument local = new XDocument(this.defaultXml);
+
+
+            this.CardXML = local.ToString();
+
+            OnCardCreated?.Invoke(this);
+            return local.ToString();
+        }
 
 
 

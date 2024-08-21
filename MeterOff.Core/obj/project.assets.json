@@ -1277,24 +1277,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Mostafa.Twfeek\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\ahmed.fayez\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.Core\\MeterOff.Core.csproj",
+      "projectUniqueName": "E:\\MosTawfik\\MeterOff.Core\\MeterOff.Core.csproj",
       "projectName": "MeterOff.Core",
-      "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.Core\\MeterOff.Core.csproj",
-      "packagesPath": "C:\\Users\\Mostafa.Twfeek\\.nuget\\packages\\",
-      "outputPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.Core\\obj\\",
+      "projectPath": "E:\\MosTawfik\\MeterOff.Core\\MeterOff.Core.csproj",
+      "packagesPath": "C:\\Users\\ahmed.fayez\\.nuget\\packages\\",
+      "outputPath": "E:\\MosTawfik\\MeterOff.Core\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Mostafa.Twfeek\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\ahmed.fayez\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1302,6 +1297,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1314,6 +1310,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -1357,8 +1358,20 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Microsoft.IdentityModel.JsonWebTokens' 6.21.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-59j7-ghrg-fj52",
+      "libraryId": "Microsoft.IdentityModel.JsonWebTokens",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    }
+  ]
 }

@@ -12978,24 +12978,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Mostafa.Twfeek\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\ahmed.fayez\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.API\\MeterOff.API.csproj",
+      "projectUniqueName": "E:\\MosTawfik\\MeterOff.API\\MeterOff.API.csproj",
       "projectName": "MeterOff.API",
-      "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.API\\MeterOff.API.csproj",
-      "packagesPath": "C:\\Users\\Mostafa.Twfeek\\.nuget\\packages\\",
-      "outputPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.API\\obj\\",
+      "projectPath": "E:\\MosTawfik\\MeterOff.API\\MeterOff.API.csproj",
+      "packagesPath": "C:\\Users\\ahmed.fayez\\.nuget\\packages\\",
+      "outputPath": "E:\\MosTawfik\\MeterOff.API\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Mostafa.Twfeek\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\ahmed.fayez\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -13003,21 +12998,21 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\GPICardCore\\GPICardCore.csproj": {
-              "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\GPICardCore\\GPICardCore.csproj"
+            "E:\\MosTawfik\\GPICardCore\\GPICardCore.csproj": {
+              "projectPath": "E:\\MosTawfik\\GPICardCore\\GPICardCore.csproj"
             },
-            "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.Core\\MeterOff.Core.csproj": {
-              "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.Core\\MeterOff.Core.csproj"
+            "E:\\MosTawfik\\MeterOff.Core\\MeterOff.Core.csproj": {
+              "projectPath": "E:\\MosTawfik\\MeterOff.Core\\MeterOff.Core.csproj"
             },
-            "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.EF\\MeterOff.EF.csproj": {
-              "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.EF\\MeterOff.EF.csproj"
+            "E:\\MosTawfik\\MeterOff.EF\\MeterOff.EF.csproj": {
+              "projectPath": "E:\\MosTawfik\\MeterOff.EF\\MeterOff.EF.csproj"
             }
           }
         }
@@ -13026,6 +13021,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -13116,7 +13116,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
       }
     }
   },

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\GPICardCore\bin\Debug\net7.0\GPICardCore.deps.json
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\GPICardCore\bin\Debug\net7.0\GPICardCore.dll
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\GPICardCore\bin\Debug\net7.0\GPICardCore.pdb
@@ -22,3 +23,17 @@ E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\GPICardCore\obj\Debug\net7.0\G
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\GPICardCore\obj\Debug\net7.0\refint\GPICardCore.dll
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\GPICardCore\obj\Debug\net7.0\GPICardCore.pdb
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\GPICardCore\obj\Debug\net7.0\ref\GPICardCore.dll
+=======
+E:\MosTawfik\GPICardCore\bin\Debug\net7.0\GPICardCore.deps.json
+E:\MosTawfik\GPICardCore\bin\Debug\net7.0\GPICardCore.dll
+E:\MosTawfik\GPICardCore\bin\Debug\net7.0\GPICardCore.pdb
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\GPICardCore.GeneratedMSBuildEditorConfig.editorconfig
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\GPICardCore.AssemblyInfoInputs.cache
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\GPICardCore.AssemblyInfo.cs
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\GPICardCore.csproj.CoreCompileInputs.cache
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\GPICardCore.sourcelink.json
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\GPICardCore.dll
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\refint\GPICardCore.dll
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\GPICardCore.pdb
+E:\MosTawfik\GPICardCore\obj\Debug\net7.0\ref\GPICardCore.dll
+>>>>>>> 8060463b1888907e97cf182db60415c95f7fb5dd
