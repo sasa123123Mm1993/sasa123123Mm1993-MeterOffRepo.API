@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.API\bin\Release\net7.0\appsettings.Development.json
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.API\bin\Release\net7.0\appsettings.json
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.API\bin\Release\net7.0\MeterOff.API.exe
@@ -291,6 +292,8 @@ E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.API\obj\Release\net7.
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.API\obj\Release\net7.0\MeterOff.API.pdb
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.API\obj\Release\net7.0\MeterOff.API.genruntimeconfig.cache
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.API\obj\Release\net7.0\ref\MeterOff.API.dll
+=======
+>>>>>>> 4dd291e9e68fee838ac866ba23de9c175bd99de5
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.API\bin\Release\net7.0\appsettings.Development.json
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.API\bin\Release\net7.0\appsettings.json
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.API\bin\Release\net7.0\MeterOff.API.exe

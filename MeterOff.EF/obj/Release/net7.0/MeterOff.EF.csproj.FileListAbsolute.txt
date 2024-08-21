@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.EF\bin\Release\net7.0\MeterOff.EF.deps.json
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.EF\bin\Release\net7.0\MeterOff.EF.runtimeconfig.json
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.EF\bin\Release\net7.0\MeterOff.EF.dll
@@ -18,6 +19,8 @@ E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.EF\obj\Release\net7.0
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.EF\obj\Release\net7.0\MeterOff.EF.pdb
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.EF\obj\Release\net7.0\MeterOff.EF.genruntimeconfig.cache
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.EF\obj\Release\net7.0\ref\MeterOff.EF.dll
+=======
+>>>>>>> 4dd291e9e68fee838ac866ba23de9c175bd99de5
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\bin\Release\net7.0\MeterOff.EF.deps.json
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\bin\Release\net7.0\MeterOff.EF.runtimeconfig.json
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\bin\Release\net7.0\MeterOff.EF.dll

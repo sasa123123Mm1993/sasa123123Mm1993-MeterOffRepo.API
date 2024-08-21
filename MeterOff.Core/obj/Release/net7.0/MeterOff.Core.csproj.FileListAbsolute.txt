@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.Core\bin\Release\net7.0\MeterOff.Core.deps.json
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.Core\bin\Release\net7.0\MeterOff.Core.dll
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.Core\bin\Release\net7.0\MeterOff.Core.pdb
@@ -11,6 +12,8 @@ E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.Core\obj\Release\net7
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.Core\obj\Release\net7.0\refint\MeterOff.Core.dll
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.Core\obj\Release\net7.0\MeterOff.Core.pdb
 E:\CoreMain2024\sasa123123Mm1993-MeterOffRepo.API\MeterOff.Core\obj\Release\net7.0\ref\MeterOff.Core.dll
+=======
+>>>>>>> 4dd291e9e68fee838ac866ba23de9c175bd99de5
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.Core\bin\Release\net7.0\MeterOff.Core.deps.json
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.Core\bin\Release\net7.0\MeterOff.Core.dll
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.Core\bin\Release\net7.0\MeterOff.Core.pdb

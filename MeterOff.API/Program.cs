@@ -11,20 +11,11 @@ using MeterOff.EF.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 //Using Lazy Loading
 builder.Services.AddDbContext<DBContext>(options =>
 options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-
-
-
+// Add services to the container.
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -38,7 +29,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     .AddDefaultTokenProviders();
 
 
-
+#region Jwt
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -57,7 +48,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 });
-
+#endregion
 
 #region Inject app Dependencies (Dependency Injection)
 builder.Services.AddScoped<IMeterOffReasonsRepository, MeterOffReasonsService>();
@@ -76,20 +67,27 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("UserPolicy", policy => policy.RequireRole("User"));
 });
 
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
+//builder.Logging.ClearProviders();
+//builder.Logging.AddConsole();
+
+
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
 app.UseSwagger();
 app.UseSwaggerUI();
+
+
+app.UseCors(options =>
+options.WithOrigins("http://localhost:4200")
+.AllowAnyMethod()
+.AllowAnyHeader());
+
 
 app.UseHttpsRedirection();
 
