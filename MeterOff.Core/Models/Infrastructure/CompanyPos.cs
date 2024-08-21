@@ -18,21 +18,12 @@ namespace MeterOff.Core.Models.Infrastructure
         public string Name { get; set; }
         [MaxLength(50)]
         public string Code { get; set; }
-      
         public int? RegionId { get; set; }//organizationStructureId-Department
-      
         public int? SectionId { get; set; }//organizationStructureId-Section
         public int? departmentId { get; set; }//Department
         public LevelEnum LevelEnum { get; set; }
         public bool IsActive { get; set; }
         public bool IsMobileUnit { get; set; } //1 MobileUnit //0 FixedUnit
-
-
-        //[ForeignKey("RegionId")]
-        //public virtual CompanyHierarchical OrganizationStructure { get; set; }
-
-        [ForeignKey("departmentId")]
-        public virtual CompanyHierarchical Department { get; set; }
         public virtual ICollection<ApplicationUser> Users { get; set; }
        
 

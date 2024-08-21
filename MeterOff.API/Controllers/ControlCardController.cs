@@ -34,7 +34,7 @@ namespace MeterOff.API.Controllers
         }
 
         [HttpGet("GetAllTechinicions")]
-        [Authorize(Roles = StaticUserRoles.USER)]
+        //[Authorize(Roles = StaticUserRoles.USER)]
         public IActionResult GetAllTechinicions(int? RegionId, string? filter, int? cardFunctionId)
         {
             var model = _ControlCard.GetAllTecnicions(RegionId, filter, cardFunctionId);

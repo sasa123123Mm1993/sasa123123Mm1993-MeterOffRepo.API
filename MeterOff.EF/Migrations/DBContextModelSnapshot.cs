@@ -91,6 +91,143 @@ namespace MeterOff.EF.Migrations
                     b.ToTable("AccountStatusLog");
                 });
 
+            modelBuilder.Entity("MeterOff.Core.Models.Dto.Reports.CMaintenenceMetersOffDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountNo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ActivityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("BranchNo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DailyNo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeliveryDateToLaboratory")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeliveryDateToTechnician")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DepartName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Department")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("DepartmentNo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("InstallationDate1")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("MaintenanceDate1")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MeterId1")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("MeterInstallationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("MeterOffDate1")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MeterOffReason1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MeterOffStatus1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("MeterPreparedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NationalId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrganizationLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PlaceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RefferenceAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RegionCode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RegionNo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sector")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SerialNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SmallDepartmentNo")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UploadDate1")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UploadMeterStatus1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UploadReason1")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UploadReasonId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VendorCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("smalldepartment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("cMaintenenceMetersOffDtos");
+                });
+
             modelBuilder.Entity("MeterOff.Core.Models.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -102,9 +239,6 @@ namespace MeterOff.EF.Migrations
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("CompanyHierarchicalId")
-                        .HasColumnType("int");
 
                     b.Property<int?>("CompanyPosId")
                         .HasColumnType("int");
@@ -168,8 +302,6 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyHierarchicalId");
 
                     b.HasIndex("CompanyPosId");
 
@@ -939,58 +1071,6 @@ namespace MeterOff.EF.Migrations
                     b.ToTable("ChargeLog");
                 });
 
-            modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.CompanyHierarchical", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountReferenceCounter")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CodeAutoGenerated")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CreationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CreatorById")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModificationTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ModifiedById")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("OrganizationLevelId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RegionCode")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SouthCairoCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CompanyHierarchical");
-                });
-
             modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.CompanyPos", b =>
                 {
                     b.Property<int>("Id")
@@ -1040,12 +1120,9 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("departmentId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("departmentId");
 
                     b.ToTable("PointOfSale");
                 });
@@ -5481,9 +5558,6 @@ namespace MeterOff.EF.Migrations
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("CompanyHierarchicalId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
@@ -5537,8 +5611,6 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyHierarchicalId");
 
                     b.HasIndex("MainDepartmentId");
 
@@ -6492,10 +6564,6 @@ namespace MeterOff.EF.Migrations
 
             modelBuilder.Entity("MeterOff.Core.Models.Identity.ApplicationUser", b =>
                 {
-                    b.HasOne("MeterOff.Core.Models.Infrastructure.CompanyHierarchical", null)
-                        .WithMany("Users")
-                        .HasForeignKey("CompanyHierarchicalId");
-
                     b.HasOne("MeterOff.Core.Models.Infrastructure.CompanyPos", null)
                         .WithMany("Users")
                         .HasForeignKey("CompanyPosId");
@@ -6567,17 +6635,6 @@ namespace MeterOff.EF.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.CompanyPos", b =>
-                {
-                    b.HasOne("MeterOff.Core.Models.Infrastructure.CompanyHierarchical", "Department")
-                        .WithMany()
-                        .HasForeignKey("departmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.Consumer", b =>
@@ -7325,10 +7382,6 @@ namespace MeterOff.EF.Migrations
 
             modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.Technician", b =>
                 {
-                    b.HasOne("MeterOff.Core.Models.Infrastructure.CompanyHierarchical", null)
-                        .WithMany("Technicians")
-                        .HasForeignKey("CompanyHierarchicalId");
-
                     b.HasOne("MeterOff.Core.Models.MainDepartment", null)
                         .WithMany("Technicians")
                         .HasForeignKey("MainDepartmentId");
@@ -7521,13 +7574,6 @@ namespace MeterOff.EF.Migrations
             modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.CardFunction", b =>
                 {
                     b.Navigation("ControlCardProperties");
-                });
-
-            modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.CompanyHierarchical", b =>
-                {
-                    b.Navigation("Technicians");
-
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.CompanyPos", b =>

@@ -232,11 +232,11 @@ namespace MeterOff.EF.Services
             return roles;
         }
 
-        public IEnumerable<ApplicationUser> GetAllUsersWithDepartments()
-        {
-            var users = _context.Users.ToList();
-            return users;
-        }
+        //public IEnumerable<ApplicationUser> GetAllUsersWithDepartments()
+        //{
+        //    var users = _context.Users.ToList();
+        //    return users;
+        //}
 
 
         public IEnumerable<SmallDepartmentDto> GetAllSmallDepartments()
@@ -459,9 +459,10 @@ namespace MeterOff.EF.Services
             throw new NotImplementedException();
         }
 
-        IEnumerable<Core.Models.Identity.ApplicationUser> IAppUser.GetAllUsersWithDepartments()
+        IEnumerable<ApplicationUser> IAppUser.GetAllUsersWithDepartments()
         {
-            throw new NotImplementedException();
+            var users = _context.Users.ToList();
+            return users;
         }
 
 
