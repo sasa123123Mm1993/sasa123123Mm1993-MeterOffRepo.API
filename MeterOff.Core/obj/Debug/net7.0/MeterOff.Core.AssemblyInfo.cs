@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MeterOff.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4dd291e9e68fee838ac866ba23de9c175bd99de5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+065d95646eca369430de035e4b1a92c68c90753a")]
 [assembly: System.Reflection.AssemblyProductAttribute("MeterOff.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MeterOff.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
