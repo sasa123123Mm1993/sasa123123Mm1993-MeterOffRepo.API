@@ -1,4 +1,4 @@
 # Ignore bin and obj directories
-/bin/
-/obj/
+**/bin/
+**/obj/
 /.vs/SolutionBasic/FileContentIndex
