@@ -256,5 +256,27 @@ namespace GPICardDB
             }
         }
 
+        public static decimal GetZeroConsumptionFeeAmount( int TariffTypeId )
+        {
+            try
+            {
+                 string query = $@"SELECT TOP (1)  [ZeroReading]
+                                       FROM  [dbo].[Tariffs]
+                                       WHERE 
+                                       [TariffTypeId] = {TariffTypeId} AND 
+                                       [IsDeleted] = 0   ";
+
+                using (IDbConnection db = new SqlConnection(connString))
+                {
+                    return db.ExecuteScalar<decimal>(query);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+                return 0;
+            }
+        }
+
     }
 }
