@@ -5,7 +5,8 @@ namespace GPICardCore
 {
     public static class Validate
     {
-        private static int MaximumMeterNumberLength = 8;
+        public static int MaximumMeterNumberLength { get; private set; } = 8;
+                 
         public static bool IsValidDateFormat(string dateString)
         {
             if (string.IsNullOrEmpty(dateString))

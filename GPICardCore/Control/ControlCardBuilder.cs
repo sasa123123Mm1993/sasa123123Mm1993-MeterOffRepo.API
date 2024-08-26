@@ -141,10 +141,8 @@ namespace GPICardCore
             {
                 if (! Validate.ValidMeterNo(item))
                 {
-                    throw new Exception($"Meter length invalid : [{item}] .");
-                }
-
-                if (item.Length < 1) throw new Exception($"Meter length Invalid : [{item}] .");
+                    throw new Exception($"Meter length invalid : [{item}] , Meter Number Lenght Must be [{Validate.MaximumMeterNumberLength}] Digit");
+                }               
 
                 ActiveMeters.Add(new XElement("controlCardActiveMeter", item));
             }
@@ -246,13 +244,13 @@ namespace GPICardCore
             
             
             if (!Validate.ValidMeterNo( currentNumber) )
-            {
-                throw new Exception($"Current Meter Number [{currentNumber}] is Invalid  .");
+            {                
+                throw new Exception($"Current Meter Number [{currentNumber}] is Invalid , Meter Number Lenght Must be [{Validate.MaximumMeterNumberLength}] Digit");
             }
 
             if (!Validate.ValidMeterNo(NewNumber))
             {
-                throw new Exception($"New Meter Number [{NewNumber}] is Invalid  .");
+                throw new Exception($"New Meter Number [{NewNumber}] is Invalid  , Meter Number Lenght Must be [{Validate.MaximumMeterNumberLength}] Digit");
             }
 
             
