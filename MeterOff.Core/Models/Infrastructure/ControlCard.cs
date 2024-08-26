@@ -15,7 +15,7 @@ namespace MeterOff.Core.Models.Infrastructure
         public DateTime ExpirationDate { get; set; }
         public int Limitation { get; set; }//0 one meter   1 many meters  2 unlimited
         [MaxLength(20)]
-        public string MeterSerial { get; set; }
+        public string? MeterSerial { get; set; }
         [MaxLength(20)]
         public string CardId { get; set; }
         public Guid CysheildCardUid { get; set; }

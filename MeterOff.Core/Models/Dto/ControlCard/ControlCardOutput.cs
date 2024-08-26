@@ -9,7 +9,7 @@ namespace MeterOff.Core.Models.Dto.ControlCard
 {
     public class ControlCardOutput : BaseDto
     {
-        public string Name { get; set; }
-        public int Code { get; set; }
+        public string Payload { get; set; }
+        public string ControlCardId { get; set; }
     }
 }

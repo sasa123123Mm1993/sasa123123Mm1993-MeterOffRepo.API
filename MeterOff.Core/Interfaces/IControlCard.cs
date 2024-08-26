@@ -13,8 +13,11 @@ namespace MeterOff.Core.Interfaces
 
         IEnumerable<CardFunction> GetAll();
         IEnumerable<Technician> GetAllTecnicions(int? RegionId, string? filter, int? cardFunctionId);
-        InsertControlCardInput AddContolCard(InsertControlCardInput card);
-        public bool ValidateMeterSerialNumber(string meterSerialNumber);
+        ControlCardOutput AddContolCard(InsertControlCardInput card);
+        bool ValidateMeterSerialNumber(string meterSerialNumber);
+        DateTime GetTechinicianExpirationDate();
+        DateTime GetTechinicianActivationDate();
+        string CancelControlCard(int controlCardId);
 
     }
 }

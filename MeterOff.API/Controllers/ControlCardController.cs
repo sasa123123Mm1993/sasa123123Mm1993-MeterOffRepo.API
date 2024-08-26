@@ -47,8 +47,8 @@ namespace MeterOff.API.Controllers
         public async Task<IActionResult> InsertControlCard(InsertControlCardInput dto)
         {
             //var data = _mapper.Map<InsertControlCardInput>(dto);
-            _ControlCard.AddContolCard(dto);
-            return Ok(dto);
+           var result =  _ControlCard.AddContolCard(dto);
+            return StatusCode(200, result);
         }
 
 

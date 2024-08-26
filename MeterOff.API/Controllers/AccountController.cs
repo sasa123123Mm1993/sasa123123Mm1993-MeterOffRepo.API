@@ -25,8 +25,10 @@ namespace MeterOff.API.Controllers
         private readonly RoleManager<Microsoft.AspNetCore.Identity.IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly DBContext _context;
-        private readonly UserService _userService;
-        public AccountController(UserManager<ApplicationUser> userManager, UserService userService,
+        //private readonly UserService _userService;
+        private readonly TestRegisterService _testRegisterService;
+        public AccountController(UserManager<ApplicationUser> userManager, UserService userService, 
+            TestRegisterService testRegisterService,
             RoleManager<Microsoft.AspNetCore.Identity.IdentityRole> roleManager, DBContext context,
             IConfiguration configuration)
         {
@@ -34,7 +36,8 @@ namespace MeterOff.API.Controllers
             _roleManager = roleManager;
             _configuration = configuration;
                 _context = context;
-            _userService = userService;
+            //_userService = userService;
+            _testRegisterService = testRegisterService;
         }
 
 
@@ -55,9 +58,9 @@ namespace MeterOff.API.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(NewRegisterDto model)
+        public async Task<IActionResult> Register([FromBody] NewRegisterDto model)
         {
-            var registerResult = await _userService.Register(model);
+            var registerResult = await _testRegisterService.Register(model);
             if (registerResult.IsSucceed)
                 return Ok(registerResult);
 
@@ -65,6 +68,15 @@ namespace MeterOff.API.Controllers
 
         }
 
+        [HttpPost]
+        public IActionResult TestRegister(NewRegisterDto model)
+        {
+            var registerResult = _testRegisterService.Register(model);
+            if (registerResult.Result.IsSucceed)
+                return Ok(registerResult);
+
+            return BadRequest(registerResult);
+        }
 
 
         [HttpPost("login")]

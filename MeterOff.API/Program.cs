@@ -57,6 +57,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IControlCard, ControlCardService>();
 builder.Services.AddScoped<IAppUser, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITestRegister, TestRegisterService>();
 #endregion
 
 
@@ -75,12 +76,14 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
 
 
 app.UseCors(options =>

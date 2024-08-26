@@ -8,6 +8,6 @@ namespace MeterOff.Core.Models.Infrastructure
         public long CardNumber { get; set; }
         public long AccountCode { get; set; }
         [MaxLength(50)]
-        public string MFPCode { get; set; }
+        public string? MFPCode { get; set; }
     }
 }
