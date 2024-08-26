@@ -116,18 +116,5 @@ namespace MeterOff.EF
         public DbSet<TransformerReading> TransformerReading { get; set; }
         public DbSet<TechnicianType> TechnicianType { get; set; }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

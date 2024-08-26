@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GPICardCore.Master;
+using GPICardDB;
 
 namespace MeterOff.EF.Services
 {
@@ -35,7 +36,7 @@ namespace MeterOff.EF.Services
             return model;
         }
 
-        public InsertControlCardInput AddContolCard(InsertControlCardInput card)
+        public ControlCardOutput AddContolCard(InsertControlCardInput card)
         {
 
             if (card.MeterSerial != null)
@@ -96,7 +97,8 @@ namespace MeterOff.EF.Services
                 cardSetting = new BasicSetting()
                 {
                     CardNumber = 100000000000001,
-                    AccountCode = 100000001
+                    AccountCode = 100000001,
+                    MFPCode = "1", // change it with migration to accept null value
 
                 };
                 _context.BasicSetting.Add(cardSetting);
@@ -114,7 +116,8 @@ namespace MeterOff.EF.Services
 
             if (cardFunction != null)
             {
-                controlCard.ControlCardProperties.Add(new ControlCardManagment() { PropertyId = cardFunction.Id });
+                controlCard.ControlCardProperties.Add(new ControlCardManagment()
+                { PropertyId = cardFunction.Id });
             }
             if (cardFunction.Code == 4 || cardFunction.Code == 0 || cardFunction.Code == 10)
             {
@@ -123,7 +126,7 @@ namespace MeterOff.EF.Services
 
             _context.ControlCard.Add(controlCard);
             _context.SaveChanges();
-
+            var newControlCardId = _context.ControlCard.OrderByDescending(m=>m.Id).FirstOrDefault().CardId;
 
             var meterType = _context.MeterType //احادى أو ثلاثى
                 .FirstOrDefault(m => m.MeterTypeModel == card.MeterTypeModel); // 1 will Replaced with value coming from screen metertype dropdown list
@@ -133,9 +136,9 @@ namespace MeterOff.EF.Services
             #region Build XML
             ControlCardBuilder contrlCardBuilder = new ControlCardBuilder();
             contrlCardBuilder.SetMeterType(0);
-            contrlCardBuilder.SetMeterVersion("GPM-PP01");
-            contrlCardBuilder.SetManufacturerId("07");
-            contrlCardBuilder.SetCardId("111");
+            contrlCardBuilder.SetMeterVersion(DB.GetMeterVersion(1));
+            contrlCardBuilder.SetManufacturerId(DB.GetManufacturerId());
+            contrlCardBuilder.SetCardId(newControlCardId);
             contrlCardBuilder.SetDistributionCompanyCode("5");
             contrlCardBuilder.SetCardPeriod(new ControlCardActivationPeriod
             {
@@ -172,9 +175,14 @@ namespace MeterOff.EF.Services
                     xmlResult = contrlCardBuilder.BuildRelayTestCard(); //under Test
                     break;
 
-                //case 7: 
-                //    xmlResult = contrlCardBuilder.BuildAlterTariffCard();
-                //    break;
+                case 7:
+                    var tariffHeader = new TariffHeader
+                    {
+                        tariffId = (int)card.TariffTypeId
+                    };
+                    xmlResult = contrlCardBuilder.BuildAlterTariffCard(GPICardDB.DB.GetTariffStep((int)card.TariffTypeId), tariffHeader,
+                        DB.GetZeroConsumptionFeeAmount((int)card.TariffTypeId));
+                    break;
 
                 case 8:
                     var balanceAlarmCutoffLimitsList = new List<int>();
@@ -200,22 +208,29 @@ namespace MeterOff.EF.Services
                 case 51:
                     xmlResult = contrlCardBuilder.BuildChangeMeterNumberCard(card.OldMeterSerial, card.NewMeterSerial);
                     break;
-                    //case 53:
-                    //    xmlResult = contrlCardBuilder.BuildCustomerCard();
-                    //    break;
+                case 53:
+                    var tamperList = card.TampersCodes.Select(int.Parse).ToList();
+                    xmlResult = contrlCardBuilder.BuildLabCard(tamperList,card.LabTestCardAvailableKWh.ToInt(),card.LabTestCardAvailableTime.ToInt());
+                    break;
 
-
- 
             }
             #endregion
 
+            
             var cardsetting = _context.BasicSetting.FirstOrDefault();
             cardsetting.CardNumber += 1;
             _context.BasicSetting.Update(cardsetting);
-            _context.ControlCard.Add(controlCard);
-            _context.Add(card);
+            //_context.ControlCard.Add(controlCard);
+            //_context.Add(card);
             _context.SaveChanges();
-            return card;
+
+            var output = new ControlCardOutput
+            {
+                Payload = xmlResult.Encrypt(),
+                ControlCardId = newControlCardId
+            };
+
+            return output;
         }
 
         public bool ValidateMeterSerialNumber(string meterSerialNumber)
@@ -253,8 +268,23 @@ namespace MeterOff.EF.Services
             return flag;
         }
 
+        public DateTime GetTechinicianExpirationDate()
+        {
+            var serverDate = DateTime.Now;
+            return serverDate.AddDays(7); ;
 
+            
+        }
 
+        public DateTime GetTechinicianActivationDate()
+        {
+            var serverDate = DateTime.Now;
+            return serverDate;
+        }
 
+        public string CancelControlCard(int controlCardId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -15,7 +15,7 @@ using MeterOff.Core.Models.Identity;
 
 namespace MeterOff.EF.Services
 {
-    //public class UserService : IAppUser
+    
     public class UserService : IAppUser
 
     {
@@ -24,7 +24,7 @@ namespace MeterOff.EF.Services
         private readonly DBContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        //private readonly AccountService _accountService;
+        private readonly AccountService _accountService;
         
 
         public UserService(DBContext context, 
