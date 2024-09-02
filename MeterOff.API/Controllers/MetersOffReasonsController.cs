@@ -39,7 +39,7 @@ namespace MeterOff.API.Controllers
 
 
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var model = await _meterOffReasonsRepository.GetById(id);
@@ -65,7 +65,7 @@ namespace MeterOff.API.Controllers
 
 
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create(InsertCUploadMainteneceMetersOffReasonInput dto)
         {
             //var model = _mapper.Map<CUploadMainteneceMetersOffReason>(dto);
@@ -93,7 +93,7 @@ namespace MeterOff.API.Controllers
 
 
 
-        [HttpPost("{id}")]
+        [HttpPost("Update/{id}")]
         public async Task<IActionResult> Update(int id, InsertCUploadMainteneceMetersOffReasonInput dto)
         {
             var result = _meterOffReasonsRepository.ValidateAddReason(dto);
@@ -124,7 +124,7 @@ namespace MeterOff.API.Controllers
 
 
 
-        [HttpGet("Delete")]
+        [HttpGet("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var model = await _meterOffReasonsRepository.GetById(id);

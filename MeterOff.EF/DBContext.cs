@@ -116,5 +116,16 @@ namespace MeterOff.EF
         public DbSet<TransformerReading> TransformerReading { get; set; }
         public DbSet<TechnicianType> TechnicianType { get; set; }
 
+        public object Query<T>(string query)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<CMaintenenceMetersOffDto>(e => {e.HasNoKey().ToView(null); });
+        }
     }
 }

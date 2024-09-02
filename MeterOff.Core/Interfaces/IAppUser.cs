@@ -23,6 +23,7 @@ namespace MeterOff.Core.Interfaces
         IEnumerable<SmallDepartment> GetAllSmallDepartmentsByMainDepId();
         GetAllUsersWithDepartmentsOutput GetAllUserssByNatId(string NatId);
         Task<InsertUserInput> AddAsync(InsertUserInput model);
+       
         Task<EditUserInput> UpdateAsync(string UserId, EditUserInput model);
         ApplicationUser DeActiveUser(string userId);
         ApplicationUser ResetUserPass(string userId);
@@ -32,8 +33,9 @@ namespace MeterOff.Core.Interfaces
         GetSmallDepartmentsByUserIdOutput GetSmallDepartmentsByUserIdOutput(string userId);
 
         GetAllUsersWithDepartmentsOutput GetUserWithDepartments(string userId);
-        Task<UserDepartmentsRolesOutput> GetUserWithRole(string userId);
+        Task<UserDepartmentsRolesOutput> GetUserDataById(string userId);
         bool ValidateAddUserWithDeps(InsertUserInput model);
+        bool ValidateUpdateUserWithDeps(EditUserInput model);
         Task<NewAuthServiceResponseDto> Register(NewRegisterDto model);
     }
 }

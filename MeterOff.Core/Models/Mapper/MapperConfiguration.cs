@@ -74,6 +74,7 @@ namespace MeterOff.Core.Models.Mapper
             CreateMap<AppRoleDto, AppRole>();
 
 
+            CreateMap<ApplicationUser, userData>();
 
 
 

@@ -71,7 +71,7 @@ namespace MeterOff.API.Controllers
 
 
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create(InsertCMaintenenceMetersOffInput dto)
         {
             var result = _meterOffReasonsRepository.validateInsertCMaintenenceMetersOff(dto);
@@ -170,8 +170,8 @@ namespace MeterOff.API.Controllers
 
             return Ok(model);
         }
-        [HttpGet]
 
+        [HttpGet("GetAllSections")]
         public IActionResult GetAllSections()
         {
             var Sections = _CMaintenenceMetersOff.GetAllSections();
@@ -248,7 +248,7 @@ namespace MeterOff.API.Controllers
             return StatusCode(200, data);
         }
 
-        [HttpGet("{MainDepId}")]
+        [HttpGet("GetAllSmallDepartmentsByMainDepId/{MainDepId}")]
         public IActionResult GetAllSmallDepartmentsByMainDepId(int MainDepId)
         {
 
@@ -257,7 +257,7 @@ namespace MeterOff.API.Controllers
             return StatusCode(200, data);
         }
 
-        [HttpGet("{SectionId}")]
+        [HttpGet("GetAllMainDepartmentsBySectionId/{SectionId}")]
         public IActionResult GetAllMainDepartmentsBySectionId(int SectionId)
         {
             var MainDeps = _CMaintenenceMetersOff.GetAllMainDepartmentsBySectionId(SectionId);

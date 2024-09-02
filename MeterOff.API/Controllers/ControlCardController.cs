@@ -1,8 +1,10 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
 using MeterOff.Core.Interfaces;
+using MeterOff.Core.Models.Dto.Auth;
 using MeterOff.Core.Models.Dto.ControlCard;
 using MeterOff.Core.Models.Static;
+using MeterOff.EF.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +20,12 @@ namespace MeterOff.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IControlCard _ControlCard;
-        public ControlCardController(IMapper mapper, IControlCard controlCard)
+        private readonly ITestRegister _testRegisterService;
+        public ControlCardController(IMapper mapper, IControlCard controlCard, ITestRegister testRegisterService)
         {
             _mapper = mapper;
             _ControlCard = controlCard;
+            _testRegisterService = testRegisterService;
         }
 
         [HttpGet("GetAll")]
@@ -43,7 +47,7 @@ namespace MeterOff.API.Controllers
         }
 
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> InsertControlCard(InsertControlCardInput dto)
         {
             //var data = _mapper.Map<InsertControlCardInput>(dto);
@@ -51,6 +55,8 @@ namespace MeterOff.API.Controllers
             return StatusCode(200, result);
         }
 
+
+        
 
 
     }

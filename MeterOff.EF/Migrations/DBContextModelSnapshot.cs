@@ -93,31 +93,35 @@ namespace MeterOff.EF.Migrations
 
             modelBuilder.Entity("MeterOff.Core.Models.Dto.Reports.CMaintenenceMetersOffDto", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int?>("AccountNo")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountNo")
+                    b.Property<int?>("ActivityTypeId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ActivityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("BranchNo")
+                    b.Property<int?>("BranchNo")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CMMOiD")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CUploadMainteneceMetersOffReasoniD")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Code")
                         .HasColumnType("int");
 
                     b.Property<string>("CustomerCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DailyNo")
+                    b.Property<int?>("DailyNo")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("DeliveryDateToLaboratory")
@@ -126,106 +130,67 @@ namespace MeterOff.EF.Migrations
                     b.Property<DateTime?>("DeliveryDateToTechnician")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DepartName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Department")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("DepartmentNo")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("InstallationDate1")
-                        .HasColumnType("datetime2");
+                    b.Property<bool?>("IsMeterRecieved")
+                        .HasColumnType("bit");
 
-                    b.Property<DateTime?>("MaintenanceDate1")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MeterId1")
+                    b.Property<int?>("MainDepartmentCode")
                         .HasColumnType("int");
+
+                    b.Property<int?>("MainDepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("MaintenanceDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("MeterInstallationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("MeterOffDate1")
+                    b.Property<DateTime?>("MeterOffDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MeterOffReason1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("MeterOffStatus1")
-                        .IsRequired()
+                    b.Property<string>("MeterOffReason")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("MeterPreparedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NationalId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Notes1")
-                        .IsRequired()
+                    b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrganizationLevelId")
+                    b.Property<int?>("PlaceTypeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PlaceName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RefferenceAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("RegionCode")
+                    b.Property<int?>("RegionNo")
                         .HasColumnType("int");
 
-                    b.Property<int>("RegionNo")
+                    b.Property<int?>("SectionId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Sector")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SerialNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("SmallDepartmentNo")
+                    b.Property<int?>("SmallDepartmentCode")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("UploadDate1")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UploadMeterStatus1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UploadReason1")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UploadReasonId1")
+                    b.Property<int?>("SmallDepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VendorCode")
+                    b.Property<int?>("VendorCode")
                         .HasColumnType("int");
 
-                    b.Property<string>("smalldepartment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.ToTable((string)null);
 
-                    b.HasKey("Id");
-
-                    b.ToTable("cMaintenenceMetersOffDtos");
+                    b.ToView(null, (string)null);
                 });
 
             modelBuilder.Entity("MeterOff.Core.Models.Identity.ApplicationUser", b =>
@@ -742,7 +707,6 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("MFPCode")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -2488,7 +2452,6 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("MeterSerial")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 

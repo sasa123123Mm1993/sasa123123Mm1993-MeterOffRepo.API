@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GPICardCore\GPICardCore.csproj" />
+    <ProjectReference Include="..\GPICardDB\GPICardDB.csproj" />
     <ProjectReference Include="..\MeterOff.Core\MeterOff.Core.csproj" />
   </ItemGroup>
 

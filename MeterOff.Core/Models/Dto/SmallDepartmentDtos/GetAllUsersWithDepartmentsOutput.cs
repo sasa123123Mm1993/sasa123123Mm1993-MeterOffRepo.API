@@ -14,7 +14,7 @@ namespace MeterOff.Core.Models.Dto.SmallDepartmentDtos
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
         public string NationalId { get; set; }
-        public string UserId { get; set; }
+        public string Id { get; set; }
         public string RoleId { get; set; }
        
 

@@ -28,23 +28,11 @@ namespace MeterOff.API.Controllers
         public IActionResult GetAllUsersWithDepartments()
         {
             var users = _appUser.GetAllUsersWithDepartments();
-
             var data = _mapper.Map<IEnumerable<GetAllUsersWithDepartmentsOutput>>(users);
             return StatusCode(200, data);
 
         }
-
-        [HttpGet("GetAllSmallDepartment_UserOutput")]
-        public IActionResult GetAllSmallDepartment_UserOutput()
-        {
-            var users = _appUser.GetAllSmallDepartment_UserOutput();
-
-            var data = _mapper.Map<IEnumerable<SmallDepartmentUserDtoOutput>>(users);
-            return StatusCode(200, data);
-
-        }
-
-        [HttpPost ("DeactivateUser")]
+        [HttpPost("DeactivateUser/{userId}")]
         public IActionResult DeactivateUser(string userId)
         {
             var data = _appUser.DeActiveUser(userId);
@@ -55,7 +43,7 @@ namespace MeterOff.API.Controllers
             return StatusCode(200, dto);
         }
 
-        [HttpPost ("ResetPassword")]
+        [HttpPost("ResetPassword/{userId}")]
         public IActionResult ResetPassword(string userId)
         {
             var data = _appUser.ResetUserPass(userId);
@@ -66,52 +54,14 @@ namespace MeterOff.API.Controllers
             return StatusCode(200, dto);
         }
 
-        [HttpPost("GetUserDataByUserId")]
-        public IActionResult GetUserDataByUserId(string userId)
+        [HttpPost("GetUserDataById/{userId}")]
+        public IActionResult GetUserDataById(string userId)
         {
-
-            var data = _appUser.GetUserDataByUserId(userId);
+            var data = _appUser.GetUserDataById(userId);
 
             if (data == null)
                 return NotFound();
-
-            //var dto = _mapper.Map<UserDtoDetail>(data);
-            return StatusCode(200, data);
-
-        }
-
-        [HttpPost("GetSmallDepartmentsByUserIdOutput")]
-        public IActionResult GetSmallDepartmentsByUserIdOutput(string userId)
-        {
-
-            var data = _appUser.GetSmallDepartmentsByUserIdOutput(userId);
-
-            if (data == null)
-                return NotFound();
-
-            //var dto = _mapper.Map<UserDtoDetail>(data);
-            return StatusCode(200, data);
-
-        }
-
-        [HttpPost("GetUserWithDepartments")]
-        public IActionResult GetUserWithDepartments(string userId)
-        {
-            var data = _appUser.GetUserWithDepartments(userId);
-
-            if (data == null)
-                return NotFound();
-            return StatusCode(200, data);
-        }
-
-        [HttpGet("GetUserBasicData")]
-        public IActionResult GetUserBasicData()
-        {
-            var data = _appUser.GetAllUsersBasicData();
-
-            if (data == null)
-                return NotFound();
-            return StatusCode(200, data);
+            return StatusCode(200, data.Result);
         }
 
         [HttpGet("GetAllSmallDepartments")]
@@ -124,31 +74,12 @@ namespace MeterOff.API.Controllers
             return StatusCode(200, data);
         }
 
-        [HttpPost("GetUserDataById")]
-        public IActionResult GetUserDataById(string userId)
-        {
-            var data = _appUser.GetUserWithRole(userId);
-
-            if (data == null)
-                return NotFound();
-            return StatusCode(200, data.Result);
-        }
-
         [HttpGet("GetAllRoles")]
         public IActionResult GetAllRoles()
         {
             var roles = _appUser.GetAllRoles();
             return StatusCode(200, roles);
 
-        }
-
-        [HttpGet("GetAllUsersByNatId")]
-        public async Task<IActionResult> GetAllUsersByNatId(string natId)
-        {
-            var data = _appUser.GetAllUserssByNatId(natId);
-            if (data == null)
-                return NotFound();
-            return StatusCode(200, data);
         }
 
         [HttpPost("AddUserWithDeps")]
@@ -166,6 +97,104 @@ namespace MeterOff.API.Controllers
             }
             return BadRequest();
         }
+
+
+
+        [HttpPost("EditUserWithDeps")]
+        public async Task<IActionResult> EditUserWithDeps(string userId, EditUserInput input)
+        {
+            var result = _appUser.ValidateUpdateUserWithDeps(input);
+            if (result == true)
+            {
+                var data = await _appUser.UpdateAsync(userId,input);
+                if (data == null)
+                    return NotFound();
+                //var dto = _mapper.Map<GetAllUsersWithDepartmentsOutput>(data);
+
+                return StatusCode(200, data);
+            }
+            return BadRequest();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        //[HttpGet("GetAllSmallDepartment_UserOutput")]
+        //public IActionResult GetAllSmallDepartment_UserOutput()
+        //{
+        //    var users = _appUser.GetAllSmallDepartment_UserOutput();
+
+        //    var data = _mapper.Map<IEnumerable<SmallDepartmentUserDtoOutput>>(users);
+        //    return StatusCode(200, data);
+
+        //}
+
+        //[HttpPost("GetUserDataByUserId/{userId}")]
+        //public IActionResult GetUserDataByUserId(string userId)
+        //{
+
+        //    var data = _appUser.GetUserDataByUserId(userId);
+
+        //    if (data == null)
+        //        return NotFound();
+
+        //    //var dto = _mapper.Map<UserDtoDetail>(data);
+        //    return StatusCode(200, data);
+
+        //}
+
+        //[HttpPost("GetSmallDepartmentsByUserIdOutput/{userId}")]
+        //public IActionResult GetSmallDepartmentsByUserIdOutput(string userId)
+        //{
+
+        //    var data = _appUser.GetSmallDepartmentsByUserIdOutput(userId);
+
+        //    if (data == null)
+        //        return NotFound();
+
+        //    //var dto = _mapper.Map<UserDtoDetail>(data);
+        //    return StatusCode(200, data);
+
+        //}
+
+        //[HttpPost("GetUserWithDepartments/{userId}")]
+        //public IActionResult GetUserWithDepartments(string userId)
+        //{
+        //    var data = _appUser.GetUserWithDepartments(userId);
+
+        //    if (data == null)
+        //        return NotFound();
+        //    return StatusCode(200, data);
+        //}
+
+        //[HttpGet("GetUserBasicData")]
+        //public IActionResult GetUserBasicData()
+        //{
+        //    var data = _appUser.GetAllUsersBasicData();
+
+        //    if (data == null)
+        //        return NotFound();
+        //    return StatusCode(200, data);
+        //}
+
+        //[HttpGet("GetAllUsersByNatId/{natId}")]
+        //public async Task<IActionResult> GetAllUsersByNatId(string natId)
+        //{
+        //    var data = _appUser.GetAllUserssByNatId(natId);
+        //    if (data == null)
+        //        return NotFound();
+        //    return StatusCode(200, data);
+        //}
+
+
 
     }
 }

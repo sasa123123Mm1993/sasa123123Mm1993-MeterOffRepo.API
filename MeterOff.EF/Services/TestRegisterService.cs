@@ -189,7 +189,9 @@ namespace MeterOff.EF.Services
                         IsSucceed = true,
                         Message = "Role assigned successfully",
                         UserId = newUser.Id,
-                        RoleId = model.RoleId
+                        RoleId = model.RoleId,
+                        UserName = model.UserName,
+                        Password = model.Password
                     };
                 }
             }
@@ -198,7 +200,9 @@ namespace MeterOff.EF.Services
                 IsSucceed = true,
                 Message = "User Created Successfully",
                 UserId = newUser.Id,
-                RoleId = model.RoleId
+                RoleId = model.RoleId,
+                UserName = model.UserName,
+                Password = model.Password
             };
         }
 

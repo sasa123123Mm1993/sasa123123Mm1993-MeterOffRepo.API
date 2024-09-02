@@ -24,7 +24,7 @@ namespace MeterOff.EF.Services
         private readonly DBContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly AccountService _accountService;
+        //private readonly AccountService _accountService;
         
 
         public UserService(DBContext context, 
@@ -45,7 +45,7 @@ namespace MeterOff.EF.Services
 
             if (model != null)
             {
-               
+
                 //Create User With Role
                 var input = new NewRegisterDto
                 {
@@ -264,7 +264,7 @@ namespace MeterOff.EF.Services
         }
 
 
-        public IEnumerable<SmallDepartmentUserDtoOutput> GetAllSmallDepartment_UserOutput()
+        public IEnumerable<SmallDepartmentUserDtoOutput> GetAllSmallDepartment_UserOutput() 
         {
             var data = _context.SmallDepartment_Users.ToList();
 
@@ -339,7 +339,7 @@ namespace MeterOff.EF.Services
             return _mapper.Map<GetAllUsersWithDepartmentsOutput>(user);
         }
 
-        public async Task<UserDepartmentsRolesOutput> GetUserWithRole(string userId)
+        public async Task<UserDepartmentsRolesOutput> GetUserDataById(string userId)
         {
             var user = _context.Users
               .FirstOrDefault(u => u.Id == userId);
@@ -441,6 +441,41 @@ namespace MeterOff.EF.Services
             return true;
 
         }
+        public bool ValidateUpdateUserWithDeps(EditUserInput model)
+        {
+            if (model == null)
+            {
+                return false;
+            }
+            if (model.NatId == null)
+            {
+                throw new UserFriendlyException("يجب ادخال هوية المستخدم");
+            }
+
+            if (model.RoleId == null)
+            {
+                throw new UserFriendlyException("يجب اختيار دور للمستخدم");
+            }
+
+            if (model.IsActive == null)
+            {
+                throw new UserFriendlyException("يجب ادخال حالة المستخدم");
+            }
+
+            if (model.UserName == null)
+            {
+                throw new UserFriendlyException("يجب ادخال اسم المستخدم");
+            }
+
+            if (model.FullName == null)
+            {
+                throw new UserFriendlyException("يجب ادخال الاسم بالكامل");
+            }
+
+            return true;
+
+        }
+
 
         // public async Task<string> GetRoleIdByUser(ApplicationUser user)
         //{
@@ -451,12 +486,25 @@ namespace MeterOff.EF.Services
 
         Core.Models.Identity.ApplicationUser IAppUser.DeActiveUser(string userId)
         {
-            throw new NotImplementedException();
+            var model = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            if (model.IsActive)
+                model.IsActive = false;
+            else { model.IsActive = true; }
+            _context.SaveChanges();
+            return model;
         }
 
         Core.Models.Identity.ApplicationUser IAppUser.ResetUserPass(string userId)
         {
-            throw new NotImplementedException();
+            var model = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            string newPassword = "123456";
+            string hashedNewPassword = _userManager.PasswordHasher.HashPassword(model, newPassword);
+            if (model.PasswordHash != null)
+                model.PasswordHash = hashedNewPassword;
+            _context.SaveChanges();
+            return model;
         }
 
         IEnumerable<ApplicationUser> IAppUser.GetAllUsersWithDepartments()

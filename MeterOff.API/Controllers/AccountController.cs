@@ -26,9 +26,9 @@ namespace MeterOff.API.Controllers
         private readonly IConfiguration _configuration;
         private readonly DBContext _context;
         //private readonly UserService _userService;
-        private readonly TestRegisterService _testRegisterService;
-        public AccountController(UserManager<ApplicationUser> userManager, UserService userService, 
-            TestRegisterService testRegisterService,
+        private readonly ITestRegister _testRegisterService;
+        public AccountController(UserManager<ApplicationUser> userManager,
+            ITestRegister testRegisterService,
             RoleManager<Microsoft.AspNetCore.Identity.IdentityRole> roleManager, DBContext context,
             IConfiguration configuration)
         {
@@ -49,13 +49,11 @@ namespace MeterOff.API.Controllers
 
         //    if (result.Succeeded)
         //    {
-        //        //await _userManager.AddToRoleAsync(user, "User");
         //        return Ok(new { message = "User registered successfully" });
         //    }
 
         //    return BadRequest(result.Errors);
         //}
-
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] NewRegisterDto model)
@@ -68,15 +66,6 @@ namespace MeterOff.API.Controllers
 
         }
 
-        [HttpPost]
-        public IActionResult TestRegister(NewRegisterDto model)
-        {
-            var registerResult = _testRegisterService.Register(model);
-            if (registerResult.Result.IsSucceed)
-                return Ok(registerResult);
-
-            return BadRequest(registerResult);
-        }
 
 
         [HttpPost("login")]

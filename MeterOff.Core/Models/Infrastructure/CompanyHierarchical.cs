@@ -20,6 +20,6 @@ namespace MeterOff.Core.Models.Infrastructure
         public string SouthCairoCode { get; set; }
         public int AccountReferenceCounter { get; set; }
         public virtual ICollection<ApplicationUser> Users { get; set; }
-        public virtual ICollection<Technician> Technicians { get; set; }
+        //public virtual ICollection<Technician> Technicians { get; set; }
     }
 }

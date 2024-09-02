@@ -8,6 +8,7 @@ using MeterOff.EF;
 using MeterOff.Core.Interfaces;
 using MeterOff.Core.Models.Identity;
 using MeterOff.EF.Services;
+using MeterOff.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,10 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 })
     .AddEntityFrameworkStores<DBContext>()
     .AddDefaultTokenProviders();
+
+//Add Dapper Service
+builder.Services.AddSingleton<DapperContext>();
+
 
 
 #region Jwt
