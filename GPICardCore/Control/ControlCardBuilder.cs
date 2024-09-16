@@ -176,15 +176,25 @@ namespace GPICardCore
         
 
 
-        public string BuildToggleRelayCard()
+        public string BuildToggleRelayCard(int reverseCardRecoveryTime)
         {
+            if ((reverseCardRecoveryTime < 0) || (reverseCardRecoveryTime > 60))
+            {
+                throw new Exception($"ReverseCardRecoveryTime  value [{reverseCardRecoveryTime}] minute Invalid .");
+            }
             
             XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
-            .Add(new XElement("controlOperationType", "5"));
+            .Add(new XElement("controlOperationType", 5 ));
 
-            
+            local.Element("meterData")
+           .Add(new XElement("reverseCardRecoveryTime", reverseCardRecoveryTime));
+
+
+
+
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.RelayToggle.ToString();
