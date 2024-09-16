@@ -106,7 +106,6 @@ namespace MeterOff.API.Controllers
                 model.Code = dto.Code;
                 model.Name = dto.Name;
                 model.Note = "Test";
-
                 model.CreationTime = DateTime.Now;
                 model.CreatorById = 1;
                 model.IsDeleted = false;

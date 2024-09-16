@@ -54,7 +54,7 @@ namespace MeterOff.API.Controllers
             return StatusCode(200, dto);
         }
 
-        [HttpPost("GetUserDataById/{userId}")]
+        [HttpPost("GetUserDataById")]
         public IActionResult GetUserDataById(string userId)
         {
             var data = _appUser.GetUserDataById(userId);
@@ -85,7 +85,7 @@ namespace MeterOff.API.Controllers
         [HttpPost("AddUserWithDeps")]
         public async Task<IActionResult> AddUserWithDeps(InsertUserInput input)
         {
-            var result = _appUser.ValidateAddUserWithDeps(input);
+            var result =  _appUser.ValidateAddUserWithDeps(input);
             if (result == true)
             {
                 var data = await _appUser.AddAsync(input);
@@ -103,7 +103,7 @@ namespace MeterOff.API.Controllers
         [HttpPost("EditUserWithDeps")]
         public async Task<IActionResult> EditUserWithDeps(string userId, EditUserInput input)
         {
-            var result = _appUser.ValidateUpdateUserWithDeps(input);
+            var result = _appUser.ValidateUpdateUserWithDeps(userId,input);
             if (result == true)
             {
                 var data = await _appUser.UpdateAsync(userId,input);

@@ -39,4 +39,10 @@ namespace MeterOff.Core.Models.Infrastructure
         public string IsDeleted { get; set; }
         public string StatusOfMeter { get; set; }
     }
+
+    public class TotalMeterOff
+    {
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+    }
 }

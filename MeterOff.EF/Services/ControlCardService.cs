@@ -12,6 +12,10 @@ using System.Text;
 using System.Threading.Tasks;
 using GPICardCore.Master;
 using GPICardDB;
+using MeterOff.Core.Models.Dto.Reports;
+using MeterOff.Core.Models.Dto.CardFunctionDto;
+using MeterOff.Core.Models.Dto.CMaintenenceMetersOff;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace MeterOff.EF.Services
 {
@@ -24,10 +28,15 @@ namespace MeterOff.EF.Services
             _context = context;
         }
 
-        public IEnumerable<CardFunction> GetAll()
+        public async Task<IEnumerable<CardFunctionDto>> GetAll()
         {
-            List<CardFunction> model = _context.CardFunction.ToList();
-            return model;
+            var model = _context.CardFunction
+                  .Select(k => new CardFunctionDto
+                  {Code = k.Code,Name = k.Name,}).ToList();
+
+                 return model;
+
+
         }
 
         public IEnumerable<Technician> GetAllTecnicions(int? RegionId, string? filter, int? cardFunctionId)
@@ -135,6 +144,15 @@ namespace MeterOff.EF.Services
 
             #region Build XML
             ControlCardBuilder contrlCardBuilder = new ControlCardBuilder();
+
+            List<string> selectedMetersList  = card.ControledMetersList?.ToList<string>() ?? new List<string>();
+
+            if (selectedMetersList.Any())
+            {
+                contrlCardBuilder.SetSelectedMeters(selectedMetersList);
+            }
+           
+            
             contrlCardBuilder.SetMeterType(0);
             contrlCardBuilder.SetMeterVersion(DB.GetMeterVersion(1));
             contrlCardBuilder.SetManufacturerId(DB.GetManufacturerId());
@@ -172,7 +190,7 @@ namespace MeterOff.EF.Services
                     xmlResult = contrlCardBuilder.BuildToggleRelayCard();
                     break;
                 case 6:
-                    xmlResult = contrlCardBuilder.BuildRelayTestCard(); //under Test
+                    xmlResult = contrlCardBuilder.BuildRelayTestCard(); //under Test 
                     break;
 
                 case 7:
@@ -283,6 +301,11 @@ namespace MeterOff.EF.Services
         }
 
         public string CancelControlCard(int controlCardId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ControlLaunchOutput ReadControlLaunch()
         {
             throw new NotImplementedException();
         }

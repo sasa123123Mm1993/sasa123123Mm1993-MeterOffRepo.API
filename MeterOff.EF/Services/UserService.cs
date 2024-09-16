@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MeterOff.Core.Models.Dto.Auth;
 using MeterOff.Core.Models.Identity;
+using Microsoft.AspNetCore.Http;
+using System.Data.Entity;
+using System.Data;
 
 namespace MeterOff.EF.Services
 {
@@ -25,9 +28,9 @@ namespace MeterOff.EF.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         //private readonly AccountService _accountService;
-        
 
-        public UserService(DBContext context, 
+
+        public UserService(DBContext context,
             IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
             IAuthService authService)
         {
@@ -36,15 +39,16 @@ namespace MeterOff.EF.Services
             _userManager = userManager;
             _authService = authService;
             _roleManager = roleManager;
+           
             //_accountService = accountService;
         }
 
       
         public async Task<InsertUserInput> AddAsync(InsertUserInput model)
         {
-
-            if (model != null)
-            {
+            
+                if (model != null)
+                {
 
                 //Create User With Role
                 var input = new NewRegisterDto
@@ -58,35 +62,57 @@ namespace MeterOff.EF.Services
                     NatId = model.NatId,
                     RoleId = model.RoleId,
                 };
-
-
-                var result =await Register(input);
-
-                //Fill SmallDepartment_User Table
-                List<SmallDepartment_UserDto> NewDto = new List<SmallDepartment_UserDto>();
-
-                foreach (var item in model.smallDepartmentsIds)
+                
+                var userid = _context.Users.Where(u => u.UserName == model.UserName)
+                     .Select(u => u.Id).FirstOrDefault();
+                if (userid !=null)
                 {
-                    var smallDepartment_UserDto = new SmallDepartment_UserDto();
-                    smallDepartment_UserDto.SmallDepartmentId = item;
-                    smallDepartment_UserDto.AppUserId = result.UserId; //static 
-                    NewDto.Add(smallDepartment_UserDto);
-                    _context.SmallDepartment_Users.Add(new SmallDepartment_User
+                    List<SmallDepartment_UserDto> NewDto = new List<SmallDepartment_UserDto>();
+                    foreach (var item in model.smallDepartmentsIds)
                     {
-                        AppUserId = smallDepartment_UserDto.AppUserId,//static 
-                        SmallDepartmentId = item,
-                    });
+                        var smallDepartment_UserDto = new SmallDepartment_UserDto();
+                        smallDepartment_UserDto.SmallDepartmentId = item;
+                        smallDepartment_UserDto.AppUserId = userid;
+                        NewDto.Add(smallDepartment_UserDto);
+                        _context.SmallDepartment_Users.Add(new SmallDepartment_User
+                        {
+                            AppUserId = smallDepartment_UserDto.AppUserId,
+                            SmallDepartmentId = item,
+                        });
+                    }
+                    _context.SaveChanges();
+                    return model;
                 }
+                else
+                {
+                    var result = await Register(input);
 
-                _context.SaveChanges();
+                    List<SmallDepartment_UserDto> NewDto = new List<SmallDepartment_UserDto>();
+                    foreach (var item in model.smallDepartmentsIds)
+                    {
 
-                return model;
+                        var smallDepartment_UserDto = new SmallDepartment_UserDto();
+                        smallDepartment_UserDto.SmallDepartmentId = item;
+                        smallDepartment_UserDto.AppUserId = result.UserId;
+                        NewDto.Add(smallDepartment_UserDto);
+                        _context.SmallDepartment_Users.Add(new SmallDepartment_User
+                        {
+                            AppUserId = smallDepartment_UserDto.AppUserId,
+                            SmallDepartmentId = item,
+                        });
+                    }
+                    _context.SaveChanges();
+                    return model;
+                }
             }
 
-            return model;
+                return model;
+            
+            
+           
 
         }
-
+       
 
         public async Task<NewAuthServiceResponseDto> Register(NewRegisterDto model)
         {
@@ -100,6 +126,7 @@ namespace MeterOff.EF.Services
                 SecurityStamp = Guid.NewGuid().ToString(),
                 NationalId = model.NatId,
             };
+
 
             var createUserResult = await _userManager.CreateAsync(newUser, model.Password);
             await _context.SaveChangesAsync();
@@ -129,6 +156,7 @@ namespace MeterOff.EF.Services
                         Message = "User Not Found"
                     };
                 }
+
                 var roleName = _context.Roles.Where(r => r.Id == model.RoleId).Select(r => r.Name).FirstOrDefault();
                 if (roleName == null)
                 {
@@ -164,48 +192,62 @@ namespace MeterOff.EF.Services
 
         public async Task<EditUserInput> UpdateAsync(string UserId, EditUserInput model)
         {
-
-            var user = await _userManager.FindByIdAsync(UserId);
+            
+                var user = await _userManager.FindByIdAsync(UserId); //get user object by userid
+                var oldRoles = await _userManager.GetRolesAsync(user);  // Get the role nameList for this user
+                var oldRoleId = _context.UserRoles.FirstOrDefault(m=>m.UserId == UserId).RoleId;
+                var oldRoleName = _context.Roles.Where(r => r.Id == oldRoleId).Select(r => r.Name).FirstOrDefault();
+                var removeResult = await _userManager.RemoveFromRoleAsync(user, oldRoleName);
 
             if (model != null && user != null)
-            {
-                var input = new NewRegisterDto
                 {
-                    Email = "Test@gmail.com",
-                    Code = new Guid().ToString(),
-                    FullName = model.FullName,
-                    IsActive = model.IsActive,
-                    UserName = model.UserName,
-                    Password = "123456",
-                    NatId = model.NatId,
-                    RoleId = model.RoleId,
-                };
 
 
-                var result = await _authService.RegisterAsync(input);
+                // var result = await _userManager.AddToRoleAsync(user, roleName);
+                // var role = await _roleManager.FindByIdAsync(model.RoleId); //get the new role to add it with user
+                // role.Name = roleName;
 
-                //Fill SmallDepartment_User Table
-                List<SmallDepartment_UserDto> NewDto = new List<SmallDepartment_UserDto>();
 
-                foreach (var item in model.smallDepartmentsIds)
-                {
-                    var smallDepartment_UserDto = new SmallDepartment_UserDto();
-                    smallDepartment_UserDto.SmallDepartmentId = item;
-                    smallDepartment_UserDto.AppUserId = result.UserId; //static 
-                    NewDto.Add(smallDepartment_UserDto);
-                    _context.SmallDepartment_Users.Add(new SmallDepartment_User
+                var newRoleName = _context.Roles.Where(r => r.Id == model.RoleId).Select(r => r.Name).FirstOrDefault();
+                var result = await _userManager.AddToRoleAsync(user, newRoleName);
+
+
+                user.FullName = model.FullName;
+                    user.UserName = model.UserName;
+                    user.IsActive = model.IsActive;
+                    user.NationalId = model.NatId;
+                    var resultOfUpdateUser = await _userManager.UpdateAsync(user);
+                    
+
+                    List<SmallDepartment_UserDto> oldDto = new List<SmallDepartment_UserDto>();
+                    var oldUserDepartment = _context.SmallDepartment_Users.Where(m => m.AppUserId == UserId).ToList();
+                    foreach (var item in oldUserDepartment)
                     {
-                        AppUserId = smallDepartment_UserDto.AppUserId,//static 
+                        item.IsDeleted = true;
+                    }
+
+                    List<SmallDepartment_UserDto> NewDto = new List<SmallDepartment_UserDto>();
+                    foreach (var item in model.smallDepartmentsIds)
+                    {
+                        var smallDepartment_UserDto = new SmallDepartment_UserDto();
+                        smallDepartment_UserDto.SmallDepartmentId = item;
+                        smallDepartment_UserDto.AppUserId = UserId; 
+                        NewDto.Add(smallDepartment_UserDto);
+                    _context.SmallDepartment_Users.Update(new SmallDepartment_User
+                    {
+                        AppUserId = smallDepartment_UserDto.AppUserId,
                         SmallDepartmentId = item,
+                        IsDeleted = false
                     });
+
                 }
 
                 _context.SaveChanges();
 
-                return model;
-            }
+                }
 
             return model;
+            
         }
 
         public ApplicationUser DeActiveUserNew(string userId)
@@ -342,16 +384,16 @@ namespace MeterOff.EF.Services
         public async Task<UserDepartmentsRolesOutput> GetUserDataById(string userId)
         {
             var user = _context.Users
-              .FirstOrDefault(u => u.Id == userId);
+              .FirstOrDefault(u => u.Id == userId); 
 
             var userRoleId = _context.UserRoles
                .Where(ur => ur.UserId == userId)
                .Select(ur => ur.RoleId)
                .FirstOrDefault();
 
-            var userRoles = _userManager.GetRolesAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
-            var SmallDepartment_Users = _context.SmallDepartment_Users.Where(u => u.AppUserId == userId).ToList();
+            var SmallDepartment_Users = _context.SmallDepartment_Users.Where(u => u.AppUserId == userId && u.IsDeleted != true).ToList();
             var SmallDepartment_UsersDtos = _mapper.Map<List<SmallDepartment_UserDto>>(SmallDepartment_Users);
 
             List<int> newSmallDepartments = new List<int>();
@@ -409,10 +451,31 @@ namespace MeterOff.EF.Services
 
         public bool ValidateAddUserWithDeps(InsertUserInput model)
         {
+
             if (model == null)
             {
                 return false;
             }
+
+            var roleName = _context.Roles.Where(r => r.Id == model.RoleId).Select(r => r.Name).FirstOrDefault();
+            if (roleName == null)
+            {
+                throw new UserFriendlyException("User Don`t Have Role");
+            }
+
+            //var user = _userManager.FindByNameAsync(model.UserName);
+            //if (user == null)
+            //{
+            //    throw new UserFriendlyException("User Not Found");
+            //}
+
+           
+
+            if (model.smallDepartmentsIds.Any(item => item == null) || model.smallDepartmentsIds.Any(item => item == 0))
+            {
+                throw new UserFriendlyException("يجب ادخال ادارة للمستخدم");
+            }
+
             if (model.NatId == null)
             {
                 throw new UserFriendlyException("يجب ادخال هوية المستخدم");
@@ -441,12 +504,35 @@ namespace MeterOff.EF.Services
             return true;
 
         }
-        public bool ValidateUpdateUserWithDeps(EditUserInput model)
+        public bool ValidateUpdateUserWithDeps(string userId,EditUserInput model)
         {
+
             if (model == null)
             {
                 return false;
             }
+
+            var roleName = _context.Roles.Where(r => r.Id == model.RoleId).Select(r => r.Name).FirstOrDefault();
+            if (roleName == null)
+            {
+                throw new UserFriendlyException("User Don`t Have Role");
+            }
+
+
+            var user = _context.Users
+                   .Where(u => u.Id == userId)
+                   .FirstOrDefault();
+            if (user == null)
+            {
+                throw new UserFriendlyException("User Not Found");
+            }
+
+
+            if (model.smallDepartmentsIds.Any(item => item == null)|| model.smallDepartmentsIds.Any(item => item == 0))
+            {
+                throw new UserFriendlyException("يجب ادخال ادارة للمستخدم");
+            }
+
             if (model.NatId == null)
             {
                 throw new UserFriendlyException("يجب ادخال هوية المستخدم");

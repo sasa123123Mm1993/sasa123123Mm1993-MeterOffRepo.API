@@ -35,7 +35,7 @@ namespace MeterOff.Core.Interfaces
         GetAllUsersWithDepartmentsOutput GetUserWithDepartments(string userId);
         Task<UserDepartmentsRolesOutput> GetUserDataById(string userId);
         bool ValidateAddUserWithDeps(InsertUserInput model);
-        bool ValidateUpdateUserWithDeps(EditUserInput model);
+        bool ValidateUpdateUserWithDeps(string userId, EditUserInput model);
         Task<NewAuthServiceResponseDto> Register(NewRegisterDto model);
     }
 }

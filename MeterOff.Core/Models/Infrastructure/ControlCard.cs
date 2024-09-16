@@ -20,10 +20,13 @@ namespace MeterOff.Core.Models.Infrastructure
         public string CardId { get; set; }
         public Guid CysheildCardUid { get; set; }
         public bool IsBlocked { get; set; }
-
         public int NoOfCollectedMeters { get; set; }
+
+
+
         [ForeignKey("EmployeeId")]
         public virtual Technician Employee { get; set; }
-        public virtual ICollection<ControlCardManagment> ControlCardProperties { get; set; }
+
+        public virtual ICollection<ControlCardManagment> ControlCardProperties { get; set; } //Many to many
     }
 }

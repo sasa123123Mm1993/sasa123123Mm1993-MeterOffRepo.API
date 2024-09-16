@@ -3,6 +3,7 @@ using AutoMapper;
 using MeterOff.Core.Interfaces;
 using MeterOff.Core.Models.Dto.Auth;
 using MeterOff.Core.Models.Dto.ControlCard;
+using MeterOff.Core.Models.Infrastructure;
 using MeterOff.Core.Models.Static;
 using MeterOff.EF.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -30,11 +31,19 @@ namespace MeterOff.API.Controllers
 
         [HttpGet("GetAll")]
         //[Authorize(Roles = StaticUserRoles.USER)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var model = _ControlCard.GetAll();
-            //var data = _mapper.Map<IEnumerable<ControlCardOutput>>(model);
-            return StatusCode(200, model);
+            try
+            {
+                var data = await _ControlCard.GetAll();
+                
+                return StatusCode(200, data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+           
         }
 
         [HttpGet("GetAllTechinicions")]

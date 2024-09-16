@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Data.SqlClient;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MeterOff.API.Controllers
 {
@@ -28,22 +29,42 @@ namespace MeterOff.API.Controllers
         private readonly IReport _report;
         public ReportsController(IMapper mapper,IReport report)
         {
-                _mapper = mapper;
+              _mapper = mapper;
               _report = report;
         }
 
+       
+
         [HttpPost("GetAll")]
-        public  IActionResult GetAllData(MetersDataInput metersDataInput)
+        public async Task<IActionResult> GetAllData(MetersDataInput metersDataInput)
         {
-            //var data = await _report.GetAllData();
-            //var data = _mapper.Map<IEnumerable<CMaintenenceMetersOffOutput>>(MaintenenceMeters);
-            //return StatusCode(200, MaintenenceMeters);
-
-            var model = new MetersDataInput();
-            return (IActionResult)model;
-
+            try
+            {
+                var data = await _report.GetAllData(metersDataInput);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
+
+        [HttpPost("GetAllTotalOfMeterOff")]
+        public async Task<IActionResult> GetAllTotalOfMeterOff(TotalMeterOff model)
+        {
+            //try
+            //{
+            //    var data = await _report.GetAllData(metersDataInput);
+            //    return Ok(data);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, ex.Message);
+            //}
+
+            return Ok();
+        }
 
 
     }

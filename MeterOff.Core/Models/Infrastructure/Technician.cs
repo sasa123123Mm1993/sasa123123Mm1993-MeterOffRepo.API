@@ -27,6 +27,7 @@ namespace MeterOff.Core.Models.Infrastructure
         public virtual TechnicianType technicianTypes { get; set; }
 
         public virtual ICollection<Section> Sections { get; set; }
+
         //public virtual ICollection<CompanyHierarchical> CompanyHierarchicals { get; set; } //شركة
 
         public virtual ICollection<SmallDepartment> SmallDepartments { get; set; }//ادارة فرعية

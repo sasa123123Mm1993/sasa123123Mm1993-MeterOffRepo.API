@@ -178,14 +178,16 @@ namespace MeterOff.EF.Services
 
         public bool ValidateAddFixedMeterToTechinicion(FixedMeterToTechinitionInsert model)
         {
-            if (model.DeliveryDateToTechnician > model.MaintenanceDate)
-            {
-                throw new UserFriendlyException("تاريخ التسليم للفنى يجب أن يكون قبل تاريخ التركيب");
-            }
             if (model.InstallationDate > model.DeliveryDateToTechnician)
             {
                 throw new UserFriendlyException("تاريخ الاصلاح يجب أن يكون قبل تاريخ التسليم للفنى");
             }
+
+            if (model.DeliveryDateToTechnician > model.MaintenanceDate)
+            {
+                throw new UserFriendlyException("تاريخ التسليم للفنى يجب أن يكون قبل تاريخ التركيب");
+            }
+           
             if (model.InstallationDate > model.MaintenanceDate)
             {
                 throw new UserFriendlyException("تاريخ الاصلاح يجب أن يكون قبل تاريخ تركيب العداد");

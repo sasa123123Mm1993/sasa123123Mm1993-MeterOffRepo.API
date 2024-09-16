@@ -34,6 +34,7 @@ builder.Services.AddSingleton<DapperContext>();
 
 
 
+
 #region Jwt
 builder.Services.AddAuthentication(options =>
 {
@@ -63,7 +64,19 @@ builder.Services.AddScoped<IControlCard, ControlCardService>();
 builder.Services.AddScoped<IAppUser, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITestRegister, TestRegisterService>();
+builder.Services.AddScoped<IReport, ReportService>();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
 #endregion
+
+
+//builder.Services.Configure<IdentityOptions>(options =>
+//{
+//    // Configure identity options
+//    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@";
+//    options.User.RequireUniqueEmail = true;
+//});
+
 
 
 

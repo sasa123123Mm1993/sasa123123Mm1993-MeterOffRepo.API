@@ -9,6 +9,7 @@ namespace MeterOff.Core.Models.Infrastructure
         {
             ControlCardProperties = new HashSet<ControlCardManagment>();
         }
+
         [MaxLength(50)]
         public string Name { get; set; }
         public int Code { get; set; }

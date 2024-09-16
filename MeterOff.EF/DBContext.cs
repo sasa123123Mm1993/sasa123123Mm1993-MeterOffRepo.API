@@ -115,7 +115,8 @@ namespace MeterOff.EF
         public DbSet<Transformer> Transformer { get; set; }
         public DbSet<TransformerReading> TransformerReading { get; set; }
         public DbSet<TechnicianType> TechnicianType { get; set; }
-
+        //public DbSet<InstallCardReading> installCardReading { get; set; }
+        
         public object Query<T>(string query)
         {
             throw new NotImplementedException();
@@ -126,6 +127,10 @@ namespace MeterOff.EF
         {
             base.OnModelCreating(builder);
             builder.Entity<CMaintenenceMetersOffDto>(e => {e.HasNoKey().ToView(null); });
+            builder.Entity<IdentityUser>()
+           .Property(u => u.UserName)
+           .HasMaxLength(256);
+
         }
     }
 }

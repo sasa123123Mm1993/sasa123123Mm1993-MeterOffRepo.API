@@ -1,4 +1,6 @@
-﻿using MeterOff.Core.Models.Dto.ControlCard;
+﻿using MeterOff.Core.Models.Dto.CardFunctionDto;
+using MeterOff.Core.Models.Dto.ControlCard;
+using MeterOff.Core.Models.Dto.Reports;
 using MeterOff.Core.Models.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,7 @@ namespace MeterOff.Core.Interfaces
     public interface IControlCard
     {
 
-        IEnumerable<CardFunction> GetAll();
+        public Task<IEnumerable<CardFunctionDto>> GetAll();
         IEnumerable<Technician> GetAllTecnicions(int? RegionId, string? filter, int? cardFunctionId);
         ControlCardOutput AddContolCard(InsertControlCardInput card);
         bool ValidateMeterSerialNumber(string meterSerialNumber);
@@ -19,5 +21,6 @@ namespace MeterOff.Core.Interfaces
         DateTime GetTechinicianActivationDate();
         string CancelControlCard(int controlCardId);
 
+        public ControlLaunchOutput ReadControlLaunch();
     }
 }
