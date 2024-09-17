@@ -187,7 +187,7 @@ namespace MeterOff.EF.Services
                     break;
 
                 case 5:
-                    xmlResult = contrlCardBuilder.BuildToggleRelayCard();
+                    xmlResult = contrlCardBuilder.BuildToggleRelayCard(Convert.ToInt32(card.ReverseCardRecoveryTime));
                     break;
                 case 6:
                     xmlResult = contrlCardBuilder.BuildRelayTestCard(); //under Test 

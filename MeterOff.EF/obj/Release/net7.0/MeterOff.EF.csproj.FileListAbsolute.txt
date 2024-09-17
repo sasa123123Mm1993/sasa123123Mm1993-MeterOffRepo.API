@@ -40,3 +40,5 @@ E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\Maintain
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\obj\Release\net7.0\MeterOff.EF.pdb
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\obj\Release\net7.0\MeterOff.EF.genruntimeconfig.cache
 E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\obj\Release\net7.0\ref\MeterOff.EF.dll
+E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\bin\Release\net7.0\GPICardDB.dll
+E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\bin\Release\net7.0\GPICardDB.pdb

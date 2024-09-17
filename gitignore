@@ -1,0 +1,43 @@
+# Ignore Visual Studio temporary files, build results, and
+# build directories
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+**/out/
+**/publish/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Auto-generated files
+*.log
+*.tlog
+*.vspx
+*.vspxuser
+*.pdb
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Mac build directories
+*.DS_Store
+
+# Rider IDE
+.idea/
+*.sln.iml
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/shelf
+
+# VS Code directories
+.vs/
+
+# NuGet Packages
+packages/
+*.nupkg

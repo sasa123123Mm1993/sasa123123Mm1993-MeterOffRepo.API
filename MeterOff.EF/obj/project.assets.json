@@ -75,6 +75,19 @@
           }
         }
       },
+      "Dapper/2.1.35": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/Dapper.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Dapper.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "EntityFramework/6.4.4": {
         "type": "package",
         "dependencies": {
@@ -2851,7 +2864,7 @@
           "lib/netstandard2.0/System.Data.DataSetExtensions.dll": {}
         }
       },
-      "System.Data.SqlClient/4.8.1": {
+      "System.Data.SqlClient/4.8.6": {
         "type": "package",
         "dependencies": {
           "Microsoft.Win32.Registry": "4.7.0",
@@ -4217,6 +4230,21 @@
           "bin/placeholder/GPICardCore.dll": {}
         }
       },
+      "GPICardDB/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Dapper": "2.1.35",
+          "GPICardCore": "1.0.0",
+          "System.Data.SqlClient": "4.8.6"
+        },
+        "compile": {
+          "bin/placeholder/GPICardDB.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/GPICardDB.dll": {}
+        }
+      },
       "MeterOff.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v7.0",
@@ -4302,6 +4330,27 @@
         "azureicon.png",
         "lib/netstandard2.0/Azure.Identity.dll",
         "lib/netstandard2.0/Azure.Identity.xml"
+      ]
+    },
+    "Dapper/2.1.35": {
+      "sha512": "YKRwjVfrG7GYOovlGyQoMvr1/IJdn+7QzNXJxyMh0YfFF5yvDmTYaJOVYWsckreNjGsGSEtrMTpnzxTUq/tZQw==",
+      "type": "package",
+      "path": "dapper/2.1.35",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Dapper.png",
+        "dapper.2.1.35.nupkg.sha512",
+        "dapper.nuspec",
+        "lib/net461/Dapper.dll",
+        "lib/net461/Dapper.xml",
+        "lib/net5.0/Dapper.dll",
+        "lib/net5.0/Dapper.xml",
+        "lib/net7.0/Dapper.dll",
+        "lib/net7.0/Dapper.xml",
+        "lib/netstandard2.0/Dapper.dll",
+        "lib/netstandard2.0/Dapper.xml",
+        "readme.md"
       ]
     },
     "EntityFramework/6.4.4": {
@@ -8846,10 +8895,10 @@
         "version.txt"
       ]
     },
-    "System.Data.SqlClient/4.8.1": {
-      "sha512": "HKLykcv6eZLbLnSMnlQ6Os4+UAmFE+AgYm92CTvJYeTOBtOYusX3qu8OoGhFrnKZax91UcLcDo5vPrqvJUTSNQ==",
+    "System.Data.SqlClient/4.8.6": {
+      "sha512": "2Ij/LCaTQRyAi5lAv7UUTV9R2FobC8xN9mE0fXBZohum/xLl8IZVmE98Rq5ugQHjCgTBRKqpXRb4ORulRdA6Ig==",
       "type": "package",
-      "path": "system.data.sqlclient/4.8.1",
+      "path": "system.data.sqlclient/4.8.6",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -8926,7 +8975,7 @@
         "runtimes/win/lib/netstandard2.0/System.Data.SqlClient.xml",
         "runtimes/win/lib/uap10.0.16299/System.Data.SqlClient.dll",
         "runtimes/win/lib/uap10.0.16299/System.Data.SqlClient.xml",
-        "system.data.sqlclient.4.8.1.nupkg.sha512",
+        "system.data.sqlclient.4.8.6.nupkg.sha512",
         "system.data.sqlclient.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
@@ -12427,6 +12476,11 @@
       "path": "../GPICardCore/GPICardCore.csproj",
       "msbuildProject": "../GPICardCore/GPICardCore.csproj"
     },
+    "GPICardDB/1.0.0": {
+      "type": "project",
+      "path": "../GPICardDB/GPICardDB.csproj",
+      "msbuildProject": "../GPICardDB/GPICardDB.csproj"
+    },
     "MeterOff.Core/1.0.0": {
       "type": "project",
       "path": "../MeterOff.Core/MeterOff.Core.csproj",
@@ -12437,6 +12491,7 @@
     "net7.0": [
       "EntityFramework >= 6.4.4",
       "GPICardCore >= 1.0.0",
+      "GPICardDB >= 1.0.0",
       "MeterOff.Core >= 1.0.0",
       "Microsoft.AspNetCore.OpenApi >= 7.0.9",
       "Microsoft.EntityFrameworkCore >= 7.0.9",
@@ -12449,19 +12504,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ahmed.fayez\\.nuget\\packages\\": {}
+    "C:\\Users\\Mostafa.Twfeek\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\MosTawfik\\MeterOff.EF\\MeterOff.EF.csproj",
+      "projectUniqueName": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.EF\\MeterOff.EF.csproj",
       "projectName": "MeterOff.EF",
-      "projectPath": "E:\\MosTawfik\\MeterOff.EF\\MeterOff.EF.csproj",
-      "packagesPath": "C:\\Users\\ahmed.fayez\\.nuget\\packages\\",
-      "outputPath": "E:\\MosTawfik\\MeterOff.EF\\obj\\",
+      "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.EF\\MeterOff.EF.csproj",
+      "packagesPath": "C:\\Users\\Mostafa.Twfeek\\.nuget\\packages\\",
+      "outputPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.EF\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\ahmed.fayez\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Mostafa.Twfeek\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12469,18 +12529,20 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "E:\\MosTawfik\\GPICardCore\\GPICardCore.csproj": {
-              "projectPath": "E:\\MosTawfik\\GPICardCore\\GPICardCore.csproj"
+            "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\GPICardCore\\GPICardCore.csproj": {
+              "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\GPICardCore\\GPICardCore.csproj"
             },
-            "E:\\MosTawfik\\MeterOff.Core\\MeterOff.Core.csproj": {
-              "projectPath": "E:\\MosTawfik\\MeterOff.Core\\MeterOff.Core.csproj"
+            "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\GPICardDB\\GPICardDB.csproj": {
+              "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\GPICardDB\\GPICardDB.csproj"
+            },
+            "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.Core\\MeterOff.Core.csproj": {
+              "projectPath": "E:\\المشروع الجديد\\Repository Pattern Project\\MyRepoproject\\MaintainanceWithRepoAndAngular\\SolutionBasic\\MeterOff.Core\\MeterOff.Core.csproj"
             }
           }
         }
@@ -12489,11 +12551,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -12557,7 +12614,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
       }
     }
   }

@@ -60,3 +60,5 @@ E:\MosTawfik\MeterOff.EF\obj\Debug\net7.0\MeterOff.1D15B91D.Up2Date
 E:\MosTawfik\MeterOff.EF\obj\Debug\net7.0\MeterOff.EF.genruntimeconfig.cache
 E:\MosTawfik\MeterOff.EF\obj\Debug\net7.0\ref\MeterOff.EF.dll
 >>>>>>> 8060463b1888907e97cf182db60415c95f7fb5dd
+E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\bin\Debug\net7.0\GPICardDB.dll
+E:\المشروع الجديد\Repository Pattern Project\MyRepoproject\MaintainanceWithRepoAndAngular\SolutionBasic\MeterOff.EF\bin\Debug\net7.0\GPICardDB.pdb

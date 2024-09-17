@@ -3535,7 +3535,6 @@ namespace MeterOff.EF.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CardNumber")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -3561,7 +3560,6 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ManufactureCompany")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -3569,7 +3567,6 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MeterOffReason")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -3586,12 +3583,10 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PaymentReceiptNumber")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SerialNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -3601,7 +3596,6 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("VersionNumber")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -3874,9 +3868,6 @@ namespace MeterOff.EF.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("MeterDataId")
-                        .HasColumnType("int");
-
                     b.Property<int>("MeterId")
                         .HasColumnType("int");
 
@@ -3898,8 +3889,6 @@ namespace MeterOff.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MeterDataId");
 
                     b.HasIndex("MeterStatusId");
 
@@ -6373,6 +6362,59 @@ namespace MeterOff.EF.Migrations
                     b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
@@ -7091,7 +7133,7 @@ namespace MeterOff.EF.Migrations
                         .IsRequired();
 
                     b.HasOne("MeterOff.Core.Models.Infrastructure.MeterData", "Meter")
-                        .WithMany("MeterMaintenanceHistory")
+                        .WithMany()
                         .HasForeignKey("MeterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -7149,10 +7191,6 @@ namespace MeterOff.EF.Migrations
 
             modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.MeterStatusLog", b =>
                 {
-                    b.HasOne("MeterOff.Core.Models.Infrastructure.MeterData", null)
-                        .WithMany("MeterStatusHistory")
-                        .HasForeignKey("MeterDataId");
-
                     b.HasOne("MeterOff.Core.Models.Infrastructure.MeterStatusType", "MeterStatus")
                         .WithMany("MeterStatusHistory")
                         .HasForeignKey("MeterStatusId")
@@ -7169,7 +7207,7 @@ namespace MeterOff.EF.Migrations
                         .HasForeignKey("ConsumerId");
 
                     b.HasOne("MeterOff.Core.Models.Infrastructure.MeterData", "Meter")
-                        .WithMany("MeterMovementLogs")
+                        .WithMany()
                         .HasForeignKey("MeterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -7378,7 +7416,7 @@ namespace MeterOff.EF.Migrations
                         .IsRequired();
 
                     b.HasOne("MeterOff.Core.Models.Infrastructure.MeterData", "Meter")
-                        .WithMany("PrintAccountMeterExchangeOrderHistory")
+                        .WithMany()
                         .HasForeignKey("MeterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -7641,17 +7679,6 @@ namespace MeterOff.EF.Migrations
                     b.Navigation("FeesSteps");
 
                     b.Navigation("TariffFees");
-                });
-
-            modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.MeterData", b =>
-                {
-                    b.Navigation("MeterMaintenanceHistory");
-
-                    b.Navigation("MeterMovementLogs");
-
-                    b.Navigation("MeterStatusHistory");
-
-                    b.Navigation("PrintAccountMeterExchangeOrderHistory");
                 });
 
             modelBuilder.Entity("MeterOff.Core.Models.Infrastructure.MeterStatusType", b =>
