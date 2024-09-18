@@ -76,7 +76,8 @@ namespace MeterOff.EF.Services
 
 
             var lastCardFortechnician = _context.ControlCard
-                .OrderByDescending(a => a.CreationTime).FirstOrDefault(a => a.EmployeeId == card.EmployeeId);
+                .OrderByDescending(a => a.CreationTime)
+                .FirstOrDefault(a => a.EmployeeId == card.EmployeeId);
 
             if (cardFunction != null)
             {
@@ -290,8 +291,6 @@ namespace MeterOff.EF.Services
         {
             var serverDate = DateTime.Now;
             return serverDate.AddDays(7); ;
-
-            
         }
 
         public DateTime GetTechinicianActivationDate()
@@ -302,9 +301,15 @@ namespace MeterOff.EF.Services
 
         public string CancelControlCard(int controlCardId)
         {
-            throw new NotImplementedException();
+            var model = _context.ControlCard.Find(controlCardId);
+            if (model !=null)
+            {
+                model.IsDeleted = true;
+                _context.SaveChanges();
+                return "تم الحذف بنجاح";
+            }
+            else { return "Cancel Failed !"; }
         }
-
         public ControlLaunchOutput ReadControlLaunch()
         {
             throw new NotImplementedException();

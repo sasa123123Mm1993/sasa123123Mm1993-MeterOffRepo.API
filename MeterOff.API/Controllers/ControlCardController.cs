@@ -64,9 +64,31 @@ namespace MeterOff.API.Controllers
             return StatusCode(200, result);
         }
 
+        [HttpGet("GetTechinicianExpirationDate")]
+        public IActionResult GetTechinicianExpirationDate()
+        {
+            var model = _ControlCard.GetTechinicianExpirationDate();
+            return StatusCode(200, model);
+
+        }
+
+        [HttpGet("GetTechinicianActivationDate")]
+        public IActionResult GetTechinicianActivationDate()
+        {
+            var model = _ControlCard.GetTechinicianActivationDate();
+            return StatusCode(200, model);
+
+        }
+
+
+        [HttpPost("CancelControlCard")]
+        public async Task<IActionResult> CancelControlCard(int controlCardId)
+        {
+            var result = _ControlCard.CancelControlCard(controlCardId);
+            return StatusCode(200, result);
+        }
+
 
         
-
-
     }
 }

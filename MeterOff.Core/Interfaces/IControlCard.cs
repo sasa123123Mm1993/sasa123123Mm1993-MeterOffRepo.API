@@ -20,7 +20,8 @@ namespace MeterOff.Core.Interfaces
         DateTime GetTechinicianExpirationDate();
         DateTime GetTechinicianActivationDate();
         string CancelControlCard(int controlCardId);
-
         public ControlLaunchOutput ReadControlLaunch();
+
+
     }
 }
