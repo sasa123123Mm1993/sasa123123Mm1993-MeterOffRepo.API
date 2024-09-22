@@ -35,7 +35,7 @@ namespace MeterOff.API.Controllers
 
        
 
-        [HttpPost("GetAll")]
+        [HttpPost("GetMeterOffData")]
         public async Task<IActionResult> GetAllData(MetersDataInput metersDataInput)
         {
             try
@@ -45,7 +45,7 @@ namespace MeterOff.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                return StatusCode(200, ex.Message);
             }
         }
 
@@ -53,17 +53,16 @@ namespace MeterOff.API.Controllers
         [HttpPost("GetAllTotalOfMeterOff")]
         public async Task<IActionResult> GetAllTotalOfMeterOff(TotalMeterOff model)
         {
-            //try
-            //{
-            //    var data = await _report.GetAllData(metersDataInput);
-            //    return Ok(data);
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, ex.Message);
-            //}
+            try
+            {
+                var data = await _report.GetTotalMeterOff(model);
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(200, ex.Message);
+            }
 
-            return Ok();
         }
 
 

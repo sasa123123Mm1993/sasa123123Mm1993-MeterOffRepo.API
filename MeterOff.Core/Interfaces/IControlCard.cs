@@ -21,7 +21,6 @@ namespace MeterOff.Core.Interfaces
         DateTime GetTechinicianActivationDate();
         string CancelControlCard(int controlCardId);
         public ControlLaunchOutput ReadControlLaunch();
-
-
+        public IEnumerable<Tamper> GetAllTempers();
     }
 }

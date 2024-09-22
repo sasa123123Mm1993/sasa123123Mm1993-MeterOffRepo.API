@@ -9,6 +9,7 @@ using MeterOff.EF.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.DirectoryServices.Protocols;
 
 namespace MeterOff.API.Controllers
 {
@@ -46,6 +47,24 @@ namespace MeterOff.API.Controllers
            
         }
 
+        [HttpGet("GetAllTampers")]
+        public async Task<IActionResult> GetAllTampers()
+        {
+            try
+            {
+                var data =  _ControlCard.GetAllTempers();
+
+                return StatusCode(200, data);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+
+
+
         [HttpGet("GetAllTechinicions")]
         //[Authorize(Roles = StaticUserRoles.USER)]
         public IActionResult GetAllTechinicions(int? RegionId, string? filter, int? cardFunctionId)
@@ -61,7 +80,7 @@ namespace MeterOff.API.Controllers
         {
             //var data = _mapper.Map<InsertControlCardInput>(dto);
            var result =  _ControlCard.AddContolCard(dto);
-            return StatusCode(200, result);
+           return StatusCode(201, result);
         }
 
         [HttpGet("GetTechinicianExpirationDate")]
