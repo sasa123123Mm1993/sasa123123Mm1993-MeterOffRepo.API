@@ -105,7 +105,7 @@ namespace MeterOff.API.Controllers
 
 
         [HttpPost("CancelControlCard")]
-        public async Task<IActionResult> CancelControlCard(int controlCardId)
+        public async Task<IActionResult> CancelControlCard(string controlCardId)
         {
             var result = _ControlCard.CancelControlCard(controlCardId);
             return StatusCode(200, result);

@@ -338,14 +338,18 @@ namespace MeterOff.EF.Services
             return serverDate;
         }
 
-        public string CancelControlCard(int controlCardId)
+        public string CancelControlCard(string controlCardId)
         {
-            var model = _context.ControlCard.Find(controlCardId);
+            var model = _context.ControlCard.FirstOrDefault(m=>m.CardId == controlCardId);
             if (model !=null)
             {
                 model.IsDeleted = true;
                 _context.SaveChanges();
                 return "تم الحذف بنجاح";
+            }
+            if (model.IsDeleted == true)
+            {
+                throw new Exception("رقم الكارت غير موجود بالنظام");
             }
             else { return "Cancel Failed !"; }
         }
