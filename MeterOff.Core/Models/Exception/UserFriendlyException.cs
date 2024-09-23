@@ -12,8 +12,10 @@ namespace MeterOff.Core.Models.Exception
         {
             Code = code;
             Description = description;
+            Message = message;
         }
         public int? Code { get; set; }
         public string Description { get; set; }
+        public string Message { get; set; }
     }
 }

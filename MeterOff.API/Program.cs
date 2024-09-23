@@ -9,6 +9,11 @@ using MeterOff.Core.Interfaces;
 using MeterOff.Core.Models.Identity;
 using MeterOff.EF.Services;
 using MeterOff.API;
+using MeterOff.Core.Models.Base;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
+using Azure;
+using MeterOff.API.Error_Handeling;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,6 +72,7 @@ builder.Services.AddScoped<ITestRegister, TestRegisterService>();
 builder.Services.AddScoped<IReport, ReportService>();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
+
 #endregion
 
 
@@ -98,9 +104,29 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
+if (app.Environment.IsProduction())
+{
+    app.UseDeveloperExceptionPage();
+}
+
+app.UseMiddleware<ErrorHandlerMiddleware>();
+//app.UseMiddleware<HttpResponseException>();
+
+//app.UseExceptionHandler(c => c.Run(async context =>
+//{
+//    var exception = context.Features.Get<IExceptionHandlerPathFeature>().Error;
+    
+
+//    var response = new { Msg = exception.Message };
+//    context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+//    await context.Response.WriteAsJsonAsync(response);
+
+//}));
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+
 
 
 
@@ -108,6 +134,7 @@ app.UseCors(options =>
 options.WithOrigins("http://localhost:4200")
 .AllowAnyMethod()
 .AllowAnyHeader());
+
 
 
 app.UseHttpsRedirection();

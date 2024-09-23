@@ -8,7 +8,7 @@ namespace MeterOff.Core.Models.Dto.ControlCard
 {
     public class InsertControlCardInput
     {
-        public int EmployeeId { get; set; }
+        public int EmployeeId { get; set;}
         public string StartDate { get; set; }
         public string ExpirationDate { get; set; }
         public int Limitation { get; set; }//0 one meter   1 many meters  2 unlimited

@@ -1,7 +1,9 @@
 ﻿using Dapper;
 using MeterOff.Core.Interfaces;
 using MeterOff.Core.Models.Base;
+using MeterOff.Core.Models.Dto.CMaintenenceMetersOff;
 using MeterOff.Core.Models.Dto.Reports;
+using MeterOff.Core.Models.Exception;
 using MeterOff.Core.Models.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -101,6 +103,60 @@ namespace MeterOff.EF.Services
            
         }
 
+        public async Task<TotalMeterOffDto> GetTotalMeterOff(TotalMeterOff TotalMeterOffInput) 
+        {
+            
+            try
+            {
+                if (TotalMeterOffInput == null || TotalMeterOffInput.FromDate == null || TotalMeterOffInput.ToDate == null)
+                    throw new Exception("خطأ فى البيانات المدخلة");
 
+                string query = $@"SELECT ISNULL(DisabledMeters.DisabledMeters, 0) AS DisabledMeters, ISNULL(EndedMeters.EndedMeters, 0) AS EndedMeters, 
+                        ISNULL(NotRecivedMeters.NotRecivedMeters, 0) AS NotRecivedMeters, ISNULL(RecivedMeters.RecivedMeters, 0) 
+                        AS RecivedMeters, ISNULL(InstalledMeters.InstalledMeters, 0) AS InstalledMeters, ISNULL(NotInstalledMeters.NotInstalledMeters, 0) AS NotInstalledMeters
+                        FROM  (SELECT 1 AS ndx, COUNT(0) AS RecivedMeters
+                        FROM  dbo.CMaintenenceMetersOff AS CMaintenenceMetersOff_1
+                        WHERE (IsMeterRecieved = 1) AND (MeterOffStatusId = 2 or MeterOffStatusId = 1) AND (IsDeleted = 0) 
+                        AND (SmallDepartmentCode in (10)) AND (CreationTime >= CONVERT(datetime, '{TotalMeterOffInput.FromDate}', 101))
+                        AND (CreationTime <= CONVERT(datetime, '{TotalMeterOffInput.ToDate}', 101))) AS RecivedMeters FULL OUTER JOIN
+                        (SELECT 1 AS ndx, COUNT(0) AS InstalledMeters
+                        FROM dbo.CMaintenenceMetersOff AS CMaintenenceMetersOff_1
+                        WHERE (IsMeterInstalled = 1) AND (MeterOffStatusId = 1) AND (IsDeleted = 0) AND (SmallDepartmentCode in (10)) 
+                        AND (CreationTime >= CONVERT(datetime, '{TotalMeterOffInput.FromDate}', 101)) AND (CreationTime <= CONVERT(datetime, '{TotalMeterOffInput.ToDate}', 101))) AS InstalledMeters ON 
+                        RecivedMeters.ndx = InstalledMeters.ndx FULL OUTER JOIN (SELECT 1 AS ndx, COUNT(0) AS NotRecivedMeters 
+                        FROM dbo.CMaintenenceMetersOff AS CMaintenenceMetersOff_1
+                        WHERE   (IsMeterRecieved = 0) AND (MeterOffStatusId != 2 or MeterOffStatusId != 1) AND (IsEnded = 1) 
+                        AND (IsDeleted = 0) AND (SmallDepartmentCode in (10)) AND (CreationTime >= CONVERT(datetime, '{TotalMeterOffInput.FromDate}', 101)) 
+                        AND (CreationTime <= CONVERT(datetime, '{TotalMeterOffInput.ToDate}', 101))) AS NotRecivedMeters ON RecivedMeters.ndx = NotRecivedMeters.ndx FULL OUTER JOIN
+                        (SELECT 1 AS ndx, COUNT(0) AS NotInstalledMeters FROM dbo.CMaintenenceMetersOff AS CMaintenenceMetersOff_1
+                        WHERE (IsMeterInstalled = 0) AND ( MeterOffStatusId != 1) AND (IsEnded = 1) AND (IsDeleted = 0)
+                        AND (SmallDepartmentCode in (10)) AND (CreationTime >= CONVERT(datetime, '{TotalMeterOffInput.FromDate}', 101)) AND 
+                        (CreationTime <= CONVERT(datetime, '{TotalMeterOffInput.ToDate}', 101))) AS NotInstalledMeters ON NotRecivedMeters.ndx = NotInstalledMeters.ndx FULL OUTER JOIN
+                        (SELECT 1 AS ndx, COUNT(0) AS EndedMeters FROM  dbo.CMaintenenceMetersOff
+                        WHERE   (MeterOffStatusId = 3 or MeterOffStatusId = 1 or MeterOffStatusId = 2)
+                        AND (IsDeleted = 0) AND (IsEnded = 1) AND (SmallDepartmentCode in (10)) AND (CreationTime >= CONVERT(datetime, '{TotalMeterOffInput.FromDate}', 101)) 
+                        AND (CreationTime <= CONVERT(datetime, '{TotalMeterOffInput.ToDate}', 101))) AS EndedMeters ON NotInstalledMeters.ndx = EndedMeters.ndx FULL OUTER JOIN
+                        (SELECT 1 AS ndx, COUNT(0) AS DisabledMeters FROM  dbo.CMaintenenceMetersOff AS CMaintenenceMetersOff_1 WHERE   (MeterOffStatusId = 4) 
+                        AND (IsDeleted = 0) AND (SmallDepartmentCode in (10)) AND (CreationTime >= CONVERT(datetime, '{TotalMeterOffInput.FromDate}', 101)) 
+                        AND (CreationTime <= CONVERT(datetime, '{TotalMeterOffInput.ToDate}', 101))) AS DisabledMeters ON EndedMeters.ndx = DisabledMeters.ndx
+                        WHERE  (ISNULL(DisabledMeters.DisabledMeters, 0) + ISNULL(EndedMeters.EndedMeters, 0) + ISNULL(NotRecivedMeters.NotRecivedMeters, 0) + 
+                        ISNULL(RecivedMeters.RecivedMeters, 0) + ISNULL(InstalledMeters.InstalledMeters, 0) + ISNULL(NotInstalledMeters.NotInstalledMeters, 0) > 0);";
+
+                using (var connection = _dapperContext.CreateConnection())
+                {
+                    var model = await connection.QueryFirstAsync<TotalMeterOffDto>(query);
+                    return (TotalMeterOffDto)model;
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+       
     }
 }

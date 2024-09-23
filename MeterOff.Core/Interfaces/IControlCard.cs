@@ -19,8 +19,8 @@ namespace MeterOff.Core.Interfaces
         bool ValidateMeterSerialNumber(string meterSerialNumber);
         DateTime GetTechinicianExpirationDate();
         DateTime GetTechinicianActivationDate();
-        string CancelControlCard(int controlCardId);
-
+        string CancelControlCard(string controlCardId);
         public ControlLaunchOutput ReadControlLaunch();
+        public IEnumerable<Tamper> GetAllTempers();
     }
 }
