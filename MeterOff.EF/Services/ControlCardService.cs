@@ -16,6 +16,7 @@ using MeterOff.Core.Models.Dto.Reports;
 using MeterOff.Core.Models.Dto.CardFunctionDto;
 using MeterOff.Core.Models.Dto.CMaintenenceMetersOff;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
+using MeterOff.Core.Models.Base;
 
 namespace MeterOff.EF.Services
 {
@@ -186,15 +187,31 @@ namespace MeterOff.EF.Services
                     case 0: //
                         xmlResult = contrlCardBuilder.BuildSetDateTimeCard(DateTime.Now);
                         break;
-                    //case 1: // Copy Meter Card
-                    //    xmlResult = contrlCardBuilder.cop
-                    //    break;
-                    case 2:
+                    case 1: // نقل بيانات عداد
+                        if(card.MeterSerial != null) 
+                        {
+                          var meterSerialExist = _context.MeterData.Any(m => m.SerialNumber == card.MeterSerial);
+                            if (meterSerialExist)
+                            {
+                                xmlResult = contrlCardBuilder.BuildCopyMeterCard(card.MeterSerial);
+                                break;
+                            }
+                            else
+                            {
+                                throw new Exception("No Meter Found With This Serial Number");
+                            }
+                        }
+                        else
+                        {
+                            throw new Exception("You Must Enter Serial Number");
+                        }
+
+                    case 2: //تجميع قراءات
                         xmlResult = contrlCardBuilder.BuildCollectCard();
                         break;
                     case 3:
                         var tamperCodeList = card.TampersCodes.Select(int.Parse).ToList();
-                        xmlResult = contrlCardBuilder.BuildClearTamperCard(tamperCodeList); //under Test
+                        xmlResult = contrlCardBuilder.BuildClearTamperCard(tamperCodeList); 
                         break;
                     case 4:
                         xmlResult = contrlCardBuilder.BuildResetCard();
@@ -204,7 +221,7 @@ namespace MeterOff.EF.Services
                         xmlResult = contrlCardBuilder.BuildToggleRelayCard(Convert.ToInt32(card.ReverseCardRecoveryTime));
                         break;
                     case 6:
-                        xmlResult = contrlCardBuilder.BuildRelayTestCard(); //under Test 
+                        xmlResult = contrlCardBuilder.BuildRelayTestCard(); 
                         break;
 
                     case 7:
@@ -344,20 +361,39 @@ namespace MeterOff.EF.Services
             return serverDate;
         }
 
-        public string CancelControlCard(string controlCardId)
+        public PayLoad<DeleteResult> CancelControlCard(string controlCardId)
         {
             var model = _context.ControlCard.FirstOrDefault(m=>m.CardId == controlCardId);
+            if (model == null)
+                throw new Exception("رقم الكارت غير موجود بالنظام");
+
+            if (model.IsDeleted == true)
+            {
+                throw new Exception("الكارت ممسوح بالفعل");
+            }
+
             if (model !=null)
             {
                 model.IsDeleted = true;
                 _context.SaveChanges();
-                return "تم الحذف بنجاح";
+                var payloadDto = new PayLoad<DeleteResult>
+                {
+                    Code = 200,
+                    Message = "Deleted Successfully",
+                    Model = null,
+                };
+                return payloadDto;
             }
-            if (model.IsDeleted == true)
-            {
-                throw new Exception("رقم الكارت غير موجود بالنظام");
+            
+            else {
+                var failedPayloadDto = new PayLoad<DeleteResult>
+                {
+                    Code = 6000,
+                    Message = "Deleted Failed",
+                    Model = null,
+                };
+                return failedPayloadDto;
             }
-            else { return "Cancel Failed !"; }
         }
         public ControlLaunchOutput ReadControlLaunch()
         {

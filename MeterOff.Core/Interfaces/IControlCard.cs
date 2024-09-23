@@ -1,4 +1,5 @@
-﻿using MeterOff.Core.Models.Dto.CardFunctionDto;
+﻿using MeterOff.Core.Models.Base;
+using MeterOff.Core.Models.Dto.CardFunctionDto;
 using MeterOff.Core.Models.Dto.ControlCard;
 using MeterOff.Core.Models.Dto.Reports;
 using MeterOff.Core.Models.Infrastructure;
@@ -19,7 +20,7 @@ namespace MeterOff.Core.Interfaces
         bool ValidateMeterSerialNumber(string meterSerialNumber);
         DateTime GetTechinicianExpirationDate();
         DateTime GetTechinicianActivationDate();
-        string CancelControlCard(string controlCardId);
+        PayLoad<DeleteResult> CancelControlCard(string controlCardId);
         public ControlLaunchOutput ReadControlLaunch();
         public IEnumerable<Tamper> GetAllTempers();
     }
