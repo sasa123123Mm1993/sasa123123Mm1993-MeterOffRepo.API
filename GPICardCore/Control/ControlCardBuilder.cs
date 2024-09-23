@@ -22,8 +22,7 @@ namespace GPICardCore
 
         public event CardCreatedHandler OnCardCreated;
 
-       // private const int MaximumMeterNumberLength = 8;
-
+     
 
         private XDocument defaultXml = new XDocument(
         new XElement("meterData",
@@ -41,6 +40,26 @@ namespace GPICardCore
         )));
      
    
+        private void CheckXMLBasicValues()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(this.defaultXml.Descendants("meterType").FirstOrDefault()?.Value)) throw new Exception("Meter Type Invalid Value Please Set it First");
+                if (string.IsNullOrEmpty(this.defaultXml.Descendants("meterVersion").FirstOrDefault()?.Value)) throw new Exception("Meter Version Invalid Value Please Set it First");
+                if (string.IsNullOrEmpty(this.defaultXml.Descendants("manufacturerId").FirstOrDefault()?.Value)) throw new Exception("Manufacturer Id Invalid Value Please Set it First");
+                if (string.IsNullOrEmpty(this.defaultXml.Descendants("cardId").FirstOrDefault()?.Value)) throw new Exception("Card Id Invalid Value Please Set it First");
+                if (string.IsNullOrEmpty(this.defaultXml.Descendants("distributionCompanyCode").FirstOrDefault()?.Value)) throw new Exception("Distribution Company Code Invalid Value Please Set it First");
+                if (string.IsNullOrEmpty(this.defaultXml.Descendants("sectorCode").FirstOrDefault()?.Value)) throw new Exception("sector Code Invalid Value Please Set it First");
+                if (string.IsNullOrEmpty(this.defaultXml.Descendants("controlCardActivationDate").FirstOrDefault()?.Value)) throw new Exception("Control Card Activation Date Invalid Value Please Set it First");
+                if (string.IsNullOrEmpty(this.defaultXml.Descendants("controlCardExpiryDate").FirstOrDefault()?.Value)) throw new Exception("Control Card Expiry Date Invalid Value Please Set it First");
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+        }
     
         public void SetMeterType (int  meterType)
         {
@@ -153,6 +172,12 @@ namespace GPICardCore
 
         public void SetCardPeriod(ControlCardActivationPeriod cardDate)
         {
+            if (cardDate.ActivationDate.Year < 2000 ||
+                cardDate.ActivationDate.Year < 2000)
+            {
+                throw new Exception("Control Card Activation Period Invalid .");
+            }
+
             if (!(cardDate.ExpiryDate >= cardDate.ActivationDate) )
             {
                 throw new Exception(" ExpiryDate less than ActivationDate");
@@ -178,6 +203,8 @@ namespace GPICardCore
 
         public string BuildToggleRelayCard(int reverseCardRecoveryTime)
         {
+            CheckXMLBasicValues();
+
             if ((reverseCardRecoveryTime < 0) || (reverseCardRecoveryTime > 60))
             {
                 throw new Exception($"ReverseCardRecoveryTime  value [{reverseCardRecoveryTime}] minute Invalid .");
@@ -206,6 +233,7 @@ namespace GPICardCore
 
         public string BuildCollectCard()
         {
+            CheckXMLBasicValues();
 
             XDocument local = new XDocument(this.defaultXml);
 
@@ -225,7 +253,7 @@ namespace GPICardCore
 
         public string BuildChangeDistributionCompanyCodeCard(string NewNumber)
         {
-              
+            CheckXMLBasicValues();
 
             if (string.IsNullOrWhiteSpace(NewNumber))
             {
@@ -251,8 +279,8 @@ namespace GPICardCore
         }
         public string BuildChangeMeterNumberCard(string currentNumber , string NewNumber)
         {
-            
-            
+            CheckXMLBasicValues();
+
             if (!Validate.ValidMeterNo( currentNumber) )
             {                
                 throw new Exception($"Current Meter Number [{currentNumber}] is Invalid , Meter Number Lenght Must be [{Validate.MaximumMeterNumberLength}] Digit");
@@ -287,7 +315,7 @@ namespace GPICardCore
         }
         public string BuildLunchCurrentCard()
         {
-            
+            CheckXMLBasicValues();
             XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
@@ -302,7 +330,7 @@ namespace GPICardCore
         }
         public string BuildRelayTestCard()
         {
-            
+            CheckXMLBasicValues();
             XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
@@ -317,7 +345,8 @@ namespace GPICardCore
         }
         public string BuildResetCard()
         {
-            
+            CheckXMLBasicValues();
+
 
             XDocument local = new XDocument(this.defaultXml);
 
@@ -338,7 +367,7 @@ namespace GPICardCore
         }
         public string BuildSetDateTimeCard(DateTime DateTimeValue)
         {
-            
+            CheckXMLBasicValues();
 
             XDocument local = new XDocument(this.defaultXml);
 
@@ -362,7 +391,7 @@ namespace GPICardCore
         }
         public string BuildSetDateTimeOnMeterManualCard()
         {
-            
+            CheckXMLBasicValues();
 
             XDocument local = new XDocument(this.defaultXml);
 
@@ -384,7 +413,7 @@ namespace GPICardCore
         }
         public string BuildClearTamperCard(List<int> tamperCodelist )
         {
-            
+            CheckXMLBasicValues();
 
             if (tamperCodelist.Count == 0)
             {
@@ -420,7 +449,8 @@ namespace GPICardCore
 
         public string BuildAlterTariffCard(List<TariffStep> tariffSteps,  TariffHeader header , decimal zeroConsumptionFeeAmount)
         {
-            
+            CheckXMLBasicValues();
+
             ValidateTariffSteps(tariffSteps);
 
             XDocument local = new XDocument(this.defaultXml);
@@ -529,7 +559,7 @@ namespace GPICardCore
 
         public string BuildAlarmCutoffLimitsCard( List<int> limits)
         {
-            
+            CheckXMLBasicValues();
 
             XDocument local = new XDocument(this.defaultXml);
 
@@ -563,7 +593,7 @@ namespace GPICardCore
 
         public string BuildLabCard(List<int> ControlWord , int AvailableKWh , int AvailableTime    )
         {
-            
+            CheckXMLBasicValues();
 
             XDocument local = new XDocument(this.defaultXml);
 
@@ -598,6 +628,7 @@ namespace GPICardCore
 
         public string BuildCopyMeterCard(string SourceMeterSerial)
         {
+            CheckXMLBasicValues();
             if (!Validate.ValidMeterNo(SourceMeterSerial))
             {
                 throw new Exception($"Source Meter Serial [{SourceMeterSerial}] Invalid .");
