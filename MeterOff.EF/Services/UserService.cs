@@ -15,10 +15,13 @@ using MeterOff.Core.Models.Identity;
 using Microsoft.AspNetCore.Http;
 using System.Data.Entity;
 using System.Data;
+using MeterOff.Core.Models.Base;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace MeterOff.EF.Services
 {
-    
+
     public class UserService : IAppUser
 
     {
@@ -27,10 +30,11 @@ namespace MeterOff.EF.Services
         private readonly DBContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         //private readonly AccountService _accountService;
 
 
-        public UserService(DBContext context,
+        public UserService(DBContext context, SignInManager<ApplicationUser> signInManager,
             IMapper mapper, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
             IAuthService authService)
         {
@@ -39,16 +43,16 @@ namespace MeterOff.EF.Services
             _userManager = userManager;
             _authService = authService;
             _roleManager = roleManager;
-           
+            _signInManager = signInManager;
             //_accountService = accountService;
         }
 
-      
+
         public async Task<InsertUserInput> AddAsync(InsertUserInput model)
         {
-            
-                if (model != null)
-                {
+
+            if (model != null)
+            {
 
                 //Create User With Role
                 var input = new NewRegisterDto
@@ -62,10 +66,10 @@ namespace MeterOff.EF.Services
                     NatId = model.NatId,
                     RoleId = model.RoleId,
                 };
-                
+
                 var userid = _context.Users.Where(u => u.UserName == model.UserName)
                      .Select(u => u.Id).FirstOrDefault();
-                if (userid !=null)
+                if (userid != null)
                 {
                     List<SmallDepartment_UserDto> NewDto = new List<SmallDepartment_UserDto>();
                     foreach (var item in model.smallDepartmentsIds)
@@ -106,13 +110,13 @@ namespace MeterOff.EF.Services
                 }
             }
 
-                return model;
-            
-            
-           
+            return model;
+
+
+
 
         }
-       
+
 
         public async Task<NewAuthServiceResponseDto> Register(NewRegisterDto model)
         {
@@ -192,15 +196,15 @@ namespace MeterOff.EF.Services
 
         public async Task<EditUserInput> UpdateAsync(string UserId, EditUserInput model)
         {
-            
-                var user = await _userManager.FindByIdAsync(UserId); //get user object by userid
-                var oldRoles = await _userManager.GetRolesAsync(user);  // Get the role nameList for this user
-                var oldRoleId = _context.UserRoles.FirstOrDefault(m=>m.UserId == UserId).RoleId;
-                var oldRoleName = _context.Roles.Where(r => r.Id == oldRoleId).Select(r => r.Name).FirstOrDefault();
-                var removeResult = await _userManager.RemoveFromRoleAsync(user, oldRoleName);
+
+            var user = await _userManager.FindByIdAsync(UserId); //get user object by userid
+            var oldRoles = await _userManager.GetRolesAsync(user);  // Get the role nameList for this user
+            var oldRoleId = _context.UserRoles.FirstOrDefault(m => m.UserId == UserId).RoleId;
+            var oldRoleName = _context.Roles.Where(r => r.Id == oldRoleId).Select(r => r.Name).FirstOrDefault();
+            var removeResult = await _userManager.RemoveFromRoleAsync(user, oldRoleName);
 
             if (model != null && user != null)
-                {
+            {
 
 
                 // var result = await _userManager.AddToRoleAsync(user, roleName);
@@ -213,26 +217,26 @@ namespace MeterOff.EF.Services
 
 
                 user.FullName = model.FullName;
-                    user.UserName = model.UserName;
-                    user.IsActive = model.IsActive;
-                    user.NationalId = model.NatId;
-                    var resultOfUpdateUser = await _userManager.UpdateAsync(user);
-                    
+                user.UserName = model.UserName;
+                user.IsActive = model.IsActive;
+                user.NationalId = model.NatId;
+                var resultOfUpdateUser = await _userManager.UpdateAsync(user);
 
-                    List<SmallDepartment_UserDto> oldDto = new List<SmallDepartment_UserDto>();
-                    var oldUserDepartment = _context.SmallDepartment_Users.Where(m => m.AppUserId == UserId).ToList();
-                    foreach (var item in oldUserDepartment)
-                    {
-                        item.IsDeleted = true;
-                    }
 
-                    List<SmallDepartment_UserDto> NewDto = new List<SmallDepartment_UserDto>();
-                    foreach (var item in model.smallDepartmentsIds)
-                    {
-                        var smallDepartment_UserDto = new SmallDepartment_UserDto();
-                        smallDepartment_UserDto.SmallDepartmentId = item;
-                        smallDepartment_UserDto.AppUserId = UserId; 
-                        NewDto.Add(smallDepartment_UserDto);
+                List<SmallDepartment_UserDto> oldDto = new List<SmallDepartment_UserDto>();
+                var oldUserDepartment = _context.SmallDepartment_Users.Where(m => m.AppUserId == UserId).ToList();
+                foreach (var item in oldUserDepartment)
+                {
+                    item.IsDeleted = true;
+                }
+
+                List<SmallDepartment_UserDto> NewDto = new List<SmallDepartment_UserDto>();
+                foreach (var item in model.smallDepartmentsIds)
+                {
+                    var smallDepartment_UserDto = new SmallDepartment_UserDto();
+                    smallDepartment_UserDto.SmallDepartmentId = item;
+                    smallDepartment_UserDto.AppUserId = UserId;
+                    NewDto.Add(smallDepartment_UserDto);
                     _context.SmallDepartment_Users.Update(new SmallDepartment_User
                     {
                         AppUserId = smallDepartment_UserDto.AppUserId,
@@ -244,10 +248,10 @@ namespace MeterOff.EF.Services
 
                 _context.SaveChanges();
 
-                }
+            }
 
             return model;
-            
+
         }
 
         public ApplicationUser DeActiveUserNew(string userId)
@@ -306,7 +310,7 @@ namespace MeterOff.EF.Services
         }
 
 
-        public IEnumerable<SmallDepartmentUserDtoOutput> GetAllSmallDepartment_UserOutput() 
+        public IEnumerable<SmallDepartmentUserDtoOutput> GetAllSmallDepartment_UserOutput()
         {
             var data = _context.SmallDepartment_Users.ToList();
 
@@ -384,7 +388,7 @@ namespace MeterOff.EF.Services
         public async Task<UserDepartmentsRolesOutput> GetUserDataById(string userId)
         {
             var user = _context.Users
-              .FirstOrDefault(u => u.Id == userId); 
+              .FirstOrDefault(u => u.Id == userId);
 
             var userRoleId = _context.UserRoles
                .Where(ur => ur.UserId == userId)
@@ -469,7 +473,7 @@ namespace MeterOff.EF.Services
             //    throw new UserFriendlyException("User Not Found");
             //}
 
-           
+
 
             if (model.smallDepartmentsIds.Any(item => item == null) || model.smallDepartmentsIds.Any(item => item == 0))
             {
@@ -504,7 +508,7 @@ namespace MeterOff.EF.Services
             return true;
 
         }
-        public bool ValidateUpdateUserWithDeps(string userId,EditUserInput model)
+        public bool ValidateUpdateUserWithDeps(string userId, EditUserInput model)
         {
 
             if (model == null)
@@ -528,7 +532,7 @@ namespace MeterOff.EF.Services
             }
 
 
-            if (model.smallDepartmentsIds.Any(item => item == null)|| model.smallDepartmentsIds.Any(item => item == 0))
+            if (model.smallDepartmentsIds.Any(item => item == null) || model.smallDepartmentsIds.Any(item => item == 0))
             {
                 throw new UserFriendlyException("يجب ادخال ادارة للمستخدم");
             }
@@ -599,6 +603,65 @@ namespace MeterOff.EF.Services
             return users;
         }
 
+        public ChangePasswordDtoOutput ChangePassword(ChangePasswordDto model)
+        {
+            var user = _context.Users.FirstOrDefault(u => u.Id == model.UserId);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
 
+            var result =  _userManager.ChangePasswordAsync(user, model.currentPassword, model.newPassword);
+            if (result.Result.Succeeded)
+            {
+                var ChangePasswordDto = new ChangePasswordDtoOutput
+                {
+                    Code = 200,
+                    Message = "Updated Successfully",
+                    Model = model
+                   
+                };
+                return ChangePasswordDto;
+            }
+
+            else
+            {
+                var errors = result.Result.Errors.Select(e => e.Description);
+                var errorChangePasswordDto = new ChangePasswordDtoOutput
+                {
+                    Code = 6000,
+                    Message = errors.ToString(),
+                    Model = model,
+                };
+                return errorChangePasswordDto;
+            }
+
+        }
+
+      
+
+      
+
+       public Logout Logout()
+        {
+           var result =  _signInManager.SignOutAsync();
+            if (result == null)
+            {
+                var errorLogoutDto = new Logout
+                {
+                    Code = 6000,
+                    Message = "Logout Failed",
+                    Model = null,
+                };
+                return errorLogoutDto;
+            }
+            var logoutDto = new Logout
+            {
+                Code = 200,
+                Message = "Logout Successfully",
+                Model = null
+            };
+            return logoutDto;
+        }
     }
 }

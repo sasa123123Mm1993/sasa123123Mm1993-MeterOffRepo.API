@@ -4,6 +4,7 @@ using MeterOff.Core.Models.Dto.SmallDepartmentDtos;
 using MeterOff.Core.Models.Dto.UserDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MeterOff.API.Controllers
@@ -116,10 +117,31 @@ namespace MeterOff.API.Controllers
             return BadRequest();
         }
 
+        [HttpPost("ChangePassword")]
+        public IActionResult ChangePassword(ChangePasswordDto input)
+        {
+            var result = _appUser.ChangePassword(input);
+            if (result == null)
+                return NotFound();
+            
+            else
+            return Ok(result);
+            
+        }
 
 
+        [HttpPost("Logout")]
+        public  IActionResult Logout()
+        {
 
+            var result = _appUser.Logout();
+            if (result == null)
+                return NotFound();
 
+            else
+                return Ok(result);
+
+        }
 
 
 

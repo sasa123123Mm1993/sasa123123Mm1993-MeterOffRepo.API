@@ -80,7 +80,7 @@ namespace MeterOff.API.Controllers
         {
             //var data = _mapper.Map<InsertControlCardInput>(dto);
            var result =  _ControlCard.AddContolCard(dto);
-           return StatusCode(201, result);
+           return StatusCode(200, result);
         }
 
         [HttpGet("GetTechinicianExpirationDate")]

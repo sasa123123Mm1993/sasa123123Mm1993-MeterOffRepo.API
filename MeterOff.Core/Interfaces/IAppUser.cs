@@ -3,6 +3,8 @@ using MeterOff.Core.Models.Dto.Auth;
 using MeterOff.Core.Models.Dto.SmallDepartmentDtos;
 using MeterOff.Core.Models.Dto.UserDto;
 using MeterOff.Core.Models.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +27,12 @@ namespace MeterOff.Core.Interfaces
         Task<InsertUserInput> AddAsync(InsertUserInput model);
        
         Task<EditUserInput> UpdateAsync(string UserId, EditUserInput model);
+        ChangePasswordDtoOutput ChangePassword(ChangePasswordDto model);
+
+        Logout Logout();
+        
+
+        
         ApplicationUser DeActiveUser(string userId);
         ApplicationUser ResetUserPass(string userId);
 

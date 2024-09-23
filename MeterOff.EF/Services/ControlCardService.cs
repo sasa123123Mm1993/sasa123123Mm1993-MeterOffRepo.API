@@ -186,6 +186,12 @@ namespace MeterOff.EF.Services
                     case 0: //
                         xmlResult = contrlCardBuilder.BuildSetDateTimeCard(DateTime.Now);
                         break;
+                    //case 1: // Copy Meter Card
+                    //    xmlResult = contrlCardBuilder.cop
+                    //    break;
+                    case 2:
+                        xmlResult = contrlCardBuilder.BuildCollectCard();
+                        break;
                     case 3:
                         var tamperCodeList = card.TampersCodes.Select(int.Parse).ToList();
                         xmlResult = contrlCardBuilder.BuildClearTamperCard(tamperCodeList); //under Test
@@ -371,5 +377,7 @@ namespace MeterOff.EF.Services
             var model = _context.Tamper.Where(t=>t.Code !="0" & t.Code !="9").ToList();
             return model;
         }
+
+
     }
 }
