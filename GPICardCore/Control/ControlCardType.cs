@@ -14,6 +14,7 @@
         TarrifUpdate,
         AlarmCutoffLimits,
         Lab  ,
-        Collect 
+        Collect ,
+        CopyMeter
     }
 }

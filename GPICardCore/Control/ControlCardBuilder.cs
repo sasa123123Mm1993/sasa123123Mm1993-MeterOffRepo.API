@@ -31,7 +31,7 @@ namespace GPICardCore
         new XElement("meterVersion"),
         new XElement("manufacturerId"),
         new XElement("cardId"),
-        new XElement("cardType", "1"),
+        new XElement("cardType", 1),
 
         new XElement("distributionCompanyCode"),
         new XElement("sectorCode"),
@@ -93,7 +93,7 @@ namespace GPICardCore
             }
             else
             {
-                throw new Exception("The cardId value is invalid.");
+                throw new Exception("The cardId value is Invalid.");
             }
         }
 
@@ -596,7 +596,27 @@ namespace GPICardCore
             return local.ToString();
         }
 
+        public string BuildCopyMeterCard(string SourceMeterSerial)
+        {
+            if (!Validate.ValidMeterNo(SourceMeterSerial))
+            {
+                throw new Exception($"Source Meter Serial [{SourceMeterSerial}] Invalid .");
+            }
+             
+            XDocument local = new XDocument(this.defaultXml);
 
+            local.Element("meterData")
+           .Add(new XElement("controlOperationType", 1));
+
+            local.Element("meterData")
+           .Add(new XElement("meterId", SourceMeterSerial));
+
+
+            this.CardXML = local.ToString();
+            this.CardName = ControlCardType.CopyMeter.ToString();
+            OnCardCreated?.Invoke(this);
+            return local.ToString();
+        }
 
 
 
