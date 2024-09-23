@@ -6,6 +6,7 @@
 **/Release/
 **/out/
 **/publish/
+Test/
 
 # User-specific files
 *.rsuser
