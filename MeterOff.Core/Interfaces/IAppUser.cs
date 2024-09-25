@@ -1,4 +1,5 @@
 ﻿using MeterOff.Core.Models;
+using MeterOff.Core.Models.Base;
 using MeterOff.Core.Models.Dto.Auth;
 using MeterOff.Core.Models.Dto.SmallDepartmentDtos;
 using MeterOff.Core.Models.Dto.UserDto;
@@ -27,7 +28,7 @@ namespace MeterOff.Core.Interfaces
         Task<InsertUserInput> AddAsync(InsertUserInput model);
        
         Task<EditUserInput> UpdateAsync(string UserId, EditUserInput model);
-        ChangePasswordDtoOutput ChangePassword(ChangePasswordDto model);
+        PayLoad<ChangePasswordDtoOutput> ChangePassword(ChangePasswordDto model);
 
         Logout Logout();
         

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MeterOff.Core.Models.Base
 {
-    public class DeleteResult
+    public class DeleteResult 
     {
         public int Id { get; set; }
 

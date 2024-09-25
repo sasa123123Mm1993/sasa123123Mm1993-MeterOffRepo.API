@@ -17,16 +17,20 @@ using MeterOff.Core.Models.Dto.CardFunctionDto;
 using MeterOff.Core.Models.Dto.CMaintenenceMetersOff;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using MeterOff.Core.Models.Base;
+using MeterOff.API.ErrorHandeling;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace MeterOff.EF.Services
 {
     public class ControlCardService : IControlCard
     {
         private readonly DBContext _context;
+        
 
         public ControlCardService(DBContext context)
         {
             _context = context;
+            
         }
 
         public async Task<IEnumerable<CardFunctionDto>> GetAll()
@@ -165,7 +169,7 @@ namespace MeterOff.EF.Services
                 contrlCardBuilder.SetMeterType(0);
                 contrlCardBuilder.SetMeterVersion(DB.GetMeterVersion(1));
                 contrlCardBuilder.SetManufacturerId(DB.GetManufacturerId());
-                contrlCardBuilder.SetCardId(newControlCardId);
+                //contrlCardBuilder.SetCardId(newControlCardId);
                 contrlCardBuilder.SetDistributionCompanyCode("5");
                 contrlCardBuilder.SetCardPeriod(new ControlCardActivationPeriod
                 {
@@ -294,7 +298,7 @@ namespace MeterOff.EF.Services
 
 
         }
-
+        
         
         public bool ValidateMeterSerialNumber(string meterSerialNumber)
         {
@@ -365,32 +369,39 @@ namespace MeterOff.EF.Services
         {
             var model = _context.ControlCard.FirstOrDefault(m=>m.CardId == controlCardId);
             if (model == null)
-                throw new Exception("رقم الكارت غير موجود بالنظام");
+                
+                  throw new BusinessException("رقم الكارت غير موجود بالنظام","1000");
 
             if (model.IsDeleted == true)
             {
-                throw new Exception("الكارت ممسوح بالفعل");
+                throw new BusinessException("الكارت ممسوح بالفعل", "1001");
             }
 
             if (model !=null)
             {
                 model.IsDeleted = true;
                 _context.SaveChanges();
-                var payloadDto = new PayLoad<DeleteResult>
+                var successPayloadDto = new PayLoad<DeleteResult>
                 {
-                    Code = 200,
-                    Message = "Deleted Successfully",
+                    Success = true,
                     Model = null,
+                    Code = 200,
+                    Errors = null,
+                    Message = "Deleted Successfully",
+                    
                 };
-                return payloadDto;
+                return successPayloadDto;
             }
             
             else {
                 var failedPayloadDto = new PayLoad<DeleteResult>
                 {
-                    Code = 6000,
-                    Message = "Deleted Failed",
+                    Success = false,
                     Model = null,
+                    Code = 6000,
+                    Errors = null,
+                    Message = "Request failed"
+                    
                 };
                 return failedPayloadDto;
             }

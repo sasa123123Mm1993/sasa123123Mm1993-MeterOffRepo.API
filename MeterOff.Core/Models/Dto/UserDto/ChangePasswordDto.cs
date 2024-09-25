@@ -1,4 +1,6 @@
 ﻿using MeterOff.Core.Models.Base;
+using MeterOff.Core.Models.Dto.ControlCard;
+using MeterOff.Core.Models.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +16,8 @@ namespace MeterOff.Core.Models.Dto.UserDto
         public string? newPassword { get; set; }
     }
 
-    public class ChangePasswordDtoOutput : PayLoad<ChangePasswordDto>
+    public class ChangePasswordDtoOutput : PayLoad<userData>
     {
-        //public string? UserId { get; set; }
-        //public string? currentPassword { get; set; }
-        //public string? newPassword { get; set; }
+      
     }
 }

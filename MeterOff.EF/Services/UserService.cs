@@ -18,6 +18,7 @@ using System.Data;
 using MeterOff.Core.Models.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http.HttpResults;
+using MeterOff.Core.Models.Enum;
 
 namespace MeterOff.EF.Services
 {
@@ -603,7 +604,7 @@ namespace MeterOff.EF.Services
             return users;
         }
 
-        public ChangePasswordDtoOutput ChangePassword(ChangePasswordDto model)
+        public PayLoad<ChangePasswordDtoOutput> ChangePassword(ChangePasswordDto model)
         {
             var user = _context.Users.FirstOrDefault(u => u.Id == model.UserId);
             if (user == null)
@@ -614,12 +615,14 @@ namespace MeterOff.EF.Services
             var result =  _userManager.ChangePasswordAsync(user, model.currentPassword, model.newPassword);
             if (result.Result.Succeeded)
             {
-                var ChangePasswordDto = new ChangePasswordDtoOutput
+                var ChangePasswordDto = new PayLoad<ChangePasswordDtoOutput> 
                 {
+                    Success = true,
+                    Model = null,
                     Code = 200,
-                    Message = "Updated Successfully",
-                    Model = model
-                   
+                    Errors = null,
+                    Message ="تم التغيير بنجاح",
+
                 };
                 return ChangePasswordDto;
             }
@@ -627,11 +630,13 @@ namespace MeterOff.EF.Services
             else
             {
                 var errors = result.Result.Errors.Select(e => e.Description);
-                var errorChangePasswordDto = new ChangePasswordDtoOutput
+                var errorChangePasswordDto = new PayLoad<ChangePasswordDtoOutput>
                 {
-                    Code = 6000,
-                    Message = errors.ToString(),
-                    Model = model,
+                    Success =false,
+                    Model = null,
+                    Code =6000,
+                    Errors = null,
+                    Message = "Request Failed",
                 };
                 return errorChangePasswordDto;
             }
