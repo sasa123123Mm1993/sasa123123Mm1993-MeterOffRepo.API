@@ -160,7 +160,9 @@ namespace GPICardCore
 
         public ControlCardBuilder SetSelectedMeters(List<string> meters)
         {
-            if (meters == null || meters.Count == 0) return;
+            if (meters == null || meters.Count == 0) {
+                throw new Exception("Invalid Meter list or Empty .");
+            }
             
             var ActiveMeters = new XElement("controlCardActiveMeters");
 
