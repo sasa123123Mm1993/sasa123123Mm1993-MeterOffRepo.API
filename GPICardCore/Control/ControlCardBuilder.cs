@@ -61,7 +61,7 @@ namespace GPICardCore
             }
         }
     
-        public void SetMeterType (int  meterType)
+        public ControlCardBuilder SetMeterType (int  meterType)
         {
             if (Validate.IsNotNullAndNonNegative<int>(meterType))
             {
@@ -73,9 +73,11 @@ namespace GPICardCore
                 throw new Exception("The meterType value is invalid.");
             }
 
+            return this;
+
         }
 
-        public void SetMeterVersion(string meterVersion)
+        public ControlCardBuilder SetMeterVersion(string meterVersion)
         {
             if (!string.IsNullOrWhiteSpace(meterVersion))
             {
@@ -87,10 +89,12 @@ namespace GPICardCore
                 throw new Exception("The meterVersion value is invalid.");
             }
 
+            return this;
+
         }
 
 
-        public void SetManufacturerId(string manufacturerId)
+        public ControlCardBuilder SetManufacturerId(string manufacturerId)
         {
             if (!string.IsNullOrWhiteSpace(manufacturerId))
             {
@@ -101,9 +105,10 @@ namespace GPICardCore
             {
                 throw new Exception("The manufacturerId value is invalid.");
             }
+            return this;
         }
 
-        public void SetCardId(string cardId)
+        public ControlCardBuilder SetCardId(string cardId)
         {
             if (!string.IsNullOrWhiteSpace(cardId))
             {
@@ -114,11 +119,12 @@ namespace GPICardCore
             {
                 throw new Exception("The cardId value is Invalid.");
             }
+            return this;
         }
 
 
 
-        public void SetDistributionCompanyCode(string distributionCompanyCode)
+        public ControlCardBuilder SetDistributionCompanyCode(string distributionCompanyCode)
         {
             if (!string.IsNullOrWhiteSpace(distributionCompanyCode))
             {
@@ -132,9 +138,11 @@ namespace GPICardCore
                 throw new Exception("The distributionCompanyCode value is invalid.");
             }
 
+            return this;
+
         }
 
-        public void SetSectorCode(string sectorCode)
+        public ControlCardBuilder SetSectorCode(string sectorCode)
         {
             if (!string.IsNullOrWhiteSpace(sectorCode))
             {
@@ -147,12 +155,14 @@ namespace GPICardCore
             {
                 throw new Exception("The sectorCode value is invalid.");
             }
-
+            return this;
         }
 
-        public void SetSelectedMeters(List<string> meters)
+        public ControlCardBuilder SetSelectedMeters(List<string> meters)
         {
-            if (meters == null || meters.Count == 0) return;
+            if (meters == null || meters.Count == 0) {
+                throw new Exception("Invalid Meter list or Empty .");
+            }
             
             var ActiveMeters = new XElement("controlCardActiveMeters");
 
@@ -168,9 +178,11 @@ namespace GPICardCore
 
             defaultXml.Element("meterData")
             .Add(ActiveMeters);
+
+            return this;
         }
 
-        public void SetCardPeriod(ControlCardActivationPeriod cardDate)
+        public ControlCardBuilder SetCardPeriod(ControlCardActivationPeriod cardDate)
         {
             if (cardDate.ActivationDate.Year < 2000 ||
                 cardDate.ActivationDate.Year < 2000)
@@ -195,6 +207,7 @@ namespace GPICardCore
             .Element("controlCardExpiryDate")
             .Value = this.CardDate.ExpiryDate.ToString("dd-MM-yyyy");
            
+            return this;
         }
            
     
