@@ -163,7 +163,12 @@ namespace GPICardCore
             if (meters == null || meters.Count == 0) {
                 throw new Exception("Invalid Meter list or Empty .");
             }
-            
+
+            if (meters.Count > 10)
+            {
+                throw new Exception("The meter list exceeds the maximum allowed size of (10) .");
+            }
+
             var ActiveMeters = new XElement("controlCardActiveMeters");
 
             foreach (var item in meters)
