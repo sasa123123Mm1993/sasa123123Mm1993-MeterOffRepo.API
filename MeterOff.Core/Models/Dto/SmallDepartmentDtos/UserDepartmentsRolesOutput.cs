@@ -18,4 +18,6 @@ namespace MeterOff.Core.Models.Dto.SmallDepartmentDtos
         public string RoleId { get; set; }
         public List<int> UserSmallDepartmentIDs { get; set; }
     }
+
+  
 }

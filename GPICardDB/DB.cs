@@ -6,9 +6,9 @@ using GPICardCore;
 
 namespace GPICardDB
 {
+
     public static class DB
     {
-      
         static string connString = @"data source=.;
                                     initial catalog=GizaDevMenia;
                                     user=sa;
@@ -274,7 +274,6 @@ namespace GPICardDB
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-                return 0;
             }
         }
 

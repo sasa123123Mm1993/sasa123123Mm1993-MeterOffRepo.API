@@ -12,6 +12,7 @@ using MeterOff.Core.Models;
 using MeterOff.Core.Models.Infrastructure;
 using MeterOff.Core.Models.Identity;
 using MeterOff.Core.Models.Dto.Reports;
+//using System.Data.Entity;
 
 namespace MeterOff.EF
 {
@@ -87,7 +88,7 @@ namespace MeterOff.EF
         public DbSet<SettingFormsData> SettingFormsData { get; set; }
         public DbSet<Settlement> Settlement { get; set; }
         public DbSet<SettlementType> SettlementType { get; set; }
-        public DbSet<Tariff> Tariff { get; set; }
+        public DbSet<Tariff> Tariffs { get; set; }
         public DbSet<TariffTamper> TariffTamper { get; set; }
         public DbSet<WorkPermissionLog> WorkPermissionLog { get; set; }
         public DbSet<BasicConsumer> BasicConsumer { get; set; }
@@ -111,7 +112,7 @@ namespace MeterOff.EF
         public DbSet<EmployeeGroup> EmployeeGroup { get; set; }
         public DbSet<StepsFee> StepsFee { get; set; }
         public DbSet<TariffFee> TariffFee { get; set; }
-        public DbSet<TariffStep> TariffStep { get; set; }
+        public DbSet<TariffStep> TariffSteps { get; set; }
         public DbSet<Transformer> Transformer { get; set; }
         public DbSet<TransformerReading> TransformerReading { get; set; }
         public DbSet<TechnicianType> TechnicianType { get; set; }
@@ -132,5 +133,8 @@ namespace MeterOff.EF
            .HasMaxLength(256);
 
         }
+
+        
+
     }
 }

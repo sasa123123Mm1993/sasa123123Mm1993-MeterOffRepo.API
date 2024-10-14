@@ -11,7 +11,7 @@ namespace MeterOff.Core.Interfaces
 {
     public interface IReport
     {
-        public Task<IEnumerable<CMaintenenceMetersOffDto>> GetAllData(MetersDataInput metersDataInput);
+        Task<IEnumerable<CMaintenenceMetersOffDto>> GetAllData(MetersDataInput metersDataInput);
         public Task<TotalMeterOffDto> GetTotalMeterOff(TotalMeterOff TotalMeterOffInput);
     }
 }

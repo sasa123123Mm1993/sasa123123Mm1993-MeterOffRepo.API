@@ -14,14 +14,14 @@ namespace MeterOff.Core.Interfaces
     public interface IControlCard
     {
 
-        public Task<IEnumerable<CardFunctionDto>> GetAll();
-        IEnumerable<Technician> GetAllTecnicions(int? RegionId, string? filter, int? cardFunctionId);
-        ControlCardOutput AddContolCard(InsertControlCardInput card);
+        Response<List<CardFunctionDto>> GetAll();
+        Response<List<Technician>> GetAllTecnicions(int? RegionId, string? filter, int? cardFunctionId);
+        Response<ControlCardOutput> AddContolCard(InsertControlCardInput card);
         bool ValidateMeterSerialNumber(string meterSerialNumber);
-        DateTime GetTechinicianExpirationDate();
-        DateTime GetTechinicianActivationDate();
-        PayLoad<DeleteResult> CancelControlCard(string controlCardId);
-        public ControlLaunchOutput ReadControlLaunch();
-        public IEnumerable<Tamper> GetAllTempers();
+        Response<DateTime> GetTechinicianExpirationDate();
+        Response<DateTime> GetTechinicianActivationDate();
+        Response<bool> CancelControlCard(string controlCardId);
+        Response<ControlLaunchOutput> ReadControlLaunch();
+        Response<List<Tamper>> GetAllTempers();
     }
 }

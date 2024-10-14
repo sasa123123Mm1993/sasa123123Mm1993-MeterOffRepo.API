@@ -34,15 +34,17 @@ namespace MeterOff.API.Controllers
         }
 
        
-
-
-
         [HttpPost("GetMeterOffData")]
         public async Task<IActionResult> GetAllData(MetersDataInput metersDataInput)
         {
             try
             {
                 var data = await _report.GetAllData(metersDataInput);
+                if (data == null)
+                {
+                    throw new Exception("لا توجد داتا لعرضها");
+                }
+                else
                 return Ok(data);
             }
             catch (Exception ex)

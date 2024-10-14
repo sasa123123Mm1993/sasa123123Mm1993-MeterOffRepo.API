@@ -59,6 +59,12 @@ namespace MeterOff.Core.Models.Mapper
             //  CreateMap<AppRole, UserRoleDto>()
             //.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.UserRoles.Select(ud => ud.Role)));
 
+            CreateMap<EditUserInput, Task<EditUserInput>>();
+            CreateMap<InsertUserInput, Task<InsertUserInput>>();
+            CreateMap<Task<InsertUserInput>, InsertUserInput>();
+           
+
+
 
             CreateMap<SmallDepartment_UserDto, SmallDepartment_User>();
             CreateMap<SmallDepartment_User, SmallDepartment_UserDto>();

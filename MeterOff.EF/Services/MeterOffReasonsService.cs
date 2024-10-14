@@ -1,10 +1,14 @@
-﻿using MeterOff.Core.Interfaces;
+﻿using Humanizer;
+using MeterOff.Core.Interfaces;
+using MeterOff.Core.Models.Base;
+using MeterOff.Core.Models.Base_Response.Providers;
 using MeterOff.Core.Models.Dto.CMaintenenceMetersOff;
 using MeterOff.Core.Models.Dto.MeterOffReasons;
 using MeterOff.Core.Models.Exception;
 using MeterOff.Core.Models.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,53 +24,386 @@ namespace MeterOff.EF.Services
             _context = context;
         }
 
-        public async Task<CUploadMainteneceMetersOffReason> Add(CUploadMainteneceMetersOffReason cuploadMeterOffReasonsOutput)
+        public Response<CUploadMainteneceMetersOffReason> Add(CUploadMainteneceMetersOffReason cuploadMeterOffReasonsOutput)
         {
-            await _context.AddAsync(cuploadMeterOffReasonsOutput);
-            _context.SaveChanges();
+            Response<CUploadMainteneceMetersOffReason> response = new Response<CUploadMainteneceMetersOffReason>();
+            try
+            {
+                var resultOfValidation = ValidateAddReason(cuploadMeterOffReasonsOutput);
+                if (resultOfValidation != null)
+                {
+                    var model = new CUploadMainteneceMetersOffReason
+                    {
+                        Code = cuploadMeterOffReasonsOutput.Code,
+                        CreationTime = DateTime.Now,
+                        CreatorById = 1,
+                        IsDeleted = false,
+                        Name = cuploadMeterOffReasonsOutput.Name,
+                        Note = cuploadMeterOffReasonsOutput.Note,
+                    };
+                    var result = _context.AddAsync(model);
+                    var ISSaved = Save() > 0;
+                    if (ISSaved)
+                    {
+                        response.code = Added.Code;
+                        response.payload = model;
+                        response.status = Added.Status;
+                        response.message = Added.messageAr;
+                        return response;
+                    }
+                }
 
-            return cuploadMeterOffReasonsOutput;
-
+                else
+                {
+                    response.code = Failed.Code;
+                    response.message = Failed.messageEn;
+                    response.status = Failed.Status;
+                    response.payload = null;
+                    return response;
+                }
+                response.code = Failed.Code;
+                response.message = Failed.messageEn;
+                response.status = Failed.Status;
+                response.payload = null;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.code = GeneralException.Code;
+                response.message = GeneralException.messageAr;
+                response.status = ex.Message;
+                response.payload = null;
+                return response;
+            }
+           
         }
 
-        public CUploadMainteneceMetersOffReason Delete(CUploadMainteneceMetersOffReason cuploadMeterOffReasonsOutput)
+        public Response<CUploadMainteneceMetersOffReason> Update(int id, CUploadMainteneceMetersOffReason cuploadMeterOffReasonsOutput)
         {
+            Response<CUploadMainteneceMetersOffReason> response = new Response<CUploadMainteneceMetersOffReason>();
+            try
+            {
+                var result = ValidateUpdateReason(cuploadMeterOffReasonsOutput);
+                
+                var reason = _context.CUploadMainteneceMetersOffReason.FirstOrDefault(r => r.IsDeleted != true && r.Id == id);
+                if (reason == null)
+                {
+                    response.status = Failed.Status;
+                    response.code = Empty.Code;
+                    response.message = "سبب العطل غير موجود بالنظام";
+                    response.status = Failed.Status;
+                    return response;
+                }
 
-            cuploadMeterOffReasonsOutput.IsDeleted = true;
-            _context.Update(cuploadMeterOffReasonsOutput);
-            //_context.Remove(cuploadMeterOffReasonsOutput);
-            _context.SaveChanges();
+                else
+                {
+                    reason.Code = cuploadMeterOffReasonsOutput.Code;
+                    reason.Name = cuploadMeterOffReasonsOutput.Name;
+                    reason.Note = cuploadMeterOffReasonsOutput.Note;
+                    reason.CreatorById = 1;
+                    reason.IsDeleted = false;
+                    reason.ModificationTime = DateTime.Now;
+                    reason.ModifiedById = 1;
+                    reason.Id = id;
+                    _context.Update(reason);
+                    var ISSaved = Save() > 0;
+                    if (ISSaved)
+                    {
+                        response.code = Updated.Code;
+                        response.payload = reason;
+                        response.status = Updated.Status;
+                        response.message = Updated.messageAr;
+                        return response;
+                    }
+                }
 
-            return cuploadMeterOffReasonsOutput;
+            }
+            catch (Exception ex)
+            {
+                response.code = GeneralException.Code;
+                response.message = GeneralException.messageAr;
+                response.status = ex.Message;
+                response.payload = null;
+                return response;
+            }
+
+            response.code = Failed.Code;
+            response.message = Failed.messageEn;
+            response.status = Failed.Status;
+            response.payload = null;
+            return response;
         }
 
-        public IEnumerable<CUploadMainteneceMetersOffReason> GetAll()
+
+        public Response<bool> Delete(int id)
         {
-            var m = _context.CUploadMainteneceMetersOffReason.ToList();
-            //var aa = await _context.CUploadMainteneceMetersOffReason.ToListAsync();
-            return m;
+            Response<bool> response = new Response<bool>();
+            try
+            {
+                var reason = _context.CUploadMainteneceMetersOffReason.FirstOrDefault(r => r.IsDeleted != true && r.Id == id);
+                if (reason == null)
+                {
+                    response.code = Empty.Code;
+                    response.message = "لا يوجد سبب لهذا العطل";
+                    response.status = Empty.Status;
+                    response.payload = false;
+                    return response;
+                }
+                else
+                {
+                    reason.IsDeleted = true;
+                    _context.Update(reason);
+                    var ISSaved = Save() > 0;
+                    if (ISSaved)
+                    {
+                        response.code = DeleteSuccess.Code;
+                        response.payload = ISSaved;
+                        response.status = DeleteSuccess.Status;
+                        response.message = DeleteSuccess.messageAr;
+                        return response;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                response.code = GeneralException.Code;
+                response.message = GeneralException.messageAr;
+                response.status = ex.Message;
+                response.payload = false;
+                return response;
+            }
+
+            response.code = Failed.Code;
+            response.message = "حدث خطا أثناء حذف معلومات العميل";
+            response.status = Failed.Status;
+            response.payload = false;
+            return response;
+        }
+        public Response<List<CUploadMainteneceMetersOffReason>> GetAll()
+        {
+            Response<List<CUploadMainteneceMetersOffReason>> response = new Response<List<CUploadMainteneceMetersOffReason>>();
+            try
+            {
+                var reasons = _context.CUploadMainteneceMetersOffReason.Where(r=>r.IsDeleted !=true).ToList();
+                if (reasons != null && reasons.Any())
+                {
+                    response.payload = reasons;
+                    response.code = Success.Code;
+                    response.status = Success.Status;
+                    response.message = Success.messageAr;
+                    return response;
+                }
+                response.code = Failed.Code;
+                response.message = Failed.messageEn;
+                response.status = Failed.Status;
+                response.payload = null;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.code = GeneralException.Code;
+                response.message = GeneralException.messageAr;
+                response.status = ex.Message;
+                response.payload = null;
+                return response;
+            }
 
         }
-
-        public async Task<CUploadMainteneceMetersOffReason> GetByCode(int Code)
+        public Response<CUploadMainteneceMetersOffReason> GetByCode(int code)
         {
-            var model = _context.CUploadMainteneceMetersOffReason.SingleOrDefault(m => m.Code == Code);
-            return model;
+            Response<CUploadMainteneceMetersOffReason> response = new Response<CUploadMainteneceMetersOffReason>();
+            try
+            {
+                var reason = _context.CUploadMainteneceMetersOffReason.FirstOrDefault(r=>r.IsDeleted != true && r.Code == code);
+                if (reason != null)
+                {
+                    response.payload = reason;
+                    response.code = Success.Code;
+                    response.status = Success.Status;
+                    response.message = Success.messageAr;
+                    return response;
+                }
+                response.code = Empty.Code;
+                response.message = Empty.messageAr;
+                response.status = Empty.Status;
+                return  response;
+            }
+            catch (Exception ex)
+            {
+                response.code = GeneralException.Code;
+                response.message = GeneralException.messageAr;
+                response.status = ex.Message;
+                response.payload = null;
+                return response;
+            }
+        }
+        public Response<CUploadMainteneceMetersOffReason> GetById(int id)
+        {
+            Response<CUploadMainteneceMetersOffReason> response = new Response<CUploadMainteneceMetersOffReason>();
+            try
+            {
+                var reason = _context.CUploadMainteneceMetersOffReason.FirstOrDefault(r => r.IsDeleted != true && r.Id == id);
+                if (reason != null)
+                {
+                    response.payload = reason;
+                    response.code = Success.Code;
+                    response.status = Success.Status;
+                    response.message = Success.messageAr;
+                    return response;
+                }
+                response.code = Empty.Code;
+                response.message = Empty.messageAr;
+                response.status = Empty.Status;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.code = GeneralException.Code;
+                response.message = GeneralException.messageAr;
+                response.status = ex.Message;
+                response.payload = null;
+                return response;
+            }
+        }
+        
+        
+        public Response<string> ValidateAddReason(CUploadMainteneceMetersOffReason model)
+        {
+            Response<string> response = new Response<string>
+            {
+                code = Empty.Code,
+                status = Empty.Status
+            };
 
+            var reason = _context.CUploadMainteneceMetersOffReason.FirstOrDefault(r => r.IsDeleted != true && r.Code == model.Code);
+            if (reason != null)
+            {
+                response.status = Failed.Status;
+                response.code = Failed.Code;
+                response.message = "سبب العطل موجود بالفعل";
+                response.payload = "";
+                return response;
+            }
+            if (model.Code == null)
+            {
+                response.status = Failed.Status;
+                response.code = Failed.Code;
+                response.message = "يجب ادخال كود لسبب العطل";
+                response.payload = Failed.messageEn;
+                return response;
+            }
+
+            if (model.Name == null)
+            {
+                response.status = Failed.Status;
+                response.code = Failed.Code;
+                response.message = "يجب ادخال سبب للعطل";
+                response.payload = Failed.messageEn;
+                return response;
+            }
+
+            return response;
+        }
+        public Response<string> ValidateUpdateReason(CUploadMainteneceMetersOffReason model)
+        {
+            Response<string> response = new Response<string>
+            {
+                code = Empty.Code,
+                status = Empty.Status
+            };
+
+            if (model.Code == null)
+            {
+                response.status = Failed.Status;
+                response.code = Failed.Code;
+                response.message = "يجب ادخال كود لسبب العطل";
+                response.payload = Failed.messageEn;
+                return response;
+            }
+
+            if (model.Name == null)
+            {
+                response.status = Failed.Status;
+                response.code = Failed.Code;
+                response.message = "يجب ادخال سبب للعطل";
+                response.payload = Failed.messageEn;
+                return response;
+            }
+
+            return response;
         }
 
-        public async Task<CUploadMainteneceMetersOffReason> GetById(int id)
+
+
+        //public async Task<CUploadMainteneceMetersOffReason> Add(CUploadMainteneceMetersOffReason cuploadMeterOffReasonsOutput)
+        //{
+        //    Response<string> response = new Response<string>();
+
+        //    await _context.AddAsync(cuploadMeterOffReasonsOutput);
+        //    _context.SaveChanges();
+
+        //    return cuploadMeterOffReasonsOutput;
+
+        //}
+
+        //public CUploadMainteneceMetersOffReason Delete(CUploadMainteneceMetersOffReason cuploadMeterOffReasonsOutput)
+        //{
+
+        //    cuploadMeterOffReasonsOutput.IsDeleted = true;
+        //    _context.Update(cuploadMeterOffReasonsOutput);
+        //    //_context.Remove(cuploadMeterOffReasonsOutput);
+        //    _context.SaveChanges();
+
+        //    return cuploadMeterOffReasonsOutput;
+        //}
+
+        //public IEnumerable<CUploadMainteneceMetersOffReason> GetAll()
+        //{
+        //    var m = _context.CUploadMainteneceMetersOffReason.ToList();
+        //    //var aa = await _context.CUploadMainteneceMetersOffReason.ToListAsync();
+        //    return m;
+
+        //}
+
+        //public async Task<CUploadMainteneceMetersOffReason> GetByCode(int Code)
+        //{
+        //    var model = _context.CUploadMainteneceMetersOffReason.SingleOrDefault(m => m.Code == Code);
+        //    return model;
+
+        //}
+
+        //public async Task<CUploadMainteneceMetersOffReason> GetById(int id)
+        //{
+        //    var model = _context.CUploadMainteneceMetersOffReason.SingleOrDefault(m => m.Id == id);
+        //    return model;
+        //}
+
+        //public CUploadMainteneceMetersOffReason Update(CUploadMainteneceMetersOffReason cuploadMeterOffReasonsOutput)
+        //{
+        //    _context.Update(cuploadMeterOffReasonsOutput);
+        //    _context.SaveChanges();
+
+        //    return cuploadMeterOffReasonsOutput;
+        //}
+
+        //public bool IsvalidCUploadMainteneceMetersOffReason(int? uploadReasonId)
+        //{
+        //    var isFound = _context.CUploadMainteneceMetersOffReason.Any(g => g.Id == uploadReasonId);
+        //    return isFound;
+        //}
+
+        
+
+        
+
+        public Response<string> ValidateAddReason(InsertCUploadMainteneceMetersOffReasonInput data)
         {
-            var model = _context.CUploadMainteneceMetersOffReason.SingleOrDefault(m => m.Id == id);
-            return model;
+            throw new NotImplementedException();
         }
 
-        public CUploadMainteneceMetersOffReason Update(CUploadMainteneceMetersOffReason cuploadMeterOffReasonsOutput)
+        public Response<string> ValidateUpdateReason(InsertCUploadMainteneceMetersOffReasonInput data)
         {
-            _context.Update(cuploadMeterOffReasonsOutput);
-            _context.SaveChanges();
-
-            return cuploadMeterOffReasonsOutput;
+            throw new NotImplementedException();
         }
 
         public bool IsvalidCUploadMainteneceMetersOffReason(int? uploadReasonId)
@@ -74,142 +411,20 @@ namespace MeterOff.EF.Services
             var isFound = _context.CUploadMainteneceMetersOffReason.Any(g => g.Id == uploadReasonId);
             return isFound;
         }
-
-        public bool validateInsertCMaintenenceMetersOff(InsertCMaintenenceMetersOffInput model)
+        public int SaveArchive()
         {
-            var isExist = _context.CMaintenenceMetersOff.Any(g => g.SerialNumber == model.SerialNumber);
-            if (model == null)
-            {
-                return false;
-            }
-            if (isExist && model.MeterOffStatusId == 1)
-            {
-                throw new UserFriendlyException("لا يمكن الاضافة حيث أن العداد معطل بالفعل");
-            }
-
-            if (model.SerialNumber == null)
-            {
-                throw new UserFriendlyException("ادخل رقم العداد");
-            }
-
-            if (model.MainDepartmentCode == null)
-            {
-                throw new UserFriendlyException("كود الادارة الرئيسية فارغ");
-            }
-
-            if (model.SmallDepartmentCode == null)
-            {
-                throw new UserFriendlyException("كود الادارة الفرعية فارغ");
-            }
-            if (model.MeterOffMaintainNote == null)
-            {
-                throw new UserFriendlyException("ادخل الملاحظات");
-            }
-            if (model.MeterOffReason == null)
-            {
-                throw new UserFriendlyException("ادخل سبب العطل");
-            }
-            if (model.MeterOffStatusId == null)
-            {
-                throw new UserFriendlyException("اختر حالة العداد");
-            }
-            if (model.CUploadMainteneceMetersOffReasonId == null)
-            {
-                throw new UserFriendlyException("اختر سبب العطل");
-            }
-            if (model.RegionNo == null)
-            {
-                throw new UserFriendlyException("اختر كود المنطقة");
-            }
-            if (model.DailyNo == null)
-            {
-                throw new UserFriendlyException("ادخل رقم اليومية");
-            }
-            if (model.AccountNo == null)
-            {
-                throw new UserFriendlyException("ادخل رقم الحساب");
-            }
-            if (model.BranchNo == null)
-            {
-                throw new UserFriendlyException("ادخل القطاع");
-            }
-            if (model.SmallDepartmentId == null)
-            {
-                throw new UserFriendlyException("اختر الادارة الفرعية");
-            }
-            if (model.MainDepartmentId == null)
-            {
-                throw new UserFriendlyException("اختر الادارة الرئيسية");
-            }
-            if (model.SectionId == null)
-            {
-                throw new UserFriendlyException("اختر القطاع");
-            }
-            if (model.ActivityTypeId == null)
-            {
-                throw new UserFriendlyException("اختر النشاط");
-            }
-            if (model.PlaceTypeId == null)
-            {
-                throw new UserFriendlyException("اختر وصف المكان");
-            }
-            if (model.Address == null)
-            {
-                throw new UserFriendlyException("ادخل العنوان");
-            }
-            if (model.NationalId == null)
-            {
-                throw new UserFriendlyException("ادخل هوية المستخدم");
-            }
-            if (model.CustomerName == null)
-            {
-                throw new UserFriendlyException("ادخل اسم المشترك");
-            }
-            if (model.CustomerCode == null)
-            {
-                throw new UserFriendlyException("ادخل كود المشترك");
-            }
-            if (model.VendorCode == null)
-            {
-                throw new UserFriendlyException("ادخل كود الشركة المصنعة");
-            }
-            return true;
+            int status = -1;
+            try { status = _context.SaveChanges(); }
+            catch (Exception ex) { }
+            return status;
         }
 
-        public bool ValidateAddFixedMeterToTechinicion(FixedMeterToTechinitionInsert model)
+        public int Save()
         {
-            if (model.InstallationDate > model.DeliveryDateToTechnician)
-            {
-                throw new UserFriendlyException("تاريخ الاصلاح يجب أن يكون قبل تاريخ التسليم للفنى");
-            }
-
-            if (model.DeliveryDateToTechnician > model.MaintenanceDate)
-            {
-                throw new UserFriendlyException("تاريخ التسليم للفنى يجب أن يكون قبل تاريخ التركيب");
-            }
-           
-            if (model.InstallationDate > model.MaintenanceDate)
-            {
-                throw new UserFriendlyException("تاريخ الاصلاح يجب أن يكون قبل تاريخ تركيب العداد");
-            }
-            return true;
-        }
-
-        public bool ValidateAddReason(InsertCUploadMainteneceMetersOffReasonInput model)
-        {
-            if (model == null)
-            {
-                return false;
-            }
-            if (model.Code == null)
-            {
-                throw new UserFriendlyException("يجب ادخال كود لسبب العطل");
-            }
-            if (model.Name == null)
-            {
-                throw new UserFriendlyException("يجب ادخال سبب للعطل");
-            }
-            return true;
+            int status = -1;
+            try { status = _context.SaveChanges(); }
+            catch (Exception ex) { }
+            return status;
         }
 
     }

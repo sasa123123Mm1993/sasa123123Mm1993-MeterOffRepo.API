@@ -16,35 +16,29 @@ namespace MeterOff.Core.Interfaces
 {
     public interface IAppUser
     {
-        IEnumerable<ApplicationUser> GetAllUsersWithDepartments();
-        IEnumerable<AppUserDto> GetAllUsersBasicData();
+        Response<List<ApplicationUser>> GetAllUsersWithDepartments();
+        Response<IEnumerable<AppUserDto>> GetAllUsersBasicData();
 
-        IEnumerable<SmallDepartmentDto> GetAllSmallDepartments();
-        IEnumerable<SmallDepartmentUserDtoOutput> GetAllSmallDepartment_UserOutput();
+        Response<IEnumerable<SmallDepartmentDto>> GetAllSmallDepartments();
+        Response<IEnumerable<SmallDepartmentUserDtoOutput>> GetAllSmallDepartment_UserOutput();
 
-        IEnumerable<AppRoleDto> GetAllRoles();
-        IEnumerable<SmallDepartment> GetAllSmallDepartmentsByMainDepId();
-        GetAllUsersWithDepartmentsOutput GetAllUserssByNatId(string NatId);
-        Task<InsertUserInput> AddAsync(InsertUserInput model);
-       
-        Task<EditUserInput> UpdateAsync(string UserId, EditUserInput model);
-        PayLoad<ChangePasswordDtoOutput> ChangePassword(ChangePasswordDto model);
+        Response<IEnumerable<AppRoleDto>> GetAllRoles();
+        //Response<IEnumerable<SmallDepartment>> GetAllSmallDepartmentsByMainDepId();
+        Response<GetAllUsersWithDepartmentsOutput> GetAllUserssByNatId(string NatId);
+        Task<Response<InsertUserInput>> AddAsync(InsertUserInput model);
+        Task<Response<EditUserInput>> UpdateAsync(string UserId, EditUserInput model);
+        Response<string> ChangePassword(ChangePasswordDto model);
+        Response<bool> Logout();
+        Response<string> DeActiveUser(string userId);
+        Response<ApplicationUser> ResetUserPass(string userId);
+        Response<List<SmallDepartment_UserDto>> GetUserDataByUserId(string userId);
 
-        Logout Logout();
-        
+        Response<GetSmallDepartmentsByUserIdOutput> GetSmallDepartmentsByUserIdOutput(string userId);
 
-        
-        ApplicationUser DeActiveUser(string userId);
-        ApplicationUser ResetUserPass(string userId);
-
-        List<SmallDepartment_UserDto> GetUserDataByUserId(string userId);
-
-        GetSmallDepartmentsByUserIdOutput GetSmallDepartmentsByUserIdOutput(string userId);
-
-        GetAllUsersWithDepartmentsOutput GetUserWithDepartments(string userId);
-        Task<UserDepartmentsRolesOutput> GetUserDataById(string userId);
-        bool ValidateAddUserWithDeps(InsertUserInput model);
-        bool ValidateUpdateUserWithDeps(string userId, EditUserInput model);
-        Task<NewAuthServiceResponseDto> Register(NewRegisterDto model);
+         Response<GetAllUsersWithDepartmentsOutput> GetUserWithDepartments(string userId);
+         Response<UserDepartmentsRolesOutput> GetUserDataById(string userId);
+         Response<bool> ValidateAddUserWithDeps(InsertUserInput model);
+         Response<bool> ValidateUpdateUserWithDeps(string userId, EditUserInput model);
+         Response<Task<NewAuthServiceResponseDto>> Register(NewRegisterDto model);
     }
 }

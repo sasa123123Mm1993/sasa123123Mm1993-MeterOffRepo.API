@@ -1,8 +1,10 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
+using Humanizer;
 using MeterOff.Core.Interfaces;
 using MeterOff.Core.Models.Dto.Auth;
 using MeterOff.Core.Models.Dto.ControlCard;
+using MeterOff.Core.Models.Dto.UserDto;
 using MeterOff.Core.Models.Infrastructure;
 using MeterOff.Core.Models.Static;
 using MeterOff.EF.Services;
@@ -32,35 +34,17 @@ namespace MeterOff.API.Controllers
 
         [HttpGet("GetAll")]
         //[Authorize(Roles = StaticUserRoles.USER)]
-        public async Task<IActionResult> GetAll()
+        public  IActionResult GetAll()
         {
-            try
-            {
-                var data = await _ControlCard.GetAll();
-                
-                return StatusCode(200, data);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-           
+               var result = _ControlCard.GetAll();
+                return Ok(result);
         }
 
         [HttpGet("GetAllTampers")]
-        public async Task<IActionResult> GetAllTampers()
+        public IActionResult GetAllTampers()
         {
-            try
-            {
-                var data =  _ControlCard.GetAllTempers();
-
-                return StatusCode(200, data);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-
+                var data = _ControlCard.GetAllTempers();
+                return Ok(data);
         }
 
 
@@ -69,40 +53,36 @@ namespace MeterOff.API.Controllers
         //[Authorize(Roles = StaticUserRoles.USER)]
         public IActionResult GetAllTechinicions(int? RegionId, string? filter, int? cardFunctionId)
         {
-            var model = _ControlCard.GetAllTecnicions(RegionId, filter, cardFunctionId);
-            return StatusCode(200, model);
-
+            
+                var data = _ControlCard.GetAllTecnicions(RegionId, filter, cardFunctionId);
+                return Ok(data);
         }
 
 
         [HttpPost("Create")]
         public async Task<IActionResult> InsertControlCard(InsertControlCardInput dto)
         {
-            //var data = _mapper.Map<InsertControlCardInput>(dto);
-           var result =  _ControlCard.AddContolCard(dto);
-           return StatusCode(200, result);
+                var data = _ControlCard.AddContolCard(dto);
+                return Ok(data);
         }
 
         [HttpGet("GetTechinicianExpirationDate")]
         public IActionResult GetTechinicianExpirationDate()
         {
-            var model = _ControlCard.GetTechinicianExpirationDate();
-            return StatusCode(200, model);
+                var data = _ControlCard.GetTechinicianExpirationDate();
+                return Ok(data);
 
         }
 
         [HttpGet("GetTechinicianActivationDate")]
         public IActionResult GetTechinicianActivationDate()
         {
-            var model = _ControlCard.GetTechinicianActivationDate();
-            return StatusCode(200, model);
+           
+                var data = _ControlCard.GetTechinicianActivationDate();
+                return Ok(data);
+           
 
         }
-
-
-
-
-
 
         [HttpPost("CancelControlCard")]
         public async Task<IActionResult> CancelControlCard(string controlCardId)

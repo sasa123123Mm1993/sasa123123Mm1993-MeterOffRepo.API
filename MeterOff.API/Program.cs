@@ -40,7 +40,6 @@ builder.Services.AddSingleton<DapperContext>();
 
 
 
-
 #region Jwt
 builder.Services.AddAuthentication(options =>
 {
@@ -83,6 +82,16 @@ builder.Logging.AddDebug();
 //    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@";
 //    options.User.RequireUniqueEmail = true;
 //});
+
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromDays(1);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 
 
@@ -152,6 +161,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllers();
 

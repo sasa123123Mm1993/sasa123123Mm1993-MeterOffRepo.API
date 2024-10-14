@@ -66,22 +66,31 @@ namespace MeterOff.EF.Services
                 }
 
 
+                ////MeterOffStatusId = {metersDataInput.Status} and
+
+
+
+
                 string query = $@"SELECT dbo.CUploadMainteneceMetersOffReason.Id AS CUploadMainteneceMetersOffReasonID, dbo.CMaintenenceMetersOff.Id AS CMMOiD, dbo.CUploadMainteneceMetersOffReason.Code, dbo.CUploadMainteneceMetersOffReason.Name, 
                   dbo.CUploadMainteneceMetersOffReason.Note, dbo.CMaintenenceMetersOff.VendorCode, dbo.CMaintenenceMetersOff.CustomerCode, dbo.CMaintenenceMetersOff.SerialNumber, dbo.CMaintenenceMetersOff.CustomerName, 
-                  dbo.CMaintenenceMetersOff.NationalId, dbo.CMaintenenceMetersOff.Address, dbo.CMaintenenceMetersOff.PlaceTypeId, dbo.CMaintenenceMetersOff.ActivityTypeId, dbo.CMaintenenceMetersOff.SectionId, 
-                  dbo.CMaintenenceMetersOff.MainDepartmentId, dbo.CMaintenenceMetersOff.SmallDepartmentId, dbo.CMaintenenceMetersOff.BranchNo, dbo.CMaintenenceMetersOff.AccountNo, dbo.CMaintenenceMetersOff.DailyNo, 
-                  dbo.CMaintenenceMetersOff.RegionNo, dbo.CMaintenenceMetersOff.MeterPreparedDate, dbo.CMaintenenceMetersOff.MeterInstallationDate, dbo.CMaintenenceMetersOff.MeterOffDate, 
-                  dbo.CMaintenenceMetersOff.DeliveryDateToLaboratory, dbo.CMaintenenceMetersOff.IsMeterRecieved, dbo.CMaintenenceMetersOff.MeterOffReason, dbo.CMaintenenceMetersOff.DeliveryDateToTechnician, 
-                  dbo.CMaintenenceMetersOff.MaintenanceDate, dbo.CMaintenenceMetersOff.MainDepartmentCode, dbo.CMaintenenceMetersOff.SmallDepartmentCode
-                  FROM  dbo.CMaintenenceMetersOff INNER JOIN
-                  dbo.CUploadMainteneceMetersOffReason ON dbo.CMaintenenceMetersOff.CUploadMainteneceMetersOffReasonId = dbo.CUploadMainteneceMetersOffReason.Id
-                    WHERE CMaintenenceMetersOff.IsDeleted != 1  and
-                    MeterOffStatusId = {metersDataInput.Status} and
-                    MeterInstallationDate >= CONVERT(datetime, '{metersDataInput.FromDate}', 101) and
-                    MeterInstallationDate < CONVERT(datetime, '{metersDataInput.ToDate}', 101) and
-                    SmallDepartmentCode in (10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
-                    27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 53, 90, 50, 60, 70, 110, 124,
-                    99, 65, 56, 58, 77, 71, 78, 856, 852, 63);";
+                  dbo.CMaintenenceMetersOff.NationalId, dbo.CMaintenenceMetersOff.Address, dbo.CMaintenenceMetersOff.PlaceTypeId, dbo.CMaintenenceMetersOff.MainDepartmentId, dbo.CMaintenenceMetersOff.SmallDepartmentId, 
+                  dbo.CMaintenenceMetersOff.BranchNo, dbo.CMaintenenceMetersOff.AccountNo, dbo.CMaintenenceMetersOff.DailyNo, dbo.CMaintenenceMetersOff.RegionNo, dbo.CMaintenenceMetersOff.MeterPreparedDate, 
+                  dbo.CMaintenenceMetersOff.MeterInstallationDate, dbo.CMaintenenceMetersOff.MeterOffDate, dbo.CMaintenenceMetersOff.DeliveryDateToLaboratory, dbo.CMaintenenceMetersOff.IsMeterRecieved, 
+                  dbo.CMaintenenceMetersOff.MeterOffReason, dbo.CMaintenenceMetersOff.DeliveryDateToTechnician, dbo.CMaintenenceMetersOff.MaintenanceDate, dbo.CMaintenenceMetersOff.MainDepartmentCode, 
+                  dbo.CMaintenenceMetersOff.SmallDepartmentCode, dbo.Section.Name AS SectionName, dbo.ActivityType.Name AS ActivityTypeName, dbo.MainDepartment.Name AS MainDepartmentName, 
+                  dbo.SmallDepartment.Name AS SmallDepartmentName, CUploadMainteneceMetersOffReason_1.Name AS ReasonName, dbo.MeterType.Name AS MeterTypeName, dbo.PlaceType.Name AS PlaceTypeName
+                  FROM     dbo.CMaintenenceMetersOff INNER JOIN
+                  dbo.CUploadMainteneceMetersOffReason ON dbo.CMaintenenceMetersOff.CUploadMainteneceMetersOffReasonId = dbo.CUploadMainteneceMetersOffReason.Id INNER JOIN
+                  dbo.Section ON dbo.CMaintenenceMetersOff.SectionId = dbo.Section.Id INNER JOIN
+                  dbo.ActivityType ON dbo.CMaintenenceMetersOff.ActivityTypeId = dbo.ActivityType.Id INNER JOIN
+                  dbo.MainDepartment ON dbo.CMaintenenceMetersOff.MainDepartmentId = dbo.MainDepartment.Id AND dbo.Section.Id = dbo.MainDepartment.sectionId INNER JOIN
+                  dbo.SmallDepartment ON dbo.CMaintenenceMetersOff.SmallDepartmentId = dbo.SmallDepartment.Id AND dbo.Section.Id = dbo.SmallDepartment.SectionId AND 
+                  dbo.MainDepartment.Id = dbo.SmallDepartment.MainDepartmentId INNER JOIN
+                  dbo.CUploadMainteneceMetersOffReason AS CUploadMainteneceMetersOffReason_1 ON dbo.CMaintenenceMetersOff.CUploadMainteneceMetersOffReasonId = CUploadMainteneceMetersOffReason_1.Id INNER JOIN
+                  dbo.MeterType ON dbo.CMaintenenceMetersOff.MeterTypeId = dbo.MeterType.Id LEFT OUTER JOIN
+                  dbo.PlaceType ON dbo.CMaintenenceMetersOff.PlaceTypeId = dbo.PlaceType.Id
+                  WHERE  (dbo.CMaintenenceMetersOff.IsDeleted <> 1) AND (dbo.CMaintenenceMetersOff.MeterInstallationDate >= CONVERT(datetime, '{metersDataInput.FromDate}', 101)) AND (dbo.CMaintenenceMetersOff.MeterInstallationDate < CONVERT(datetime, '{metersDataInput.ToDate}', 
+                  101)) AND (dbo.CMaintenenceMetersOff.SmallDepartmentCode IN (10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 53, 90, 50, 60, 70, 110, 124, 99, 65, 56, 58, 77, 71, 78, 856, 852, 63))";
 
                 //var steps = _context.Query<CMaintenenceMetersOffDto>(query);
 

@@ -9,6 +9,6 @@ namespace MeterOff.Core.Models.Infrastructure
         public int Code { get; set; }
         [MaxLength(70)]
         public string Name { get; set; }
-        public string Note { get; set; }
+        public string? Note { get; set; }
     }
 }

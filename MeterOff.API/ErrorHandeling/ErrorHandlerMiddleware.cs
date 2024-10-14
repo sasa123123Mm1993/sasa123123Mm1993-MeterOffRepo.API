@@ -1,7 +1,12 @@
-﻿using MeterOff.API.ErrorHandeling;
+﻿using Azure;
+using MeterOff.API.ErrorHandeling;
 using MeterOff.Core.Models.Base;
+using MeterOff.Core.Models.Base_Response.Providers;
 using MeterOff.Core.Models.Exception;
 using Newtonsoft.Json;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Validation;
 using static MeterOff.API.Error_Handeling.ErrorHandlerMiddleware;
 
 namespace MeterOff.API.Error_Handeling
@@ -18,32 +23,97 @@ namespace MeterOff.API.Error_Handeling
         {
             try
             {
+                //if (context.Session== "InvalidOperationException") { }
                 await _next(context);
             }
+
             catch (BusinessException businessEx)
             {
                 await HandleBusinessExceptionAsync(context, businessEx);
             }
+            catch (DbEntityValidationException ex)
+            {
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        Console.WriteLine($"Property: {validationError.PropertyName} Error: {validationError.ErrorMessage}");
+                    }
+                }
+            }
+            catch (ValidationException ex)
+            {
+                await HandleValidationExceptionAsync(context, ex);
+            }
+
+            //catch (HttpRequestException HttpRequestEx) when (HttpRequestEx.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            //{
+            //    await HandleGeneralException(context, HttpRequestEx);
+            //}
+
+            catch (InvalidOperationException HttpRequestEx)
+            {
+                await HandleGeneralException(context, HttpRequestEx);
+            }
+
             catch (Exception ex)
             {
                 await HandleExceptionAsync(context, ex);
             }
+
         }
 
-        private Task HandleBusinessExceptionAsync(HttpContext context, BusinessException exception)
+
+
+        private Task HandleValidationExceptionAsync(HttpContext context, ValidationException ex)
         {
-            var response = new ApiResponse<string>(new List<string> { exception.Message }, exception.ErrorCode);
+            
+            Core.Models.Base.Response<HttpContext> response = new Core.Models.Base.Response<HttpContext>();
+            response.code = GeneralException.Code;
+            response.message = ex.Message;
+            response.status = "خطأ عام --- ValidationException";
+            response.payload = null;
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
             return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }
 
 
+        private Task HandleBusinessExceptionAsync(HttpContext context, BusinessException exception)
+        {
+            Core.Models.Base.Response<HttpContext> response = new Core.Models.Base.Response<HttpContext>();
+            response.code = GeneralException.Code;
+            response.message = exception.Message;
+            response.status = "خطأ عام --- BusinessException";
+            response.payload = null;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+
+            //var response = new ApiResponse<string>(new List<string> { exception.Message }, exception.ErrorCode);
+            //context.Response.ContentType = "application/json";
+            //context.Response.StatusCode = StatusCodes.Status400BadRequest;
+            //return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+        }
+        private Task HandleGeneralException(HttpContext context, InvalidOperationException basicException)
+        {
+            Core.Models.Base.Response<HttpContext> response = new Core.Models.Base.Response<HttpContext>();
+
+            response.code = GeneralException.Code;
+            response.message = GeneralException.messageAr;
+            response.status = "خطأ عام --- GeneralException";
+            response.payload = null;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
+        }
+
         private Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var response = new ApiResponse<string>(new List<string> { "An unexpected error occurred." });
+            Core.Models.Base.Response<HttpContext> response = new Core.Models.Base.Response<HttpContext>();
+
+            response.code = GeneralException.Code;
+            response.message = GeneralException.messageAr;
+            response.status = "خطأ عام --- Exception";
+            response.payload = null;
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
             return context.Response.WriteAsync(JsonConvert.SerializeObject(response));
         }
 
@@ -102,8 +172,19 @@ namespace MeterOff.API.Error_Handeling
             public string error { get; set; }
             public int? code { get; set; }
         }
+
+        public class ValidationErrorResponse
+        {
+            public string Type { get; set; }
+            public string Title { get; set; }
+            public int Status { get; set; }
+            public string TraceId { get; set; }
+            public Dictionary<string, List<string>> Errors { get; set; }
+        }
     }
 
+   
 
-    
+
+
 }
