@@ -5,7 +5,6 @@ using MeterOff.Core.Models.Dto.UserDto;
 using MeterOff.Core.Models.Identity;
 using MeterOff.EF;
 using MeterOff.EF.Services;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
