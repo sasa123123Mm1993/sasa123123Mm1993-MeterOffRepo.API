@@ -21,6 +21,7 @@ Test/
 *.vspx
 *.vspxuser
 *.pdb
+*.tar
 
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
