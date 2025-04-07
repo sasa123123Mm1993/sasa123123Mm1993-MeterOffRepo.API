@@ -5,9 +5,9 @@ namespace GPICardCore
 {
 
     public delegate void CardCreatedHandler(ControlCardBuilder controlCard);
-    public class ControlCardBuilder
+    public class ControlCardBuilder : IControlCardBuilder
     {
-        private int   MeterType { get; set; }
+        private int MeterType { get; set; }
         private string MeterVersion { get; set; }
         private string ManufacturerId { get; set; }
         private string CardId { get; set; }
@@ -22,7 +22,7 @@ namespace GPICardCore
 
         public event CardCreatedHandler OnCardCreated;
 
-     
+
 
         private XDocument defaultXml = new XDocument(
         new XElement("meterData",
@@ -38,8 +38,8 @@ namespace GPICardCore
             new XElement("controlCardActivationDate"),
             new XElement("controlCardExpiryDate")
         )));
-     
-   
+
+
         private void CheckXMLBasicValues()
         {
             try
@@ -60,8 +60,8 @@ namespace GPICardCore
                 throw new Exception(ex.Message);
             }
         }
-    
-        public ControlCardBuilder SetMeterType (int  meterType)
+
+        public IControlCardBuilder SetMeterType(int meterType)
         {
             if (Validate.IsNotNullAndNonNegative<int>(meterType))
             {
@@ -77,7 +77,7 @@ namespace GPICardCore
 
         }
 
-        public ControlCardBuilder SetMeterVersion(string meterVersion)
+        public IControlCardBuilder SetMeterVersion(string meterVersion)
         {
             if (!string.IsNullOrWhiteSpace(meterVersion))
             {
@@ -94,7 +94,7 @@ namespace GPICardCore
         }
 
 
-        public ControlCardBuilder SetManufacturerId(string manufacturerId)
+        public IControlCardBuilder SetManufacturerId(string manufacturerId)
         {
             if (!string.IsNullOrWhiteSpace(manufacturerId))
             {
@@ -108,7 +108,7 @@ namespace GPICardCore
             return this;
         }
 
-        public ControlCardBuilder SetCardId(string cardId)
+        public IControlCardBuilder SetCardId(string cardId)
         {
             if (!string.IsNullOrWhiteSpace(cardId))
             {
@@ -124,7 +124,7 @@ namespace GPICardCore
 
 
 
-        public ControlCardBuilder SetDistributionCompanyCode(string distributionCompanyCode)
+        public IControlCardBuilder SetDistributionCompanyCode(string distributionCompanyCode)
         {
             if (!string.IsNullOrWhiteSpace(distributionCompanyCode))
             {
@@ -142,7 +142,7 @@ namespace GPICardCore
 
         }
 
-        public ControlCardBuilder SetSectorCode(string sectorCode)
+        public IControlCardBuilder SetSectorCode(string sectorCode)
         {
             if (!string.IsNullOrWhiteSpace(sectorCode))
             {
@@ -158,9 +158,10 @@ namespace GPICardCore
             return this;
         }
 
-        public ControlCardBuilder SetSelectedMeters(List<string> meters)
+        public IControlCardBuilder SetSelectedMeters(List<string> meters)
         {
-            if (meters == null || meters.Count == 0) {
+            if (meters == null || meters.Count == 0)
+            {
                 throw new Exception("Invalid Meter list or Empty .");
             }
 
@@ -173,10 +174,10 @@ namespace GPICardCore
 
             foreach (var item in meters)
             {
-                if (! Validate.ValidMeterNo(item))
+                if (!Validate.ValidMeterNo(item))
                 {
                     throw new Exception($"Meter length invalid : [{item}] , Meter Number Lenght Must be [{Validate.MaximumMeterNumberLength}] Digit");
-                }               
+                }
 
                 ActiveMeters.Add(new XElement("controlCardActiveMeter", item));
             }
@@ -187,7 +188,7 @@ namespace GPICardCore
             return this;
         }
 
-        public ControlCardBuilder SetCardPeriod(ControlCardActivationPeriod cardDate)
+        public IControlCardBuilder SetCardPeriod(ControlCardActivationPeriod cardDate)
         {
             if (cardDate.ActivationDate.Year < 2000 ||
                 cardDate.ActivationDate.Year < 2000)
@@ -195,7 +196,7 @@ namespace GPICardCore
                 throw new Exception("Control Card Activation Period Invalid .");
             }
 
-            if (!(cardDate.ExpiryDate >= cardDate.ActivationDate) )
+            if (!(cardDate.ExpiryDate >= cardDate.ActivationDate))
             {
                 throw new Exception(" ExpiryDate less than ActivationDate");
             }
@@ -205,18 +206,18 @@ namespace GPICardCore
             .Element("controlCardActivationPeriod")
             .Element("controlCardActivationDate")
             .Value = this.CardDate.ActivationDate.ToString("dd-MM-yyyy");
-           
+
 
             defaultXml.Root
             .Element("controlCardActivationPeriod")
             .Element("controlCardExpiryDate")
             .Value = this.CardDate.ExpiryDate.ToString("dd-MM-yyyy");
-           
+
             return this;
         }
-           
-    
-        
+
+
+
 
 
         public string BuildToggleRelayCard(int reverseCardRecoveryTime)
@@ -227,11 +228,11 @@ namespace GPICardCore
             {
                 throw new Exception($"ReverseCardRecoveryTime  value [{reverseCardRecoveryTime}] minute Invalid .");
             }
-            
+
             XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
-            .Add(new XElement("controlOperationType", 5 ));
+            .Add(new XElement("controlOperationType", 5));
 
             local.Element("meterData")
            .Add(new XElement("reverseCardRecoveryTime", reverseCardRecoveryTime));
@@ -278,29 +279,29 @@ namespace GPICardCore
                 throw new Exception($"New CompanyCode [{NewNumber}] is Invalid  .");
             }
 
-          
-            
+
+
             XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
              .Add(new XElement("controlOperationType", "50"));
 
-         
+
             local.Element("meterData")
             .Add(new XElement("newDistributionCompanyCode", NewNumber));
-                        
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.ChangeCompany.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
-        public string BuildChangeMeterNumberCard(string currentNumber , string NewNumber)
+        public string BuildChangeMeterNumberCard(string currentNumber, string NewNumber)
         {
             CheckXMLBasicValues();
 
-            if (!Validate.ValidMeterNo( currentNumber) )
-            {                
+            if (!Validate.ValidMeterNo(currentNumber))
+            {
                 throw new Exception($"Current Meter Number [{currentNumber}] is Invalid , Meter Number Lenght Must be [{Validate.MaximumMeterNumberLength}] Digit");
             }
 
@@ -309,21 +310,21 @@ namespace GPICardCore
                 throw new Exception($"New Meter Number [{NewNumber}] is Invalid  , Meter Number Lenght Must be [{Validate.MaximumMeterNumberLength}] Digit");
             }
 
-            
 
-           
+
+
             XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
                  .Add(new XElement("controlOperationType", "51"));
 
             local.Element("meterData")
-                .Add(new XElement("meterId", currentNumber ));
+                .Add(new XElement("meterId", currentNumber));
 
             local.Element("meterData")
             .Add(new XElement("newMeterId", NewNumber));
 
-            
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.ChangeMeterNumber.ToString();
@@ -339,7 +340,7 @@ namespace GPICardCore
             local.Element("meterData")
              .Add(new XElement("controlOperationType", "52"));
 
-             
+
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.LunchCurrent.ToString();
             OnCardCreated?.Invoke(this);
@@ -354,7 +355,7 @@ namespace GPICardCore
             local.Element("meterData")
            .Add(new XElement("controlOperationType", "6"));
 
-            
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.RelayTest.ToString();
@@ -376,7 +377,7 @@ namespace GPICardCore
 
             local.Root.Element("cardType").Value = "0";
 
-            
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.Reset.ToString();
@@ -391,16 +392,16 @@ namespace GPICardCore
 
             local.Element("meterData")
              .Add(new XElement("setDateAndTimeMode", "0"));
-                        
+
             local.Element("meterData")
-           .Add(new XElement("meterTimestampToSet", DateTimeValue.ToString("dd-MM-yyyy HH:mm") ));
+           .Add(new XElement("meterTimestampToSet", DateTimeValue.ToString("dd-MM-yyyy HH:mm")));
 
             local.Element("meterData")
            .Add(new XElement("controlOperationType", "0"));
 
             local.Root.Element("cardType").Value = "1";
 
-            
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.SetDateTime.ToString();
@@ -416,20 +417,20 @@ namespace GPICardCore
             local.Element("meterData")
             .Add(new XElement("setDateAndTimeMode", "1"));
 
-          
+
             local.Element("meterData")
            .Add(new XElement("controlOperationType", "0"));
 
             local.Root.Element("cardType").Value = "1";
 
-            
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.SetDateTimeOnMeter.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
-        public string BuildClearTamperCard(List<int> tamperCodelist )
+        public string BuildClearTamperCard(List<int> tamperCodelist)
         {
             CheckXMLBasicValues();
 
@@ -437,12 +438,12 @@ namespace GPICardCore
             {
                 throw new Exception("tamper Code list is Empty .");
             }
-            
+
 
             XDocument local = new XDocument(this.defaultXml);
 
             var manipulationsAndFaultsToBeCleared = new XElement("manipulationsAndFaultsToBeCleared");
-         
+
             foreach (int code in tamperCodelist)
             {
                 manipulationsAndFaultsToBeCleared.Add(new XElement("manipulationOrFaultToBeCleared", code));
@@ -452,11 +453,11 @@ namespace GPICardCore
             .Add(manipulationsAndFaultsToBeCleared);
 
             local.Element("meterData")
-           .Add(new XElement("controlOperationType", 3 ));
+           .Add(new XElement("controlOperationType", 3));
 
             local.Root.Element("cardType").Value = "1";
 
-             
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.ClearTamper.ToString();
@@ -465,7 +466,7 @@ namespace GPICardCore
         }
 
 
-        public string BuildAlterTariffCard(List<TariffStep> tariffSteps,  TariffHeader header , decimal zeroConsumptionFeeAmount)
+        public string BuildAlterTariffCard(List<TariffStep> tariffSteps, TariffHeader header, decimal zeroConsumptionFeeAmount)
         {
             CheckXMLBasicValues();
 
@@ -478,30 +479,30 @@ namespace GPICardCore
           new XElement("editMeterDataOperation", 1)));
 
             local.Element("meterData")
-           .Add(new XElement("controlOperationType", 4 ));
+           .Add(new XElement("controlOperationType", 4));
 
 
             local.Element("meterData")
-           .Add(new XElement("zeroConsumptionFeeAmount", zeroConsumptionFeeAmount ));
-
-           
-         
+           .Add(new XElement("zeroConsumptionFeeAmount", zeroConsumptionFeeAmount));
 
 
 
 
-         var tariffsDetails = new XElement("tariffsDetails",
-         new XElement("tariffDetails",
-         new XElement("tariffId", header.tariffId ),
-         new XElement("tariffVersion"        , header.tariffVersion ),
-         new XElement("tariffGraceType"      , header.tariffGraceType ),
-         new XElement("tariffGracevalue"     , header.tariffGracevalue ),
-         new XElement("tariffAlarmGrace"     , header.tariffAlarmGrace ),
-         new XElement("tariffLimitGrace"     , header.tariffLimitGrace ),
-         new XElement("tariffDeductionGrace" , header.tariffDeductionGrace),
-         new XElement("tariffSteps")
-            )
-            );
+
+
+
+            var tariffsDetails = new XElement("tariffsDetails",
+            new XElement("tariffDetails",
+            new XElement("tariffId", header.tariffId),
+            new XElement("tariffVersion", header.tariffVersion),
+            new XElement("tariffGraceType", header.tariffGraceType),
+            new XElement("tariffGracevalue", header.tariffGracevalue),
+            new XElement("tariffAlarmGrace", header.tariffAlarmGrace),
+            new XElement("tariffLimitGrace", header.tariffLimitGrace),
+            new XElement("tariffDeductionGrace", header.tariffDeductionGrace),
+            new XElement("tariffSteps")
+               )
+               );
 
             var tariffStepsElement = tariffsDetails.Element("tariffDetails").Element("tariffSteps");
 
@@ -516,9 +517,9 @@ namespace GPICardCore
                 );
 
                 if (step.TariffStepRecalculationEdge is > 0)
-                {                     
-                   stepElement.Add(new XElement("tariffStepRecalculationEdge", step.TariffStepRecalculationEdge.Value));
-                    
+                {
+                    stepElement.Add(new XElement("tariffStepRecalculationEdge", step.TariffStepRecalculationEdge.Value));
+
                 }
 
                 if (step.TariffStepRecalculationEdgeAddedAmount is > 0)
@@ -533,7 +534,7 @@ namespace GPICardCore
 
 
 
-            
+
 
 
             this.CardXML = local.ToString();
@@ -546,7 +547,7 @@ namespace GPICardCore
         {
             if (tariffSteps == null) throw new Exception("TariffStep list is NULL .");
 
-            if (tariffSteps.Count ==0 ) throw new Exception("TariffStep list is Empty .");
+            if (tariffSteps.Count == 0) throw new Exception("TariffStep list is Empty .");
 
 
             foreach (var item in tariffSteps)
@@ -575,7 +576,7 @@ namespace GPICardCore
 
 
 
-        public string BuildAlarmCutoffLimitsCard( List<int> limits)
+        public string BuildAlarmCutoffLimitsCard(List<int> limits)
         {
             CheckXMLBasicValues();
 
@@ -600,7 +601,7 @@ namespace GPICardCore
 
 
 
-             
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.AlarmCutoffLimits.ToString();
@@ -609,7 +610,7 @@ namespace GPICardCore
         }
 
 
-        public string BuildLabCard(List<int> ControlWord , int AvailableKWh , int AvailableTime    )
+        public string BuildLabCard(List<int> ControlWord, int AvailableKWh, int AvailableTime)
         {
             CheckXMLBasicValues();
 
@@ -619,12 +620,12 @@ namespace GPICardCore
            .Add(new XElement("labTestCardAvailableTime", AvailableTime));
 
             local.Element("meterData")
-           .Add(new XElement("labTestCardAvailableKWh" , AvailableKWh));
+           .Add(new XElement("labTestCardAvailableKWh", AvailableKWh));
 
 
 
             local.Element("meterData")
-           .Add(new XElement("controlOperationType", 53 ));
+           .Add(new XElement("controlOperationType", 53));
 
             var ControlWords = new XElement("labTestCardControlWords");
 
@@ -636,7 +637,7 @@ namespace GPICardCore
             local.Element("meterData")
             .Add(ControlWords);
 
-             
+
 
             this.CardXML = local.ToString();
             this.CardName = ControlCardType.Lab.ToString();
@@ -651,7 +652,7 @@ namespace GPICardCore
             {
                 throw new Exception($"Source Meter Serial [{SourceMeterSerial}] Invalid .");
             }
-             
+
             XDocument local = new XDocument(this.defaultXml);
 
             local.Element("meterData")
