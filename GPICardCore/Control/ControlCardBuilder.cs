@@ -362,7 +362,7 @@ namespace GPICardCore
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
-        public string BuildResetCard()
+        public string BuildResetMeterCard()
         {
             CheckXMLBasicValues();
 

@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -110,7 +111,8 @@ namespace GPICardCore.Control
                      ["indirectCompanyCode"] = null
                  },
                  ["noInstallationWithoutBattery"] = null,
-                 ["RelayTime"] = null
+                 ["RelayTime"] = null,
+                 ["Relaykw"] = null
              },
              ["isEPayment"] = false,
              ["cardGenerationType"] = 2
@@ -134,7 +136,9 @@ namespace GPICardCore.Control
 
         public string BuildChangeDistributionCompanyCodeCard(string NewNumber)
         {
+
             throw new NotImplementedException();
+
         }
 
         public string BuildChangeMeterNumberCard(string currentNumber, string NewNumber)
@@ -144,8 +148,29 @@ namespace GPICardCore.Control
 
         public string BuildClearTamperCard(List<int> tamperCodelist)
         {
-            throw new NotImplementedException();
+            var _json = this.json.DeepClone();
+
+            _json["businessData"]["cardType"] = 1;
+            _json["businessData"]["ControlCardType"] = 2;
+            _json["businessData"]["controlOperationType"] = 2;
+
+            var manipulationsArray = new JArray();
+
+            foreach (var tamperCode in tamperCodelist)
+            {
+                manipulationsArray.Add(
+                    new JObject
+                    {
+                        ["manipulationOrFaultToBeCleared"] = tamperCode
+                    }
+                );
+            }
+
+            _json["businessData"]["manipulationsAndFaultsToBeCleared"] = manipulationsArray;
+
+            return _json.ToString();
         }
+
 
         public string BuildCollectCard()
         {
@@ -157,41 +182,77 @@ namespace GPICardCore.Control
             throw new NotImplementedException();
         }
 
-        public string BuildLabCard(List<int> ControlWord, int AvailableKWh, int AvailableTime)
+        public string BuildLabCard(List<int> ControlWord  , int AvailableKWh, int AvailableTime)
         {
-            throw new NotImplementedException();
+            var _json = this.json.DeepClone();
+
+            _json["businessData"]["cardType"] = 1;
+            _json["businessData"]["ControlCardType"] = 2;
+            _json["businessData"]["controlOperationType"] = 9;
+
+            _json["businessData"]["Relaykw"] = AvailableKWh;
+            _json["businessData"]["RelayTime"] = AvailableTime;
+
+            return _json.ToString();
         }
 
         public string BuildLunchCurrentCard()
         {
-            throw new NotImplementedException();
+            var _json = this.json.DeepClone();
+
+            _json["businessData"]["cardType"] = 1;
+            _json["businessData"]["ControlCardType"] = 2;
+            _json["businessData"]["controlOperationType"] = 3;
+           
+            
+            return _json.ToString();
         }
 
         public string BuildRelayTestCard()
         {
-             json["businessData"]["controlOperationType"] = 6;
+            var _json = this.json.DeepClone();
 
-            return json.ToString();
+            _json["businessData"]["controlOperationType"] = 5;
+
+            return _json.ToString();
         }
 
-        public string BuildResetCard()
+        public string BuildResetMeterCard()
         {
-            throw new NotImplementedException();
+            var _json = this.json.DeepClone();
+            _json["businessData"]["controlOperationType"] = 7;
+          
+            return _json.ToString();
         }
 
         public string BuildSetDateTimeCard(DateTime DateTimeValue)
         {
-            throw new NotImplementedException();
+            var _json = this.json.DeepClone();
+
+            _json["businessData"]["controlOperationType"] = 0;
+            _json["businessData"]["setDateAndTimeMode"] = 0;
+            _json["businessData"]["meterTimestampToSet"] = DateTimeValue.ToString("dd-MM-yyyy HH:mm");
+
+            return _json.ToString();
         }
 
         public string BuildSetDateTimeOnMeterManualCard()
         {
-            throw new NotImplementedException();
+            var _json = this.json.DeepClone();
+
+            _json["businessData"]["controlOperationType"] = 0;
+            _json["businessData"]["setDateAndTimeMode"] = 1;
+            return _json.ToString();
+            
         }
 
         public string BuildToggleRelayCard(int reverseCardRecoveryTime)
         {
-            throw new NotImplementedException();
+            var _json =  this.json.DeepClone();
+            _json["businessData"]["controlOperationType"] = 5;
+            _json["businessData"]["RelayTime"] = reverseCardRecoveryTime;
+
+            return _json.ToString();
         }
 
         public IControlCardBuilder SetCardId(string cardId)
@@ -314,7 +375,54 @@ namespace GPICardCore.Control
 
         public IControlCardBuilder SetSelectedMeters(List<string> meters)
         {
-            throw new NotImplementedException();
+            if (meters != null && meters.Count > 0)
+            {
+                this.SelectedMeters = meters;
+                json["businessData"]["numberOfMeter"] = meters.Count;
+
+                // Add the meters list as an array to the "controlMetersList" field
+                json["businessData"]["controlMetersList"] = new JArray(meters);
+
+            }
+            else
+            {
+                throw new Exception("The selected meters list is invalid.");
+            }
+
+            return this;
+        }
+
+
+        private void SetAllNull(JObject json)
+        {
+            foreach (var property in json.Properties().ToList())
+            {
+                if (property.Value.Type == JTokenType.Object)
+                {
+                    // Recursively call for nested JObject
+                    SetAllNull((JObject)property.Value);
+                }
+                else if (property.Value.Type == JTokenType.Array)
+                {
+                    // If it's an array, we can set elements to null or keep them empty
+                    JArray array = (JArray)property.Value;
+                    foreach (var item in array)
+                    {
+                        if (item.Type == JTokenType.Object)
+                        {
+                            SetAllNull((JObject)item);
+                        }
+                    }
+                }
+                else
+                {
+                    // Set to null if the current value is not already null
+                    if (property.Value != null)
+                    {
+                        property.Value = null;
+                    }
+                }
+            }
         }
     }
 }

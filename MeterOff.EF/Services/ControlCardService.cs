@@ -291,7 +291,7 @@ namespace MeterOff.EF.Services
                             xmlResult = contrlCardBuilder.BuildClearTamperCard(tamperCodeList);
                             break;
                         case 4:
-                            xmlResult = contrlCardBuilder.BuildResetCard();
+                            xmlResult = contrlCardBuilder.BuildResetMeterCard();
                             break;
 
                         case 5:

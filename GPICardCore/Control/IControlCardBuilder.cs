@@ -20,8 +20,8 @@ namespace GPICardCore
         string BuildLabCard(List<int> ControlWord, int AvailableKWh, int AvailableTime);
         string BuildLunchCurrentCard();
         string BuildRelayTestCard();
-        string BuildResetCard();
-        string BuildSetDateTimeCard(DateTime DateTimeValue);
+        string BuildResetMeterCard();
+        string BuildSetDateTimeCard(DateTime DateTimeValue );
         string BuildSetDateTimeOnMeterManualCard();
         string BuildToggleRelayCard(int reverseCardRecoveryTime);
         IControlCardBuilder SetCardId(string cardId);
