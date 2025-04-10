@@ -380,7 +380,7 @@ namespace GPICardCore
 
 
             this.CardXML = local.ToString();
-            this.CardName = ControlCardType.Reset.ToString();
+            this.CardName = ControlCardType.ResetMeter.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
@@ -404,7 +404,7 @@ namespace GPICardCore
 
 
             this.CardXML = local.ToString();
-            this.CardName = ControlCardType.SetDateTime.ToString();
+            this.CardName = ControlCardType.SetDateTimeAuto.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }
@@ -426,7 +426,7 @@ namespace GPICardCore
 
 
             this.CardXML = local.ToString();
-            this.CardName = ControlCardType.SetDateTimeOnMeter.ToString();
+            this.CardName = ControlCardType.SetDateTimeManual.ToString();
             OnCardCreated?.Invoke(this);
             return local.ToString();
         }

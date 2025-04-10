@@ -2,19 +2,20 @@
 {
     public enum ControlCardType
     {
-        Reset,
+        ResetMeter,
         LunchCurrent  ,
         RelayTest,
         RelayToggle,
         ChangeMeterNumber,
         ChangeCompany,
-        SetDateTime,
-        SetDateTimeOnMeter,
+        SetDateTimeAuto,
+        SetDateTimeManual,
         ClearTamper ,
         TarrifUpdate,
         AlarmCutoffLimits,
         Lab  ,
         Collect ,
-        CopyMeter
+        CopyMeter,
+        UnknownNotSupported
     }
 }

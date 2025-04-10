@@ -217,7 +217,7 @@ namespace GPICardCore.Control
             return _json.ToString();
         }
 
-        public string BuildSetDateTimeCard(DateTime DateTimeValue)
+        public string BuildSetDateTimeCard(DateTime DateTimeValue   )
         {
             var _json = this.json.DeepClone();
 
