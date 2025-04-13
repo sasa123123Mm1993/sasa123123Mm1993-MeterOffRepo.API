@@ -5,7 +5,7 @@ namespace GPICardCore.Control
 {
     public class ControlCardBuilderJson : IControlCardBuilder
     {
-        private int MeterType { get; set; }
+        private string MeterType { get; set; }
         private string MeterVersion { get; set; }
         private string ManufacturerId { get; set; }
         private string CardId { get; set; }
@@ -264,22 +264,13 @@ namespace GPICardCore.Control
 
         public IControlCardBuilder SetCardPeriod(ControlCardActivationPeriod cardDate)
         {
-            if (cardDate.ActivationDate.Year < 2000 ||
-               cardDate.ActivationDate.Year < 2000)
-            {
-                throw new Exception("Control Card Activation Period Invalid .");
-            }
-
-            if (!(cardDate.ExpiryDate >= cardDate.ActivationDate))
-            {
-                throw new Exception(" ExpiryDate less than ActivationDate");
-            }
+            
 
             this.CardDate = cardDate;
              
-            json["businessData"]["controlCardActivationDate"] = cardDate.ActivationDate.ToString("dd-MM-yyyy");
+            json["businessData"]["controlCardActivationDate"] = cardDate.ActivationDate;
 
-            json["businessData"]["controlCardExpiryDate"] = cardDate.ExpiryDate.ToString("dd-MM-yyyy");
+            json["businessData"]["controlCardExpiryDate"] = cardDate.ExpiryDate;
             
 
             
@@ -316,11 +307,11 @@ namespace GPICardCore.Control
             return this;
         }
 
-        public IControlCardBuilder SetMeterType(int meterType)
+        public IControlCardBuilder SetMeterType(string meterType)
         {
            
 
-            if (Validate.IsNotNullAndNonNegative<int>(meterType))
+            if (!string.IsNullOrWhiteSpace(meterType))
             {
                 this.MeterType = meterType;
                 json["businessData"]["meterType"] = meterType ;

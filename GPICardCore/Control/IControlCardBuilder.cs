@@ -28,7 +28,7 @@ namespace GPICardCore
         IControlCardBuilder SetCardPeriod(ControlCardActivationPeriod cardDate);
         IControlCardBuilder SetDistributionCompanyCode(string distributionCompanyCode);
         IControlCardBuilder SetManufacturerId(string manufacturerId);
-        IControlCardBuilder SetMeterType(int meterType);
+        IControlCardBuilder SetMeterType(string meterType);
         IControlCardBuilder SetMeterVersion(string meterVersion);
         IControlCardBuilder SetSectorCode(string sectorCode);
         IControlCardBuilder SetSelectedMeters(List<string> meters);

@@ -7,7 +7,7 @@ namespace GPICardCore
     public delegate void CardCreatedHandler(ControlCardBuilder controlCard);
     public class ControlCardBuilder : IControlCardBuilder
     {
-        private int MeterType { get; set; }
+        private string MeterType { get; set; }
         private string MeterVersion { get; set; }
         private string ManufacturerId { get; set; }
         private string CardId { get; set; }
@@ -61,17 +61,13 @@ namespace GPICardCore
             }
         }
 
-        public IControlCardBuilder SetMeterType(int meterType)
+        public IControlCardBuilder SetMeterType(string meterType)
         {
-            if (Validate.IsNotNullAndNonNegative<int>(meterType))
-            {
+           
                 this.MeterType = meterType;
                 defaultXml.Root.Element("meterType").Value = meterType.ToString();
-            }
-            else
-            {
-                throw new Exception("The meterType value is invalid.");
-            }
+            
+            
 
             return this;
 
@@ -190,28 +186,19 @@ namespace GPICardCore
 
         public IControlCardBuilder SetCardPeriod(ControlCardActivationPeriod cardDate)
         {
-            if (cardDate.ActivationDate.Year < 2000 ||
-                cardDate.ActivationDate.Year < 2000)
-            {
-                throw new Exception("Control Card Activation Period Invalid .");
-            }
-
-            if (!(cardDate.ExpiryDate >= cardDate.ActivationDate))
-            {
-                throw new Exception(" ExpiryDate less than ActivationDate");
-            }
+           
 
             this.CardDate = cardDate;
             defaultXml.Root
             .Element("controlCardActivationPeriod")
             .Element("controlCardActivationDate")
-            .Value = this.CardDate.ActivationDate.ToString("dd-MM-yyyy");
+            .Value = this.CardDate.ActivationDate;
 
 
             defaultXml.Root
             .Element("controlCardActivationPeriod")
             .Element("controlCardExpiryDate")
-            .Value = this.CardDate.ExpiryDate.ToString("dd-MM-yyyy");
+            .Value = this.CardDate.ExpiryDate;
 
             return this;
         }

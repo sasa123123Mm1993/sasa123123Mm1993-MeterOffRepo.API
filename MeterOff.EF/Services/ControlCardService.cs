@@ -248,8 +248,8 @@ namespace MeterOff.EF.Services
                     .SetDistributionCompanyCode("5")
                     .SetCardPeriod(new ControlCardActivationPeriod
                     {
-                        ActivationDate = DateTime.Now,
-                        ExpiryDate = DateTime.Now.AddDays(99)
+                        ActivationDate = DateTime.Now.ToString("dd-MM-yyyy"),
+                        ExpiryDate = DateTime.Now.AddDays(99).ToString("dd-MM-yyyy")
                     });
                     if (technician.LevelEnum == LevelEnum.Company || technician.LevelEnum == LevelEnum.Section)
                     {

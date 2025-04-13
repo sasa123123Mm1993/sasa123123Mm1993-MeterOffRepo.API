@@ -2,9 +2,9 @@
 {
     public class ControlCardActivationPeriod
     {      
-        public DateTime ActivationDate { get; set; }
+        public string ActivationDate { get; set; }
           
-        public DateTime ExpiryDate { get; set; }
+        public string ExpiryDate { get; set; }
     }
 
 
