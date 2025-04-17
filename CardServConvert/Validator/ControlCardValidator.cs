@@ -9,7 +9,13 @@ namespace CardServConvert.Validator
         public ControlCardValidator()
         {
             RuleFor(x => x.ManufacturerId).NotEmpty();
-            RuleFor(x => x.MeterType).NotEmpty();
+
+            RuleFor(x => x.MeterType)
+            .NotEmpty()
+            .WithMessage("MeterType is Required.")
+            .Matches(@"^[0-9]$")
+            .WithMessage("MeterType Must be a Integer");
+
             RuleFor(x => x.MeterVersion).NotEmpty();
             RuleFor(x => x.CardId).NotEmpty();
             RuleFor(x => x.DistributionCompanyCode).NotEmpty();

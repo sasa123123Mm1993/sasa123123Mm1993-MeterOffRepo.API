@@ -616,9 +616,12 @@ namespace GPICardCore
 
             var ControlWords = new XElement("labTestCardControlWords");
 
-            foreach (var item in ControlWord)
+            if (ControlWord != null)
             {
-                ControlWords.Add(new XElement("labTestCardControlWord", item));
+                foreach (var item in ControlWord)
+                {
+                    ControlWords.Add(new XElement("labTestCardControlWord", item));
+                } 
             }
 
             local.Element("meterData")
@@ -655,7 +658,14 @@ namespace GPICardCore
             return local.ToString();
         }
 
+        public IControlCardBuilder SetGeneralDivisionCode(string generalDivisionCode)
+        {
+            throw new NotImplementedException();
+        }
 
-
+        public IControlCardBuilder SetDivisionCode(string DivisionCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

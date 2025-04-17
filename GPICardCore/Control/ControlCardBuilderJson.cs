@@ -11,6 +11,8 @@ namespace GPICardCore.Control
         private string CardId { get; set; }
         private string DistributionCompanyCode { get; set; }
         private string SectorCode { get; set; }
+        private string GeneralDivisionCode { get; set; }
+        private string DivisionCode { get; set; }
         private ControlCardActivationPeriod CardDate { get; set; }
 
         public string CardXML { get; private set; }
@@ -20,7 +22,7 @@ namespace GPICardCore.Control
 
 
         // Create JSON dynamically like XML
-         private JObject json = new JObject
+         private JObject jsonControl = new JObject
          {
              ["businessData"] = new JObject
              {
@@ -111,6 +113,10 @@ namespace GPICardCore.Control
          };
 
 
+  
+
+
+
 
 
 
@@ -118,29 +124,29 @@ namespace GPICardCore.Control
 
         public string BuildAlarmCutoffLimitsCard(List<int> limits)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public string BuildAlterTariffCard(List<TariffStep> tariffSteps, TariffHeader header, decimal zeroConsumptionFeeAmount)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public string BuildChangeDistributionCompanyCodeCard(string NewNumber)
         {
 
-            throw new NotImplementedException();
+            return null;
 
         }
 
         public string BuildChangeMeterNumberCard(string currentNumber, string NewNumber)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public string BuildClearTamperCard(List<int> tamperCodelist)
         {
-            var _json = this.json.DeepClone();
+            var _json = this.jsonControl.DeepClone();
 
             _json["businessData"]["cardType"] = 1;
             _json["businessData"]["ControlCardType"] = 2;
@@ -166,17 +172,51 @@ namespace GPICardCore.Control
 
         public string BuildCollectCard()
         {
-            throw new NotImplementedException();
+            
+
+
+            var json = new JObject
+            {
+                ["businessData"] = new JObject
+                {
+                    ["meterType"]    =  Convert.ToInt32( this.MeterType),
+                    ["meterVersion"] = this.MeterVersion,
+                    ["manufacturerId"] = this.ManufacturerId,
+                    ["cardId"]         = this.CardId,
+                    ["collectorCode"] = null,
+                    ["controlOperationType"] = 2,
+                    ["collectionCardExpiryDate"] = null,
+                    ["encryptionKey"] = null,
+                    ["distributionCompany"] = new JObject
+                    {
+                        ["companyCode"] = null,
+                        ["techCodeRegion"] = null,
+                        ["sectorCode"] = null,
+                        ["generalDivisionCode"] = null,
+                        ["divisionCode"] = null,
+                        ["rechargeCenterCode"] = null,
+                        ["companyLevel"] = null,
+                        ["indirectCompanyCode"] = null
+                    }
+                },
+                ["isEPayment"] = false,
+                ["cardGenerationType"] = 2
+            };
+
+
+
+            return json.ToString(); 
+
         }
 
         public string BuildCopyMeterCard(string SourceMeterSerial)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public string BuildLabCard(List<int> ControlWord  , int AvailableKWh, int AvailableTime)
         {
-            var _json = this.json.DeepClone();
+            var _json = this.jsonControl.DeepClone();
 
             _json["businessData"]["cardType"] = 1;
             _json["businessData"]["ControlCardType"] = 2;
@@ -190,7 +230,7 @@ namespace GPICardCore.Control
 
         public string BuildLunchCurrentCard()
         {
-            var _json = this.json.DeepClone();
+            var _json = this.jsonControl.DeepClone();
 
             _json["businessData"]["cardType"] = 1;
             _json["businessData"]["ControlCardType"] = 2;
@@ -202,7 +242,7 @@ namespace GPICardCore.Control
 
         public string BuildRelayTestCard()
         {
-            var _json = this.json.DeepClone();
+            var _json = this.jsonControl.DeepClone();
 
             _json["businessData"]["controlOperationType"] = 5;
 
@@ -211,7 +251,7 @@ namespace GPICardCore.Control
 
         public string BuildResetMeterCard()
         {
-            var _json = this.json.DeepClone();
+            var _json = this.jsonControl.DeepClone();
             _json["businessData"]["controlOperationType"] = 7;
           
             return _json.ToString();
@@ -219,7 +259,7 @@ namespace GPICardCore.Control
 
         public string BuildSetDateTimeCard(DateTime DateTimeValue   )
         {
-            var _json = this.json.DeepClone();
+            var _json = this.jsonControl.DeepClone();
 
             _json["businessData"]["controlOperationType"] = 0;
             _json["businessData"]["setDateAndTimeMode"] = 0;
@@ -230,7 +270,7 @@ namespace GPICardCore.Control
 
         public string BuildSetDateTimeOnMeterManualCard()
         {
-            var _json = this.json.DeepClone();
+            var _json = this.jsonControl.DeepClone();
 
             _json["businessData"]["controlOperationType"] = 0;
             _json["businessData"]["setDateAndTimeMode"] = 1;
@@ -240,7 +280,7 @@ namespace GPICardCore.Control
 
         public string BuildToggleRelayCard(int reverseCardRecoveryTime)
         {
-            var _json =  this.json.DeepClone();
+            var _json =  this.jsonControl.DeepClone();
             _json["businessData"]["controlOperationType"] = 5;
             _json["businessData"]["RelayTime"] = reverseCardRecoveryTime;
 
@@ -252,7 +292,7 @@ namespace GPICardCore.Control
             if (!string.IsNullOrWhiteSpace(cardId))
             {
                 this.CardId = cardId;
-                json["businessData"]["cardId"] = cardId;
+                jsonControl["businessData"]["cardId"] = cardId;
                
             }
             else
@@ -268,9 +308,9 @@ namespace GPICardCore.Control
 
             this.CardDate = cardDate;
              
-            json["businessData"]["controlCardActivationDate"] = cardDate.ActivationDate;
+            jsonControl["businessData"]["controlCardActivationDate"] = cardDate.ActivationDate;
 
-            json["businessData"]["controlCardExpiryDate"] = cardDate.ExpiryDate;
+            jsonControl["businessData"]["controlCardExpiryDate"] = cardDate.ExpiryDate;
             
 
             
@@ -282,7 +322,7 @@ namespace GPICardCore.Control
             if (!string.IsNullOrWhiteSpace(distributionCompanyCode))
             {
                 this.DistributionCompanyCode = distributionCompanyCode;
-                json["businessData"]["distributionCompany"]["companyCode"] = Convert.ToInt32( distributionCompanyCode );
+                jsonControl["businessData"]["distributionCompany"]["companyCode"] = Convert.ToInt32( distributionCompanyCode );
                
             }
             else
@@ -298,7 +338,7 @@ namespace GPICardCore.Control
             if (!string.IsNullOrWhiteSpace(manufacturerId))
             {
                 this.ManufacturerId = manufacturerId;
-                json["businessData"]["manufacturerId"] = manufacturerId;
+                jsonControl["businessData"]["manufacturerId"] = manufacturerId;
              }
             else
             {
@@ -314,7 +354,7 @@ namespace GPICardCore.Control
             if (!string.IsNullOrWhiteSpace(meterType))
             {
                 this.MeterType = meterType;
-                json["businessData"]["meterType"] = meterType ;
+                jsonControl["businessData"]["meterType"] = Convert.ToInt32( meterType) ;
             }
             else
             {
@@ -331,7 +371,7 @@ namespace GPICardCore.Control
             if (!string.IsNullOrWhiteSpace(meterVersion))
             {
                 this.MeterVersion = meterVersion;
-                json["businessData"]["meterVersion"] =  meterVersion;
+                jsonControl["businessData"]["meterVersion"] =  meterVersion;
              }
             else
             {
@@ -346,7 +386,7 @@ namespace GPICardCore.Control
             if (!string.IsNullOrWhiteSpace(sectorCode))
             {
                 this.SectorCode = sectorCode;
-                json["businessData"]["distributionCompany"]["sectorCode"] = sectorCode;
+                jsonControl["businessData"]["distributionCompany"]["sectorCode"] = sectorCode;
               
             }
             else
@@ -356,15 +396,30 @@ namespace GPICardCore.Control
             return this;
         }
 
+        public IControlCardBuilder SetGeneralDivisionCode(string generalDivisionCode)
+        {
+            if (!string.IsNullOrWhiteSpace(generalDivisionCode))
+            {
+                this.GeneralDivisionCode = generalDivisionCode;
+                jsonControl["businessData"]["distributionCompany"]["generalDivisionCode"] = generalDivisionCode;
+
+            }
+            else
+            {
+                throw new Exception("The GeneralDivisionCode value is invalid.");
+            }
+            return this;
+        }
+
         public IControlCardBuilder SetSelectedMeters(List<string> meters)
         {
             if (meters != null && meters.Count > 0)
             {
                 this.SelectedMeters = meters;
-                json["businessData"]["numberOfMeter"] = meters.Count;
+                jsonControl["businessData"]["numberOfMeter"] = meters.Count;
 
                 // Add the meters list as an array to the "controlMetersList" field
-                json["businessData"]["controlMetersList"] = new JArray(meters);
+                jsonControl["businessData"]["controlMetersList"] = new JArray(meters);
 
             }
             else
@@ -407,5 +462,25 @@ namespace GPICardCore.Control
                 }
             }
         }
+
+        public IControlCardBuilder SetDivisionCode(string DivisionCode)
+        {
+            if (!string.IsNullOrWhiteSpace(DivisionCode))
+            {
+                this.DivisionCode = DivisionCode;
+                jsonControl["businessData"]["distributionCompany"]["divisionCode"] = DivisionCode;
+
+            }
+            else
+            {
+                throw new Exception("The DivisionCode value is invalid.");
+            }
+            return this;
+        }
+
+
+        
+
+
     }
 }

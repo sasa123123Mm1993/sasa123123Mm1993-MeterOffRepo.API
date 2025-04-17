@@ -9,13 +9,13 @@ using System.Xml.Linq;
 
 namespace CardServConvert.Controllers
 {
-    [Route("api/GpiServ")]
+    [Route("api/ControlCard")]
     [ApiController]
-    public class GpiServController : ControllerBase
+    public class ControlCardController : ControllerBase
     {
         private readonly ILogger _logger;
 
-        public GpiServController(ILogger<GpiServController> logger)
+        public ControlCardController(ILogger<ControlCardController> logger)
         {
             _logger = logger;
         }
@@ -24,9 +24,9 @@ namespace CardServConvert.Controllers
         [HttpPost]
         [Route("Write")]
         [Consumes("text/plain")]
-        public async Task<IActionResult> ConvertGpiServ( string xmlCardData)
+        public async Task<IActionResult> Write( string xmlCardData)
         {
-            if (!IsValidXML(xmlCardData))
+            if (! Tools.IsValidXML(xmlCardData))
             {
                 _logger.LogError("Invalid XML format. {xmlCardData}", xmlCardData);
                 return BadRequest(new
@@ -49,6 +49,11 @@ namespace CardServConvert.Controllers
             string sectorCode              = reader.GetValue("sectorCode");
             string activationDate          = reader.GetChildValue("controlCardActivationPeriod", "controlCardActivationDate");
             string expiryDate              = reader.GetChildValue("controlCardActivationPeriod", "controlCardExpiryDate");
+
+            List<string> ActiveMeters      = reader.GetListValues("controlCardActiveMeters", "controlCardActiveMeter");
+            
+
+
 
             ControlCardDto controlCardDto = new ControlCardDto
             {
@@ -85,20 +90,27 @@ namespace CardServConvert.Controllers
             ControlCardType cardType = reader.GetControlCardType();
             _logger.LogInformation("ControlCardType: {cardType}", cardType);
 
-            IControlCardBuilder contrlcard = new ControlCardBuilderJson();
+            ControlCardBuilderJson contrlcard = new ControlCardBuilderJson();
 
             contrlcard.SetMeterType(meterType)
             .SetMeterVersion(meterVersion)
             .SetManufacturerId(manufacturerId)
             .SetCardId(cardId)
-            .SetSectorCode(sectorCode)
+            .SetSectorCode(sectorCode)  
+            .SetGeneralDivisionCode(sectorCode)
+            .SetDivisionCode(sectorCode)
             .SetDistributionCompanyCode(distributionCompanyCode)
-
             .SetCardPeriod(new ControlCardActivationPeriod
             {
                 ActivationDate = activationDate,
                 ExpiryDate =  expiryDate
             });
+
+            if (ActiveMeters != null && ActiveMeters.Count > 0)
+            {
+                contrlcard.SetSelectedMeters(ActiveMeters);
+            }
+           
 
 
             string jsonCardData = string.Empty;
@@ -167,21 +179,7 @@ namespace CardServConvert.Controllers
 
         }
 
-        private bool IsValidXML(string xml)
-        {
-            if (string.IsNullOrWhiteSpace(xml))
-                return false;
-
-            try
-            {
-                XDocument.Parse(xml);  
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+     
     }
 
 

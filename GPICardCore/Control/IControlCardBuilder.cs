@@ -31,6 +31,8 @@ namespace GPICardCore
         IControlCardBuilder SetMeterType(string meterType);
         IControlCardBuilder SetMeterVersion(string meterVersion);
         IControlCardBuilder SetSectorCode(string sectorCode);
+        IControlCardBuilder SetGeneralDivisionCode(string generalDivisionCode);
+        IControlCardBuilder SetDivisionCode(string DivisionCode);
         IControlCardBuilder SetSelectedMeters(List<string> meters);
     }
 }
