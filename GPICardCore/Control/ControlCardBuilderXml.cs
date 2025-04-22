@@ -1,11 +1,12 @@
 ﻿using System.Xml.Linq;
+using GPICardCore.Control;
 using GPICardCore.Master;
 
 namespace GPICardCore
 {
 
-    public delegate void CardCreatedHandler(ControlCardBuilder controlCard);
-    public class ControlCardBuilder : IControlCardBuilder
+    public delegate void CardCreatedHandler(ControlCardBuilderXml controlCard);
+    public class ControlCardBuilderXml : IControlCardBuilder 
     {
         private string MeterType { get; set; }
         private string MeterVersion { get; set; }

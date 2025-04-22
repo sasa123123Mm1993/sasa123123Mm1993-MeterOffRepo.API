@@ -235,7 +235,7 @@ namespace MeterOff.EF.Services
                     var generalSettings = _context.DbSetting.FirstOrDefault();
 
                     #region Build XML
-                    ControlCardBuilder contrlCardBuilder = new ControlCardBuilder();
+                    ControlCardBuilderXml contrlCardBuilder = new ControlCardBuilderXml();
                     List<string> selectedMetersList = card.ControledMetersList?.ToList<string>() ?? new List<string>();
                     if (selectedMetersList.Any())
                     {

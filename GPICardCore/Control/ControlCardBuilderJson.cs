@@ -122,27 +122,7 @@ namespace GPICardCore.Control
 
         public event CardCreatedHandler OnCardCreated;
 
-        public string BuildAlarmCutoffLimitsCard(List<int> limits)
-        {
-            return null;
-        }
-
-        public string BuildAlterTariffCard(List<TariffStep> tariffSteps, TariffHeader header, decimal zeroConsumptionFeeAmount)
-        {
-            return null;
-        }
-
-        public string BuildChangeDistributionCompanyCodeCard(string NewNumber)
-        {
-
-            return null;
-
-        }
-
-        public string BuildChangeMeterNumberCard(string currentNumber, string NewNumber)
-        {
-            return null;
-        }
+        
 
         public string BuildClearTamperCard(List<int> tamperCodelist)
         {
@@ -172,47 +152,10 @@ namespace GPICardCore.Control
 
         public string BuildCollectCard()
         {
-            
-
-
-            var json = new JObject
-            {
-                ["businessData"] = new JObject
-                {
-                    ["meterType"]    =  Convert.ToInt32( this.MeterType),
-                    ["meterVersion"] = this.MeterVersion,
-                    ["manufacturerId"] = this.ManufacturerId,
-                    ["cardId"]         = this.CardId,
-                    ["collectorCode"] = null,
-                    ["controlOperationType"] = 2,
-                    ["collectionCardExpiryDate"] = null,
-                    ["encryptionKey"] = null,
-                    ["distributionCompany"] = new JObject
-                    {
-                        ["companyCode"] = null,
-                        ["techCodeRegion"] = null,
-                        ["sectorCode"] = null,
-                        ["generalDivisionCode"] = null,
-                        ["divisionCode"] = null,
-                        ["rechargeCenterCode"] = null,
-                        ["companyLevel"] = null,
-                        ["indirectCompanyCode"] = null
-                    }
-                },
-                ["isEPayment"] = false,
-                ["cardGenerationType"] = 2
-            };
-
-
-
-            return json.ToString(); 
-
+            return null;             
         }
 
-        public string BuildCopyMeterCard(string SourceMeterSerial)
-        {
-            return null;
-        }
+        
 
         public string BuildLabCard(List<int> ControlWord  , int AvailableKWh, int AvailableTime)
         {
@@ -478,9 +421,29 @@ namespace GPICardCore.Control
             return this;
         }
 
+        public string BuildAlarmCutoffLimitsCard(List<int> limits)
+        {
+            return null;
+        }
 
-        
+        public string BuildAlterTariffCard(List<TariffStep> tariffSteps, TariffHeader header, decimal zeroConsumptionFeeAmount)
+        {
+            return null;
+        }
 
+        public string BuildChangeDistributionCompanyCodeCard(string NewNumber)
+        {
+            return null;
+        }
 
+        public string BuildChangeMeterNumberCard(string currentNumber, string NewNumber)
+        {
+            return null;
+        }
+
+        public string BuildCopyMeterCard(string SourceMeterSerial)
+        {
+            return null;
+        }
     }
 }

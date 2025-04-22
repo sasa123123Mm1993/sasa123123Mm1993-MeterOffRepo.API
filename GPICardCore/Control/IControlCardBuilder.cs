@@ -9,14 +9,9 @@ namespace GPICardCore
         List<string> SelectedMeters { get; }
 
         event CardCreatedHandler OnCardCreated;
-
-        string BuildAlarmCutoffLimitsCard(List<int> limits);
-        string BuildAlterTariffCard(List<TariffStep> tariffSteps, TariffHeader header, decimal zeroConsumptionFeeAmount);
-        string BuildChangeDistributionCompanyCodeCard(string NewNumber);
-        string BuildChangeMeterNumberCard(string currentNumber, string NewNumber);
-        string BuildClearTamperCard(List<int> tamperCodelist);
-        string BuildCollectCard();
-        string BuildCopyMeterCard(string SourceMeterSerial);
+       
+         string BuildClearTamperCard(List<int> tamperCodelist);
+  
         string BuildLabCard(List<int> ControlWord, int AvailableKWh, int AvailableTime);
         string BuildLunchCurrentCard();
         string BuildRelayTestCard();
@@ -24,6 +19,17 @@ namespace GPICardCore
         string BuildSetDateTimeCard(DateTime DateTimeValue );
         string BuildSetDateTimeOnMeterManualCard();
         string BuildToggleRelayCard(int reverseCardRecoveryTime);
+
+        //----------
+        string BuildAlarmCutoffLimitsCard(List<int> limits);
+        string BuildAlterTariffCard(List<TariffStep> tariffSteps, TariffHeader header, decimal zeroConsumptionFeeAmount);
+        string BuildChangeDistributionCompanyCodeCard(string NewNumber);
+        string BuildChangeMeterNumberCard(string currentNumber, string NewNumber);
+        string BuildCollectCard();
+        string BuildCopyMeterCard(string SourceMeterSerial);
+
+        //----------//
+
         IControlCardBuilder SetCardId(string cardId);
         IControlCardBuilder SetCardPeriod(ControlCardActivationPeriod cardDate);
         IControlCardBuilder SetDistributionCompanyCode(string distributionCompanyCode);
