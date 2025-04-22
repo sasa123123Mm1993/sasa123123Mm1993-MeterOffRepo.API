@@ -179,7 +179,16 @@ namespace CardServConvert.Controllers
 
         }
 
-     
+        [HttpPost]
+        [Route("Read")]
+        [Consumes("text/json")]
+        public async Task<IActionResult> Read( [FromBody] string jsonCardData)
+        {
+            return Ok("");
+        }
+
+
+
     }
 
 
