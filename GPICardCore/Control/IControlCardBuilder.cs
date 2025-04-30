@@ -40,5 +40,8 @@ namespace GPICardCore
         IControlCardBuilder SetGeneralDivisionCode(string generalDivisionCode);
         IControlCardBuilder SetDivisionCode(string DivisionCode);
         IControlCardBuilder SetSelectedMeters(List<string> meters);
+        IControlCardBuilder SetMetersProcessedByControlCard(List<ProcessedMeter> processedMeters);
+        IControlCardBuilder SetPreviousMeterEvents(List<PreviousMeterEvent> previousMeterEvents);
+    
     }
 }

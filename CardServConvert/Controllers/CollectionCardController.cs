@@ -25,7 +25,7 @@ namespace CardServConvert.Controllers
         [HttpPost]
         [Route("Write")]
         [Consumes("text/plain")]
-        public async Task<IActionResult> Write (string xmlCardData)
+        public async Task<IActionResult> Write ([FromBody] string xmlCardData)
         {
             if (!Tools.IsValidXML(xmlCardData))
             {

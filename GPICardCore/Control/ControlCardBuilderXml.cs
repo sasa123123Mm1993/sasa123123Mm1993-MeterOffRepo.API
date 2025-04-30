@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Net.Http.Headers;
+using System.Xml.Linq;
 using GPICardCore.Control;
 using GPICardCore.Master;
 
@@ -90,6 +91,7 @@ namespace GPICardCore
 
         }
 
+     
 
         public IControlCardBuilder SetManufacturerId(string manufacturerId)
         {
@@ -119,6 +121,7 @@ namespace GPICardCore
             return this;
         }
 
+         
 
 
         public IControlCardBuilder SetDistributionCompanyCode(string distributionCompanyCode)
@@ -668,5 +671,57 @@ namespace GPICardCore
         {
             throw new NotImplementedException();
         }
+
+        public IControlCardBuilder SetPreviousMeterEvents(List<PreviousMeterEvent> previousMeterEvents)
+        {
+            this.defaultXml.Element("meterData")
+           .Add(new XElement("previousMeterEvents"));
+
+            foreach (var item in previousMeterEvents)
+            {
+                var prviousmeterenent = new XElement("previousMeterEvent",
+                    new XElement("meterNo", item.MeterNo),
+                    new XElement("previousMeterEventCode", item.PreviousMeterEventCode),
+                    new XElement("previousMeterEventTime", item.PreviousMeterEventTime),
+                    new XElement("previousMeterEventRemovalTime", item.PreviousMeterEventRemovalTime),
+                    new XElement("previousMeterEventRemovalCardId", item.PreviousMeterEventRemovalCardId)
+                );
+
+                this.defaultXml.Element("meterData").Element("previousMeterEvents").Add(prviousmeterenent);
+            }
+
+           return this;
+        }
+
+
+        public IControlCardBuilder SetMetersProcessedByControlCard(List<ProcessedMeter> processedMeters)
+        {
+
+
+            this.defaultXml.Element("meterData")
+            .Add(new XElement("metersProcessedByControlCard"));
+
+            foreach (var item in processedMeters)
+            {
+                var processedMeter = new XElement("processedMeter",
+                    new XElement("processedMeterId", item.ProcessedMeterId),
+                    new XElement("processingTimestamp", item.ProcessingTimestamp),
+                    new XElement("currentMeterStatus", item.CurrentMeterStatus),
+                    new XElement("oldMeterStatus", item.OldMeterStatus),
+                    new XElement("meterInstallationDate", item.MeterInstallationDate),
+                    new XElement("meterInstallerID", item.MeterInstallerID),
+                    new XElement("customerId", item.CustomerId)
+                );
+
+                this.defaultXml.Element("meterData").Element("metersProcessedByControlCard").Add(processedMeter);
+            }
+
+
+            return this;
+
+        }
+
+
+
     }
 }

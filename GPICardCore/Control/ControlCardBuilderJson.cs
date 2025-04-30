@@ -445,5 +445,15 @@ namespace GPICardCore.Control
         {
             return null;
         }
+
+        public IControlCardBuilder SetMetersProcessedByControlCard(List<ProcessedMeter> processedMeters)
+        {
+           return null;
+        }
+
+        public IControlCardBuilder SetPreviousMeterEvents(List<PreviousMeterEvent> previousMeterEvents)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,17 +1,31 @@
-﻿namespace GPICardCore.Master
+﻿using System.Xml.Serialization;
+
+namespace GPICardCore.Master
 {
+    [XmlRoot("processedMeter")]
     public class ProcessedMeter
     {
-         public string ProcessedMeterId { get; set; }
+        [XmlElement("processedMeterId")]
+        public string ProcessedMeterId { get; set; }
 
-         public string ProcessingTimestamp { get; set; }
+        [XmlElement("processingTimestamp")]
+        public string ProcessingTimestamp { get; set; }
 
-         public string CurrentMeterStatus { get; set; }
+        [XmlElement("currentMeterStatus")]
+        public string CurrentMeterStatus { get; set; }
 
-         public string OldMeterStatus { get; set; }
+        [XmlElement("oldMeterStatus")]
+        public string OldMeterStatus { get; set; }
 
-         public string MeterInstallationDate { get; set; }
+        [XmlElement("meterInstallationDate")]
+        public string MeterInstallationDate { get; set; }
 
-         public string CustomerId { get; set; }
+        [XmlElement("meterInstallerID")]
+        public string MeterInstallerID { get; set; }
+
+        [XmlElement("customerId")]
+        public string CustomerId { get; set; }
     }
+
+ 
 }

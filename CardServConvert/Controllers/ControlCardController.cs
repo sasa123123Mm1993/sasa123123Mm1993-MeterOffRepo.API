@@ -24,7 +24,7 @@ namespace CardServConvert.Controllers
         [HttpPost]
         [Route("Write")]
         [Consumes("text/plain")]
-        public async Task<IActionResult> Write( string xmlCardData)
+        public async Task<IActionResult> Write([FromBody] string xmlCardData)
         {
             if (! Tools.IsValidXML(xmlCardData))
             {
@@ -181,10 +181,52 @@ namespace CardServConvert.Controllers
 
         [HttpPost]
         [Route("Read")]
-        [Consumes("text/json")]
+        [Consumes("text/plain")]
         public async Task<IActionResult> Read( [FromBody] string jsonCardData)
         {
+
+            CardJsonReader reader = new CardJsonReader(jsonCardData);
+
+            if (reader.ParsedData.StatusCode == 200)
+            {
+
+                var cardId                    = reader.ParsedData.Data.Payload.CardId;
+                var cardType                  = reader.ParsedData.Data.Payload.CardType;
+                var technicianCode            = reader.ParsedData.Data.Payload.TechnicianCode;
+                var controlCardType           = reader.ParsedData.Data.Payload.ControlCardType;
+                var numberOfMeter             = reader.ParsedData.Data.Payload.NumberOfMeter;
+                var controlMetersList         = reader.ParsedData.Data.Payload.ControlMetersList;
+                var controlOperationType      = reader.ParsedData.Data.Payload.ControlOperationType;
+                var controlCardActivationDate = reader.ParsedData.Data.Payload.ControlCardActivationDate;
+                var controlCardExpiryDate     = reader.ParsedData.Data.Payload.ControlCardExpiryDate;
+
+                var meterDataList =  reader.GetMeterData();
+
+
+                ControlCardBuilderXml builderXml = new ControlCardBuilderXml();
+                builderXml.SetCardId(cardId)
+                    
+                    .SetCardPeriod(new ControlCardActivationPeriod
+                    {
+                        ActivationDate = controlCardActivationDate,
+                        ExpiryDate     = controlCardExpiryDate
+                    })
+
+                    
+                    ;
+                   
+                   
+              
+
+
+
+
+
+            }
+
             return Ok("");
+
+           
         }
 
 

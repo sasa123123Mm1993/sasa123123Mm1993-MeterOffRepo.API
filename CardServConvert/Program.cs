@@ -1,3 +1,4 @@
+using CardServConvert;
 using NLog.Web;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +9,15 @@ builder.Host.UseNLog();
 
 // Add services to the container.
 
-builder.Services.AddControllers()
-       .AddXmlSerializerFormatters();
+
+// Add services to the container
+builder.Services.AddControllers(options =>
+{
+    // Insert the custom formatter to handle text/plain
+    options.InputFormatters.Insert(0, new PlainTextInputFormatter());
+});
+
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>

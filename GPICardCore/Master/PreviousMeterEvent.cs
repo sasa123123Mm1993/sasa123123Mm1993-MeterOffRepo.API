@@ -1,14 +1,24 @@
 ﻿
+using System.Xml.Serialization;
+
 namespace GPICardCore.Master
 {
+    [XmlRoot("previousMeterEvent")]
     public class PreviousMeterEvent
     {
-         public string PreviousMeterEventCode { get; set; }
+        [XmlElement("meterNo")]
+        public string MeterNo { get; set; }
 
-         public string PreviousMeterEventTime { get; set; }
+        [XmlElement("previousMeterEventCode")]
+        public string PreviousMeterEventCode { get; set; }
 
-         public string PreviousMeterEventRemovalTime { get; set; }
+        [XmlElement("previousMeterEventTime")]
+        public string PreviousMeterEventTime { get; set; }
 
-         public string PreviousMeterEventRemovalCardId { get; set; }
+        [XmlElement("previousMeterEventRemovalTime")]
+        public string PreviousMeterEventRemovalTime { get; set; }
+
+        [XmlElement("previousMeterEventRemovalCardId")]
+        public string PreviousMeterEventRemovalCardId { get; set; }
     }
 }
