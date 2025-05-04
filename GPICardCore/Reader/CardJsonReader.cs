@@ -177,7 +177,7 @@ namespace GPICardCore.Reader
         public List<PreviousMeterRemovalEvent>? PreviousMeterRemovalEvents { get; set; }
 
         [JsonPropertyName("meterDateTimeAdjustments")]
-        public List<string>? MeterDateTimeAdjustments { get; set; }
+        public List<MeterDateTimeAdjustment>? MeterDateTimeAdjustments { get; set; }
 
         [JsonPropertyName("meterInstallationLog")]
         public MeterInstallationLog? MeterInstallationLog { get; set; }
@@ -221,6 +221,18 @@ namespace GPICardCore.Reader
 
         [JsonPropertyName("meterInstallationTechCode")]
         public long? MeterInstallationTechCode { get; set; }
+    }
+
+    public class MeterDateTimeAdjustment
+    {
+        [JsonPropertyName("eventSequence")]
+        public int EventSequence { get; set; }
+
+        [JsonPropertyName("eventDateTime")]
+        public string EventDateTime { get; set; }
+
+        [JsonPropertyName("cardNumber")]
+        public string CardNumber { get; set; }
     }
 
 

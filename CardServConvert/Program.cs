@@ -1,5 +1,7 @@
 using CardServConvert;
+using Microsoft.OpenApi.Models;
 using NLog.Web;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +20,14 @@ builder.Services.AddControllers(options =>
 });
 
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(opt =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    opt.IncludeXmlComments(xmlPath);
+ 
+});
+ 
 
 builder.Services.AddCors(options =>
 {

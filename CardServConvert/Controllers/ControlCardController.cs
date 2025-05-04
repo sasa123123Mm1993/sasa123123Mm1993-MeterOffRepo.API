@@ -21,15 +21,20 @@ namespace CardServConvert.Controllers
         }
 
 
+
+        /// <summary>
+        ///  XMl => Unified-Json 
+        /// </summary>
         [HttpPost]
         [Route("Write")]
         [Consumes("text/plain")]
         public async Task<IActionResult> Write([FromBody] string xmlCardData)
         {
+            _logger.LogInformation("Received XML data: {xmlCardData}", xmlCardData);
+
             if (! Tools.IsValidXML(xmlCardData))
             {
-                _logger.LogError("Invalid XML format. {xmlCardData}", xmlCardData);
-                return BadRequest(new
+                 return BadRequest(new
                 {
                     Message = "Validation failed",
                     Errors = "Invalid XML format. "
@@ -37,7 +42,6 @@ namespace CardServConvert.Controllers
 
                
             }
-            _logger.LogInformation("Received XML data: {xmlCardData}", xmlCardData);
             
             CardXmlReader reader = new CardXmlReader(xmlCardData);
 
@@ -179,13 +183,30 @@ namespace CardServConvert.Controllers
 
         }
 
+
+        /// <summary>
+        /// Unified-Json => XMl 
+        /// </summary>
         [HttpPost]
         [Route("Read")]
-        [Consumes("text/plain")]
+       // [Consumes("text/plain")]
         public async Task<IActionResult> Read( [FromBody] string jsonCardData)
         {
+            _logger.LogInformation("Received JSON data: {jsonCardData}", jsonCardData);
+
+            if (!Tools.IsValidJson(jsonCardData.ToString()))
+            {
+                 return BadRequest(new
+                {
+                    Message = "Validation failed",
+                    Errors = "Invalid Json format. "
+                });
+
+
+            }
 
             CardJsonReader reader = new CardJsonReader(jsonCardData);
+            string xmlDataResult = string.Empty;
 
             if (reader.ParsedData.StatusCode == 200)
             {
@@ -203,20 +224,90 @@ namespace CardServConvert.Controllers
                 var meterDataList =  reader.GetMeterData();
 
 
-                ControlCardBuilderXml builderXml = new ControlCardBuilderXml();
-                builderXml.SetCardId(cardId)
-                    
-                    .SetCardPeriod(new ControlCardActivationPeriod
-                    {
-                        ActivationDate = controlCardActivationDate,
-                        ExpiryDate     = controlCardExpiryDate
-                    })
 
-                    
-                    ;
-                   
-                   
-              
+                ControlCardBuilderXml card2 = new ControlCardBuilderXml();
+
+                card2
+                .SetMeterType("0")
+                .SetMeterVersion("GPM-PP01")
+                .SetManufacturerId("07")
+                .SetCardId(cardId)
+                 // .SetSectorCode("02")
+                 //.SetDistributionCompanyCode("9")
+
+                 .SetCardPeriod(new ControlCardActivationPeriod
+                 {
+                     ActivationDate = controlCardActivationDate,
+                     ExpiryDate     = controlCardExpiryDate
+                 });
+
+                var processedMeters = new List<ProcessedMeter>();
+
+                foreach (var item in meterDataList)
+                {
+                    processedMeters.Add(new ProcessedMeter
+                    {
+                        ProcessedMeterId = item.MeterId,
+                        ProcessingTimestamp = DateTime.Now.ToString("dd-MM-yyyy"),
+                        CurrentMeterStatus = item.MeterStatusCode.ToString(),
+                        OldMeterStatus = item.BeforeMeterStatusCode.ToString(),
+                        MeterInstallationDate = item.MeterEvents.MeterInstallationLog?.MeterInstallationDate,
+                        MeterInstallerID = item.MeterEvents.MeterInstallationLog?.MeterInstallationTechCode.ToString(),
+                        CustomerId = item.CustomerId
+                    });
+                }
+                // Set once, after the loop
+                card2.SetMetersProcessedByControlCard(processedMeters);
+
+
+                var previousMeterEvents = new List<GPICardCore.Master.PreviousMeterEvent>();
+
+                foreach (var item in meterDataList)
+                {
+                    if (item.MeterEvents?.PreviousMeterEvents != null)
+                    {
+                        foreach (var evt in item.MeterEvents.PreviousMeterEvents)
+                        {
+                            previousMeterEvents.Add(new GPICardCore.Master.PreviousMeterEvent
+                            {
+                                MeterNo = item.MeterId,
+                                PreviousMeterEventCode = evt.PreviousMeterEventCode.ToString(),
+                                PreviousMeterEventTime = evt.PreviousMeterEventTime,
+                                PreviousMeterEventRemovalTime = evt.PreviousMeterEventRemovalTime,
+                                PreviousMeterEventRemovalCardId = evt.PreviousMeterEventRemovalTechnicianCode.ToString()
+                            });
+                        }
+                    }
+
+                    if (item.MeterEvents.MeterDateTimeAdjustments != null)
+                    {
+                        foreach (var evt in item.MeterEvents.MeterDateTimeAdjustments)
+                        {
+                            previousMeterEvents.Add(new GPICardCore.Master.PreviousMeterEvent
+                            {
+                                MeterNo = item.MeterId,
+                                PreviousMeterEventCode = "9",
+                                PreviousMeterEventTime = evt.EventDateTime,
+                                PreviousMeterEventRemovalTime = evt.EventDateTime,
+                                PreviousMeterEventRemovalCardId = evt.CardNumber
+                            });
+                        }
+                    }
+
+
+
+
+                }
+
+                card2.SetPreviousMeterEvents(previousMeterEvents);
+
+
+
+                 xmlDataResult  = card2.BuildRetunCard();
+
+
+
+
 
 
 
@@ -224,7 +315,7 @@ namespace CardServConvert.Controllers
 
             }
 
-            return Ok("");
+            return Ok(xmlDataResult);
 
            
         }

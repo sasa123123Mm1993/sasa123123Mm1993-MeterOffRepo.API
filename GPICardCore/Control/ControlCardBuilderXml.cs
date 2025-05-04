@@ -721,7 +721,28 @@ namespace GPICardCore
 
         }
 
+        public string BuildRetunCard()
+        {
+       
+
+                 this.defaultXml.Element("meterData")
+                .Add(new XElement("controlOperationType", 3));
+
+            this.defaultXml.Element("meterData")
+           .Add(
+               new XElement("manipulationsAndFaultsToBeCleared",
+
+                 Enumerable.Range(2, 7)
+                .Select(code => new XElement("manipulationOrFaultToBeCleared", code))
+               )
+           );
 
 
+
+          
+
+
+            return this.defaultXml.ToString();
+        }
     }
 }
